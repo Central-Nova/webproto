@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const AccountSchema = new mongoose.Schema({
-  type: { type: String },
+  type: { type: String, required: true },
   company: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'company'

@@ -5,15 +5,25 @@ const CompanySchema = new mongoose.Schema({
     type: String
   },
   address: {
-    type: String
+    type: String,
+    required: true
   },
   ein: {
-    type: Number
+    type: Number,
+    required: true
   },
   email: {
-    type: String
+    type: String,
+    required: true
   },
-  phone: {
+  phoneWork: {
+    type: Number,
+    required: true
+  },
+  phonePersonal: {
+    type: Number
+  },
+  phoneFax: {
     type: Number
   },
   owner: {
