@@ -55,6 +55,7 @@ router.post(
 
       await user.save();
 
+      // Create json webtoken for user
       const payload = {
         user: {
           id: user.id
