@@ -4,6 +4,7 @@ const { check, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const bcrypt = require('bcryptjs');
+const passport = require('passport');
 
 const User = require('../../models/User');
 
@@ -43,15 +44,16 @@ router.post(
 
       user = new User({
         name,
+        local: {
         email,
-        password
+      }
       });
 
       // Encrypt password
 
       const salt = await bcrypt.genSalt(10);
 
-      user.password = await bcrypt.hash(password, salt);
+      user.local.password = await bcrypt.hash(password, salt);
 
       await user.save();
 
@@ -76,5 +78,19 @@ router.post(
     }
   }
 );
+
+// @route   POST api/users
+// @desc    Login User
+// @access  public
+
+// Login
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', {
+    successRedirect: '/dashboard',
+    failureRedirect: '/',
+    failureFlash: false
+  })(req, res, next);
+  console.log(req.user);
+});
 
 module.exports = router;
