@@ -21,12 +21,8 @@ require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Static Files
-app.use(express.static('views'))
-app.use(express.static(path.join(__dirname, 'public')));
 
 // Define Routes
-app.use('/', require('./routes/api/index.js'))
 app.use('/api/users', require('./routes/api/users'));
 app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/companies', require('./routes/api/companies'));

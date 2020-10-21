@@ -1,9 +1,38 @@
 import React, { Fragment, useState } from 'react'
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-// const [formData, setFormData] = useState({})
+// Actions
+import { register } from '../../actions/auth';
+import { setAlert } from '../../actions/alert';
 
-const Register = () => {
+
+const Register = ({ setAlert, register }) => {
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    password2: ''
+  })
+
+  const { name, email, password, password2 } = formData;
+
+  const onChange = e => {
+    setFormData({...formData, [e.target.name]: e.target.value})
+  }
+
+  const onSubmit = async e => {
+    e.preventDefault();
+    if (password !== password2) {
+      setAlert('Passwords do not match', 'danger');
+    } else {
+      register({name, email, password})
+    }
+  };
+
+
   return (
     <Fragment>
       <div className="landing-container">
@@ -18,62 +47,73 @@ const Register = () => {
             </p>
           </div>
         </section>
-        <section class="landing-form-container">
-        <i class="logo fas fa-warehouse fa-5x text-primary"></i>
-        <h1 class="text-medium">Register Your Account</h1>
-        <form action="/api/users" method="POST" class="form mx-4">
-          <div class="form form form-item">
+        <section className="landing-form-container">
+        <i className="logo fas fa-warehouse fa-5x text-primary"></i>
+        <h1 className="text-medium">Register Your Account</h1>
+        <form onSubmit={e=> onSubmit(e)} className="form mx-4">
+          <div className="form form form-item">
             <input
               type="text"
               id="name"
               name="name"
-              value=""
+              value={name}
+              onChange={e => onChange(e)}
               placeholder="Name"
             />
           </div>
-          <div class="form form-item">
+          <div className="form form-item">
             <input
               type="email"
               id="email"
               name="email"
-              value=""
+              value={email}
+              onChange={e => onChange(e)}
               placeholder="Email Address"
             />
           </div>
-          <div class="form form-item">
+          <div className="form form-item">
             <input
               type="password"
               id="password"
               name="password"
-              value=""
+              value={password}
+              onChange={e => onChange(e)}
               placeholder="Password"
             />
           </div>
-          <div class="form form-item">
+          <div className="form form-item">
             <input
               type="password"
               id="password2"
               name="password2"
-              value=""
+              value={password2}
+              onChange={e => onChange(e)}
               placeholder="Confirm Password"
             />
           </div>
           <div className="form form-item">
-          <button type="submit" class="btn btn-large btn-primary">
-            Sign Up
-          </button>
+          <input type="submit" className="btn btn-large btn-primary" value='Sign Up'/>
           </div>
         </form>
-        <div class="button-container my-1">
-          <div class="separator">or</div>
-          <a class="btn btn-large btn-light mx-4"
-            ><i class="fab fa-google mx-1"></i>Sign Up with Google</a>
+        <div className="button-container my-1">
+          <div className="separator">or</div>
+          <Link className="btn btn-large btn-light mx-4"
+            ><i className="fab fa-google mx-1"></i>Sign Up with Google</Link>
         </div>
         <p>Already have an account? <Link to="/login">Sign in here.</Link></p>
       </section>
       </div>
     </Fragment>
   )
+};
+
+Register.propTypes = {
+  setAlert: PropTypes.func.isRequired,
+  register: PropTypes.func.isRequired,
 }
 
-export default Register;
+const mapStateToProps = state => ({
+  
+})
+
+export default connect(mapStateToProps, { setAlert, register })(Register);

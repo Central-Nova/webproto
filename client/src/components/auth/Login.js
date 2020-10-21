@@ -1,7 +1,30 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-const Login = () => {
+// Actions
+import { loginUser } from '../../actions/auth';
+import { setAlert } from '../../actions/alert';
+
+const Login = ({ loginUser }) => {
+
+  const [ formData, setFormData ] = useState({
+    email: '',
+    password: ''
+  })
+
+  const { email, password } = formData;
+
+  const onChange = e => {
+    setFormData({...formData, [e.target.name]: e.target.value})
+  };
+
+  const onSubmit = e => {
+    e.preventDefault();
+    loginUser(formData);
+  }
+
   return (
     <Fragment>
       <div className="landing-container">
@@ -19,13 +42,14 @@ const Login = () => {
         <section className="landing-form-container">
         <i className="logo fas fa-warehouse fa-5x text-primary"></i>
         <h1 className="text-medium">Sign Into Your Account</h1>
-        <form action="/api/users/login" method="POST" className="form mx-4">
+        <form onSubmit={e=> onSubmit(e)} className="form mx-4">
           <div className="form form-item">
             <input
               type="email"
               id="email"
               name="email"
-              value=""
+              value={email}
+              onChange={e=> onChange(e)}
               placeholder="Email Address"
             />
           </div>
@@ -34,7 +58,8 @@ const Login = () => {
               type="password"
               id="password"
               name="password"
-              value=""
+              value={password}
+              onChange={e=> onChange(e)}
               placeholder="Password"
             />
           </div>
@@ -46,8 +71,8 @@ const Login = () => {
         </form>
         <div className="button-container my-1">
           <div className="separator">or</div>
-          <a className="btn btn-large btn-light mx-4"
-            ><i className="fab fa-google mx-1"></i>Sign In with Google</a>
+          <Link className="btn btn-large btn-light mx-4"
+            ><i className="fab fa-google mx-1"></i>Sign In with Google</Link>
         </div>
         <p>
           Don't have an account? <Link to="/register">Create one here.</Link>
@@ -58,4 +83,13 @@ const Login = () => {
   )
 }
 
-export default Login;
+Login.propTypes = {
+  loginUser: PropTypes.func.isRequired,
+  setAlert: PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => ({
+
+})
+
+export default connect(mapStateToProps, { loginUser, setAlert })(Login);
