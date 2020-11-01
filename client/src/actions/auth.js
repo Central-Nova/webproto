@@ -13,6 +13,8 @@ import setAuthToken from '../utils/setAuthToken';
 
 //Login User
 export const loginUser = (formData) => async (dispatch) => {
+  console.log('calling loginUser', formData);
+  const { email, password } = formData;
   const config = {
     headers: {
       'Content-Type': 'application/json'
@@ -20,14 +22,15 @@ export const loginUser = (formData) => async (dispatch) => {
   };
 
   try {
-    const res = await axios.post('/api/auth', formData, config);
+    const res = await axios.post('/api/auth', {email, password}, config);
+    console.log('Axios Response: ', res.data);
 
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data
     });
 
-    dispatch(loadUser());
+    // dispatch(loadUser());
   } catch (err) {
     const errors = err.response.data.errors;
 

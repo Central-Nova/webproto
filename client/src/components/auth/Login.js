@@ -64,9 +64,8 @@ const Login = ({ loginUser }) => {
             />
           </div>
           <div className="form form-item">
-          <button type="submit" className="btn btn-large btn-primary">
-            Sign In
-          </button>
+          <input type="submit" className="btn btn-large btn-primary" value="Sign In">
+          </input>
           </div>
         </form>
         <div className="button-container my-1">

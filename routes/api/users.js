@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
+const { genPassword, validPassword } = require('../../lib/passwordUtils')
 
 const User = require('../../models/User');
 
@@ -50,48 +51,20 @@ router.post(
       }
       });
 
-      // Encrypt password
+      // Create password hash
 
-      const salt = await bcrypt.genSalt(10);
+      const { salt, hash } = genPassword(password);
 
-      user.local.password = await bcrypt.hash(password, salt);
+      user.local.salt = salt;
+      user.local.hash = hash;
 
       await user.save();
 
-      // Create json webtoken for user
-      const payload = {
-        user: {
-          id: user.id
-        }
-      };
-
-      jwt.sign(
-        payload,
-        config.get('jwtSecret'),
-        { expiresIn: 36000 },
-        (err, token) => {
-          if (err) throw err;
-          return res.json({ token });
-        }
-      );
     } catch (err) {
       return res.status(500).send('Server Error');
     }
   }
 );
 
-// @route   POST api/users
-// @desc    Login User
-// @access  public
-
-// Login
-router.post('/login', (req, res, next) => {
-  passport.authenticate('local', {
-    successRedirect: '/dashboard',
-    failureRedirect: '/',
-    failureFlash: false
-  })(req, res, next);
-  console.log(req.user);
-});
 
 module.exports = router;

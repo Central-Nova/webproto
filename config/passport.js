@@ -1,39 +1,46 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
+const passport = require('passport');
+const validPassword = require('../lib/passwordUtils').validPassword;
 
 const LocalStrategy = require('passport-local').Strategy;
 
 module.exports = function (passport) {
   passport.use(
-    new LocalStrategy({ username: 'email' }, async (email, password, done) => {
-      // Find User
-      await User.findOne({ 'local.email': email }, function (err, user) {
-        if (err) {
-          return done(err);
-        }
-        if (!user) {
-          return done(null, false, { message: 'Incorrect email.' });
-        }
-      });
+    new LocalStrategy({ usernameField: 'email' }, async (username, password, done) => {
+      console.log('PASSPORT VERIFY CALLBACK CALLED');
+      User.findOne({ 'local.email': username })
+        .then((user) => {
+          // Wrong Email
+          if (!user) { return done(null, false) }
+          
+            console.log('Found User:', user.local);
 
-      // Encrypt Password
-      const isMatch = await bcrypt.compare(password, user.local.password);
+            const isValid = validPassword(password, user.local.hash, user.local.salt);
 
-      if (isMatch) {
-        return done(null, user);
-      } else {
-        return done(null, false, { message: 'Password is incorrect' });
-      }
+            if (isValid) {
+                return done(null, user);
+            } else {
+            // Wrong Password
+                return done(null, false);
+            }
+        })
+        .catch((err) => {
+            done(err);
+        });
+
     })
   );
 
-  passport.serializeUser(function (user, done) {
+  passport.serializeUser((user, done) => {
     done(null, user.id);
   });
 
-  passport.deserializeUser(function (id, done) {
-    User.findById(id, function (err, user) {
-      done(err, user);
-    });
+  passport.deserializeUser((id, done) => {
+    console.log('PASSPORT DESERIALIZE CALLED');
+    User.findById(id).select('-local.hash -local.salt')
+    .then(user => {done(null, user);}
+    ).catch(err => done(err))
   });
-};
+
+}
