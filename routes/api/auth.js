@@ -13,16 +13,46 @@ const User = require('../../models/User');
 // @desc    Get user data
 // @access  public
 
-router.get('/', auth, async (req, res) => {
-  // try {
-  //   const user = await User.findById(req.user.id).select('-local.password');
-  //   return res.json(user);
-  // } catch (err) {
-  //   console.error(err.message);
-  //   res.status(500).send('Server Error');
-  // }
-  // res.json({message:'from api/user',...req.user})
-});
+// router.get('/', auth, async (req, res) => {
+//   try {
+//     const user = await User.findById(req.user.id).select('-local.password');
+//     return res.json(user);
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).send('Server Error');
+//   }
+//   res.json({message:'from api/user',...req.user})
+// });
+
+// @route   GET api/auth/google
+// @desc    Authenticate user & get token
+// @access  public
+
+router.get('/google/login', passport.authenticate('google-login', { scope: ['email','profile'] }))
+
+// @route   GET api/auth/
+// @desc    Authenticate user & get token
+// @access  public
+
+router.get('/google/register', passport.authenticate('google-register', { scope: ['email','profile'] }))
+
+// @route   GET api/auth
+// @desc    Authenticate user & get token
+// @access  public
+
+router.get(
+	'/google/login-callback',
+	passport.authenticate('google-login')
+)
+
+router.get(
+	'/google/register-callback',
+	passport.authenticate('google-register', {
+		successRedirect: '/',
+		failureRedirect: '/'
+	})
+)
+
 
 // @route   POST api/auth
 // @desc    Authenticate user & get token

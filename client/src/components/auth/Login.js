@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
 // Actions
 import { loginUser } from '../../actions/auth';
@@ -23,6 +24,16 @@ const Login = ({ loginUser }) => {
   const onSubmit = e => {
     e.preventDefault();
     loginUser(formData);
+  }
+
+  const onGoogleClick = e => {
+    const params = {
+      headers: {
+        "Access-Control-Allow-Origin": "http://localhost:3000"
+      }
+    }
+     axios.get('/api/auth/google/', params)
+
   }
 
   return (
@@ -70,8 +81,8 @@ const Login = ({ loginUser }) => {
         </form>
         <div className="button-container my-1">
           <div className="separator">or</div>
-          <Link className="btn btn-large btn-light mx-4"
-            ><i className="fab fa-google mx-1"></i>Sign In with Google</Link>
+          <a className="btn btn-large btn-light mx-4" href="http://localhost:5000/api/auth/google/login"
+            ><i className="fab fa-google mx-1"></i>Sign In with Google</a>
         </div>
         <p>
           Don't have an account? <Link to="/register">Create one here.</Link>

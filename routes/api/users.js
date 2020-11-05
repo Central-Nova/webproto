@@ -1,10 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
-const jwt = require('jsonwebtoken');
-const config = require('config');
-const bcrypt = require('bcryptjs');
-const passport = require('passport');
 const { genPassword, validPassword } = require('../../lib/passwordUtils')
 
 const User = require('../../models/User');
@@ -16,7 +12,8 @@ const User = require('../../models/User');
 router.post(
   '/',
   [
-    check('name', 'Name is required').not().isEmpty(),
+    check('firstName', 'First name is required').not().isEmpty(),
+    check('lastName', 'Last name is required').not().isEmpty(),
     check('email', 'Email is required').isEmail(),
     check(
       'password',
@@ -30,13 +27,13 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
 
 
     try {
       // Check for existing user
 
-      let user = await User.findOne({ 'local.email': email });
+      let user = await User.findOne({ email });
 
       if (user) {
         return res
@@ -45,10 +42,9 @@ router.post(
       }
 
       user = new User({
-        name,
-        local: {
-        email,
-      }
+        firstName,
+        lastName,
+        email
       });
 
       // Create password hash

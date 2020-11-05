@@ -17,7 +17,7 @@ const Register = ({ setAlert, register }) => {
     password2: ''
   })
 
-  const { name, email, password, password2 } = formData;
+  const { firstName, lastName, email, password, password2 } = formData;
 
   const onChange = e => {
     setFormData({...formData, [e.target.name]: e.target.value})
@@ -28,7 +28,7 @@ const Register = ({ setAlert, register }) => {
     if (password !== password2) {
       setAlert('Passwords do not match', 'danger');
     } else {
-      register({name, email, password})
+      register({firstName, lastName, email, password})
     }
   };
 
@@ -54,11 +54,21 @@ const Register = ({ setAlert, register }) => {
           <div className="form form form-item">
             <input
               type="text"
-              id="name"
-              name="name"
-              value={name}
+              id="firstName"
+              name="firstName"
+              value={firstName}
               onChange={e => onChange(e)}
-              placeholder="Name"
+              placeholder="First Name"
+            />
+          </div>
+          <div className="form form form-item">
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              value={lastName}
+              onChange={e => onChange(e)}
+              placeholder="Last Name"
             />
           </div>
           <div className="form form-item">
@@ -97,8 +107,8 @@ const Register = ({ setAlert, register }) => {
         </form>
         <div className="button-container my-1">
           <div className="separator">or</div>
-          <Link className="btn btn-large btn-light mx-4"
-            ><i className="fab fa-google mx-1"></i>Sign Up with Google</Link>
+          <a className="btn btn-large btn-light mx-4" href="http://localhost:5000/api/auth/google/register"
+            ><i className="fab fa-google mx-1"></i>Sign Up with Google</a>
         </div>
         <p>Already have an account? <Link to="/login">Sign in here.</Link></p>
       </section>
