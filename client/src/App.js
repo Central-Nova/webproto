@@ -1,12 +1,10 @@
 import React, { Fragment, useEffect } from 'react';
-import { BrowserRouter as Router, Route} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import { loadUser } from './actions/auth';
 
 // Components
 import Landing from './components/landing/Landing.js';
-import Login from './components/auth/Login';
-import Register from './components/auth/Register';
-import Dashboard from './components/dashboard/Dashboard';
+import Routes from './components/routing/Routes';
 
 // Redux
 import { Provider } from 'react-redux';
@@ -25,10 +23,10 @@ const App = () => {
     <Provider store={store}>
       <Router>
         <Fragment>
+        <Switch>
             <Route exact path='/' component={Landing}/>
-            <Route exact path='/login' component={Login}/>
-            <Route exact path='/register' component={Register}/>
-            <Route exact path='/dashboard' component={Dashboard}/>
+            <Route component={Routes}/>
+        </Switch>
         </Fragment>
       </Router>
     </Provider>
