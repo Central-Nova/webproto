@@ -1,9 +1,8 @@
 const express = require('express');
-const mongoConection = require('./config/db');
+const sessionStore = require('./config/db');
 const path = require('path');
 const passport = require('passport');
 const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
 
 require('dotenv').config();
 
@@ -15,8 +14,8 @@ app.use(express.json({ extended: false }));
 // Express body parser
 app.use(express.urlencoded({ extended: true }))
 
-// Passport Session
-const sessionStore = new MongoStore({ mongooseConnection: mongoConection, collection: 'sessions' });
+// // Passport Session
+// const sessionStore = new MongoStore({ mongooseConnection: mongoConection, collection: 'sessions' });
 
 app.use(session({
     secret: process.env.SECRET,
@@ -35,9 +34,14 @@ require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use((req,res,next)=>{
+  sessionStore.all((error,sessions) => {
+    console.log("//* SERVER.JS MIDDLEWARE *// sessionStore.all: ", sessions)});
+  next();})
+
 app.use((req, res, next) => {
-  console.log('From the server.js, req.session:',req.session);
-  console.log('From the server.js, req.user:',req.user);
+  console.log('//* SERVER.JS MIDDLEWARE *// req.session:',req.session);
+  console.log('//* SERVER.JS MIDDLEWARE *// req.user:',req.user);
   next();
 });
 

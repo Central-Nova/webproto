@@ -1,5 +1,6 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { BrowserRouter as Router, Route} from 'react-router-dom';
+import { loadUser } from './actions/auth';
 
 // Components
 import Landing from './components/landing/Landing.js';
@@ -16,6 +17,10 @@ import './App.css';
 
 
 const App = () => {
+    useEffect(()=> {
+    store.dispatch(loadUser())
+  }, [])
+
   return (
     <Provider store={store}>
       <Router>

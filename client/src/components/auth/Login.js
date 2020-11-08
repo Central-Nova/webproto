@@ -1,14 +1,13 @@
 import React, { Fragment, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 
 // Actions
-import { loginUser } from '../../actions/auth';
+import { loginUser, loadUser } from '../../actions/auth';
 import { setAlert } from '../../actions/alert';
 
-const Login = ({ loginUser }) => {
+const Login = ({ loginUser, auth: {isAuthenticated} }) => {
 
   const [ formData, setFormData ] = useState({
     email: '',
@@ -27,14 +26,14 @@ const Login = ({ loginUser }) => {
   }
 
   const onGoogleClick = e => {
-    const params = {
-      headers: {
-        "Access-Control-Allow-Origin": "http://localhost:3000"
-      }
-    }
-     axios.get('/api/auth/google/', params)
+    console.log('Clicked!')
 
   }
+
+  if(isAuthenticated) {
+    return <Redirect to='/dashboard'/>
+  }
+  
 
   return (
     <Fragment>
@@ -81,7 +80,7 @@ const Login = ({ loginUser }) => {
         </form>
         <div className="button-container my-1">
           <div className="separator">or</div>
-          <a className="btn btn-large btn-light mx-4" href="http://localhost:5000/api/auth/google/login"
+          <a className="btn btn-large btn-light mx-4" onClick={e=> onGoogleClick(e)} href='http://localhost:5000/api/auth/google/login'
             ><i className="fab fa-google mx-1"></i>Sign In with Google</a>
         </div>
         <p>
@@ -90,16 +89,18 @@ const Login = ({ loginUser }) => {
       </section>
       </div>
     </Fragment>
-  )
-}
+  );
+};
 
 Login.propTypes = {
   loginUser: PropTypes.func.isRequired,
+  loadUser: PropTypes.func.isRequired,
   setAlert: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
-
+  auth: state.auth
 })
 
-export default connect(mapStateToProps, { loginUser, setAlert })(Login);
+export default connect(mapStateToProps, { loginUser, setAlert, loadUser })(Login);

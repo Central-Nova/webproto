@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const config = require('config');
 const db = config.get('mongoURI');
 
+// Express Session
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+
+
 require('dotenv').config();
 
 
@@ -51,8 +56,10 @@ mongoConnection.once('open', ()=> {
   console.log(`You have successfully connected to your mongodatabase: ${process.env.MONGO_URI}`);
 })
 
+const sessionStore = new MongoStore({ mongooseConnection: mongoConnection, collection: 'sessions' });
 
-module.exports = mongoConnection;
+
+module.exports = sessionStore;
 
 // const connection = mongoose.createConnection(db, {
 //       useNewUrlParser: true,
