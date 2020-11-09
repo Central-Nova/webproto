@@ -34,11 +34,6 @@ require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use((req,res,next)=>{
-  sessionStore.all((error,sessions) => {
-    console.log("//* SERVER.JS MIDDLEWARE *// sessionStore.all: ", sessions)});
-  next();})
-
 app.use((req, res, next) => {
   console.log('//* SERVER.JS MIDDLEWARE *// req.session:',req.session);
   console.log('//* SERVER.JS MIDDLEWARE *// req.user:',req.user);

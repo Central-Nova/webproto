@@ -5,7 +5,7 @@ import {logoutUser} from '../../actions/auth';
 
 const Dashboard = ( { logoutUser } ) => {
 
-  const onClick = () => {
+  const onClick = (e) => {
     logoutUser();
   }
 
@@ -14,7 +14,7 @@ const Dashboard = ( { logoutUser } ) => {
 <section className="landing-form-container">
         <i className="logo fas fa-warehouse fa-5x text-primary"></i>
         <h1 className="text-medium">Welcome</h1>
-        <button className="btn btn-large btn-primary" onClick={logoutUser}>Log Out</button>
+        <button className="btn btn-large btn-primary" onClick={()=>onClick()}>Log Out</button>
       </section>
 </Fragment>
   )

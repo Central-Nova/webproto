@@ -12,6 +12,8 @@ import {
 
 // Logout User
 export const logoutUser = () => (dispatch) => {
+   axios.get('/api/auth/logout');
+
   dispatch({
     type: LOGOUT,
   })
