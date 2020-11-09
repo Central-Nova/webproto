@@ -54,6 +54,36 @@ router.get('/google/register', passport.authenticate('google-register', { scope:
 router.get(
 	'/google/login-callback',
 	passport.authenticate('google-login'), (req, res) => {
+
+    const sessionsCollection = sessionStore.db.collection('sessions');
+
+  // Returns cursor for sessions containing user id
+  sessionsCollection.find({session: new RegExp(req.user._id)}, (err, sessions) => {
+    if(sessions !== null) {
+
+      // Form an array from cursor
+      sessions.toArray((a, sessionsData) => {
+
+        // Loop through each item in sessions array. If it doesn't have the same session ID as the current session ID, then destroy the session
+        sessionsData.forEach((element, index) => {
+          const data = JSON.parse(element.session);
+          if (element._id !== req.session.id) {
+            sessionStore.destroy(element._id, (err, data) => {
+              if (err) 
+                return res.status(400).send({
+                  message: errorHandler.getErrorMessage(err)
+                });
+                res.jasonp({status: 'Previous Session Deleted'})
+            })
+          }
+        })
+      })
+    } else {
+      res.jsonp({ status: 'No Session Found'});
+    }
+    console.log("found sessions: ", sessions);
+  })
+  
     res.redirect('http://localhost:3000/dashboard');
   }
 )
@@ -80,15 +110,17 @@ router.post('/', passport.authenticate('local'), async (req,res) => {
 
   const sessionsCollection = sessionStore.db.collection('sessions');
 
+  // Returns cursor for sessions containing user id
   sessionsCollection.find({session: new RegExp(req.user._id)}, (err, sessions) => {
     if(sessions !== null) {
+
+      // Form an array from cursor
       sessions.toArray((a, sessionsData) => {
-        console.log('SessionsData: ', sessionsData)
+
+        // Loop through each item in sessions array. If it doesn't have the same session ID as the current session ID, then destroy the session
         sessionsData.forEach((element, index) => {
-          console.log('For Each element: ', element);
           const data = JSON.parse(element.session);
           if (element._id !== req.session.id) {
-            console.log('element found: ', element);
             sessionStore.destroy(element._id, (err, data) => {
               if (err) 
                 return res.status(400).send({
@@ -105,17 +137,7 @@ router.post('/', passport.authenticate('local'), async (req,res) => {
     console.log("found sessions: ", sessions);
   })
   
-  // sessionStore.all((error, sessions) => {
-  //   const userSessions = sessions.filter(session => session.passport.user == req.user._id);
-
-  //   userSessions.map(session => console.log('session: ',session))
-  //   userSessions.map(session => console.log('session.id: ',session.id))
-  //   userSessions.map(session => console.log('session._id: ',session.id))
-
-  //   console.log('Existing Sessions: ', userSessions);
-
-  // })
-
+  // Remove local credentials of user from memory before returning
   console.log('//* POST/AUTH *// loggin in')
   const user = JSON.parse(JSON.stringify(req.user)) // hack
   const cleanUser = Object.assign({}, user)
