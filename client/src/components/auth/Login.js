@@ -50,7 +50,7 @@ const Login = ({ loginUser, auth: {isAuthenticated} }) => {
           </div>
         </section>
         <section className="landing-form-container">
-        <i className="logo fas fa-warehouse fa-5x text-primary"></i>
+        <i className="logo-landing fas fa-warehouse fa-5x text-primary"></i>
         <h1 className="text-medium">Sign Into Your Account</h1>
         <form onSubmit={e=> onSubmit(e)} className="form mx-4">
           <div className="form form-item">

@@ -4,7 +4,7 @@ const passport = require('passport');
 const sessionStore = require('../../config/db');
 const session = require('express-session');
 const db = require('../../config/db');
-
+const nodemailer = require('nodemailer');
 
 const User = require('../../models/User');
 
@@ -83,7 +83,7 @@ router.get(
     }
     console.log("found sessions: ", sessions);
   })
-  
+
     res.redirect('http://localhost:3000/dashboard');
   }
 )

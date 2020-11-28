@@ -18,7 +18,7 @@ const Landing = () => {
         </div>
       </section>
       <section className="landing-form-container">
-        <i className="logo fas fa-warehouse fa-5x text-primary"></i>
+        <i className="logo-landing fas fa-warehouse fa-5x text-primary"></i>
         <h1 className="text-medium">Welcome</h1>
         <div className="button-container">
           <Link className="btn btn-large btn-primary mx-4" to='/login'>

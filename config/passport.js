@@ -123,11 +123,14 @@ module.exports = function (passport) {
   )
   
   passport.serializeUser((user, done) => {
+    console.log('Serialize user:', user);
     done(null, user.id);
   });
 
   passport.deserializeUser((id, done) => {
     console.log('PASSPORT DESERIALIZE CALLED');
+    console.log('Deserialize user:', id);
+
     User.findById(id).select('-local.hash -local.salt')
     .then(user => {done(null, user);}
     ).catch(err => done(err))
