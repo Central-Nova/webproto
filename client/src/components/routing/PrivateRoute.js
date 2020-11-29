@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
+import SideNav from '../layout/SideNav';
 
 const PrivateRoute = ({
   component: Component,
   auth: { isAuthenticated, loading },
   ...rest
 }) => (
+  <Fragment>
+  <div className="container-main">
+  <SideNav/>
   <Route
     {...rest}
     render={props =>
@@ -21,6 +25,8 @@ const PrivateRoute = ({
       )
     }
   />
+  </div>
+  </Fragment>
 );
 
 PrivateRoute.propTypes = {
