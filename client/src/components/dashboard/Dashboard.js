@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {logoutUser} from '../../actions/auth';
 
-const Dashboard = ( { logoutUser } ) => {
+const Dashboard = ( { logoutUser, auth: {user} } ) => {
 
   const onClick = (e) => {
     logoutUser();
@@ -13,10 +13,10 @@ const Dashboard = ( { logoutUser } ) => {
   return (
 <Fragment>
 <section className="landing-form-container">
-        <i className="logo fas fa-warehouse fa-5x text-primary"></i>
-        <h1 className="text-medium">Welcome</h1>
+        <i className="logo-landing fas fa-warehouse fa-5x text-primary"></i>
+        <h1 className="text-medium">Welcome, {user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1)}!</h1>
         <button className="btn btn-large btn-primary" onClick={()=>onClick()}>Log Out</button>
-        <Link className="btn btn-large btn-primary-light" to='/users'>Users</Link>
+        <Link className="btn btn-large btn-primary-light mx-2" to='/users'>Users</Link>
       </section>
 </Fragment>
   )
