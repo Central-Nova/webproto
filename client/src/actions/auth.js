@@ -63,9 +63,12 @@ export const loginUser = (formData) => async (dispatch) => {
     const res = await axios.post('/api/auth', {email, password}, config);
     console.log('Axios Response: ', res.data);
 
+    
     dispatch({
       type: LOGIN_SUCCESS,
     });
+    
+    dispatch(loadUser());
 
   } catch (err) {
     const errors = err.response.data.errors;

@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { loginUser, loadUser } from '../../actions/auth';
 import { setAlert } from '../../actions/alert';
 
-const Login = ({ loginUser, isAuthenticated }) => {
+const Login = ({ loginUser, isAuthenticated, user }) => {
 
   const [ formData, setFormData ] = useState({
     email: '',
@@ -30,7 +30,7 @@ const Login = ({ loginUser, isAuthenticated }) => {
 
   }
 
-  if(isAuthenticated) {
+  if(isAuthenticated && user!== null) {
     return <Redirect to='/dashboard'/>
   }
   
@@ -97,10 +97,12 @@ Login.propTypes = {
   loadUser: PropTypes.func.isRequired,
   setAlert: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
+  user: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated,
+  user: state.auth.user
 })
 
 export default connect(mapStateToProps, { loginUser, setAlert, loadUser })(Login);
