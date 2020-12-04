@@ -33,21 +33,18 @@ const CompanySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user'
   },
-  // users: [
-  //   {
-  //     user: {
-  //       type: mongoose.Schema.Types.ObjectId,
-  //       ref: 'user'
-  //     },
-  //     role: {
-  //       type: String
-  //     },
-  //     dateAdded: {
-  //       type: Date,
-  //       default: Date.now
-  //     }
-  //   }
-  // ],
+  users: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user'
+      },
+      dateAdded: {
+        type: Date,
+        default: Date.now
+      }
+    }
+  ],
   date: {
     type: Date,
     default: Date.now

@@ -24,7 +24,16 @@ const UserSchema = new mongoose.Schema({
   isVerified: {
     type: Boolean,
     default: false
-  }
+  },
+  company: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'company'
+
+  },
+  roles: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'role'
+  }]
 });
 
 module.exports = User = new mongoose.model('user', UserSchema);

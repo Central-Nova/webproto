@@ -1,8 +1,8 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 
 const AlertItem = ({msg, alertType}) => {
 
-  if (alertType =='success') {
+  if (alertType === 'success') {
     return(
       <div className="alert">
       <div className={`bg-${alertType} alert-icon`}>
@@ -18,7 +18,7 @@ const AlertItem = ({msg, alertType}) => {
       </div>
     </div>
     )}
-    if (alertType =='warning') {
+    if (alertType === 'warning') {
       return(
         <div className="alert">
         <div className={`bg-${alertType} alert-icon`}>
@@ -34,7 +34,7 @@ const AlertItem = ({msg, alertType}) => {
         </div>
       </div>
       )}
-      if (alertType =='danger') {
+      if (alertType === 'danger') {
         return(
           <div className="alert">
           <div className={`bg-${alertType} alert-icon`}>

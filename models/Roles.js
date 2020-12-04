@@ -1,46 +1,34 @@
 const mongoose = require('mongoose');
 
 const RoleSchema = new mongoose.Schema({
-  sales: {
-    manager: {
-
-    },
-    worker: {
-      
-    }
+  company: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'company'
   },
-  inventory: {
-    manager: {
-
-    },
-    worker: {
-      
-    }
+  department: {
+    type: String,
+    required: true
   },
-  warehouse: {
-    manager: {
+  category: {
+    type: String,
+    required: true
 
-    },
-    worker: {
-      
-    }
   },
-  fleet: {
-    manager: {
-
-    },
-    worker: {
-      
-    }
+  role: {
+    type: String,
+    required: true
   },
-  accounting: {
-    manager: {
-
+  permissions: [
+    {
+      action: {
+      type: String,
+      required: true,
     },
-    worker: {
-      
-    }
-  }
+    allow: {
+      type: Boolean,
+      required: true
+    }}
+  ]
 
 })
 
