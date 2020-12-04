@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { Route, Switch } from 'react-router-dom';
 import PrivateRoute from '../routing/PrivateRoute';
 
@@ -6,6 +6,7 @@ import PrivateRoute from '../routing/PrivateRoute';
 import Register from '../auth/Register'
 import Login from '../auth/Login'
 import Dashboard from '../dashboard/Dashboard';
+import AlertBox from '../layout/alerts/AlertBox';
 
 // Settings
 import Users from '../userSettings/Users';
@@ -17,6 +18,8 @@ import Role from '../userSettings/Role';
 
 const Routes = (props) => {
   return (
+    <Fragment>
+    <AlertBox/>
     <Switch>
       <Route exact path='/register' component={Register}/>
       <Route exact path='/login' component={Login}/>
@@ -25,9 +28,8 @@ const Routes = (props) => {
       <PrivateRoute exact path='/user' component={User}/>
       <PrivateRoute exact path='/roles' component={Roles}/>
       <PrivateRoute exact path='/role' component={Role}/>
-
-
     </Switch>
+    </Fragment>
   )
 }
 
