@@ -4,7 +4,8 @@ import SetupCreateStep2 from './SetupCreateStep2';
 import SetupCreateStep3 from './SetupCreateStep3';
 import SetupCreateStep4 from './SetupCreateStep4';
 
-const SetupCreateStep = ( props ) => {
+const SetupCreateStepHandler = ( props ) => {
+  console.log('level 0 props: ', props)
 
   const { step } = props;
 
@@ -35,4 +36,4 @@ null
 
 }
 
-export default SetupCreateStep;
+export default SetupCreateStepHandler;

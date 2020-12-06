@@ -1,6 +1,12 @@
 import React, { Fragment } from 'react'
+import SetupAddressForm from './SetupAddressForm';
 
-const SetupCreateStep2 = ({ back, next }) => {
+const SetupCreateStep2 = (props) => {
+
+  const { back, next, onChangeAddress, formData } = props;
+
+  console.log('step 2 props: ', formData)
+  
   return (
     <Fragment>
     <div className="logo">
@@ -8,7 +14,7 @@ const SetupCreateStep2 = ({ back, next }) => {
     </div>
     <div className="container-company-double">
       <div className="button-back">
-        <button className="btn btn-light btn-large" onClick={back}>
+        <button onClick={back} className="btn btn-light btn-large">
           <i className="fas fa-long-arrow-alt-left"></i>Back
         </button>
       </div>
@@ -42,21 +48,7 @@ const SetupCreateStep2 = ({ back, next }) => {
               Your registered business address.
             </p>
           </div>
-          <form action="">
-            <div className="form-grid">
-              <div className="street">
-                <input type="text" placeholder="Street" />
-              </div>
-              <div className="suite">
-                <input type="text" placeholder="Apt/Suite" />
-              </div>
-              <div className="city"><input type="text" placeholder="City" /></div>
-              <div className="state"><input type="text" placeholder="State" /></div>
-              <div className="zip">
-                <input type="text" placeholder="Zip Code" />
-              </div>
-            </div>
-          </form>
+          <SetupAddressForm  type='business' onChangeAddress={onChangeAddress}/>
         </div>
         <div className="container-address-field my-4">
           <div className="container-text">
@@ -65,30 +57,7 @@ const SetupCreateStep2 = ({ back, next }) => {
               Your ship from address for your orders.
             </p>
           </div>
-          <div className="form">
-            <form action="">
-              <div className="form-grid">
-                <div className="street">
-                  <input type="text" placeholder="Street" />
-                </div>
-                <div className="suite">
-                  <input type="text" placeholder="Apt/Suite" />
-                </div>
-                <div className="city">
-                  <input type="text" placeholder="City" />
-                </div>
-                <div className="state">
-                  <input type="text" placeholder="State" />
-                </div>
-                <div className="zip">
-                  <input type="text" placeholder="Zip Code" />
-                </div>
-              </div>
-              <button className="btn btn-small btn-primary my-1" onClick={next}>
-                Next <i className="fas fa-long-arrow-alt-right"></i>
-              </button>
-            </form>
-          </div>
+          <SetupAddressForm type='warehouse' onChangeAddress={onChangeAddress} next={next}/>
         </div>
       </div>
     </div>

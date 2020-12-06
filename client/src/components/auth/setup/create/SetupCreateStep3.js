@@ -1,6 +1,9 @@
 import React, { Fragment } from 'react'
 
-const SetupCreateStep3 = ({back, next}) => {
+const SetupCreateStep3 = ({back, next, onChangeGeneral }) => {
+
+  const {email, phone} = '';
+
   return (
     <Fragment>
     <div className="logo">
@@ -47,10 +50,20 @@ const SetupCreateStep3 = ({back, next}) => {
           <div className="form">
             <form action="">
               <div className="form form-item">
-                <input type="email" placeholder="Email Address" />
+                <input 
+                  type="email" 
+                  name="email"
+                  value={email}
+                  onChange={e=>onChangeGeneral(e)}
+                  placeholder="Email Address" />
               </div>
               <div className="form form-item">
-                <input type="text" placeholder="Phone Number" />
+                <input 
+                  type="text" 
+                  name="phone"
+                  value={phone}
+                  onChange={e=>onChangeGeneral(e)}
+                  placeholder="Phone Number" />
               </div>
               <button className="btn btn-small btn-primary my-1" onClick={next}>
                 Next <i className="fas fa-long-arrow-alt-right"></i>

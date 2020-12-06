@@ -1,8 +1,13 @@
 import React, { Fragment } from 'react'
 import { Link } from 'react-router-dom';
 
-const SetupCreateStep1 = ({ next, onChange, formState }) => {
-  console.log('step 1 formState: ', formState)
+const SetupCreateStep1 = ( props ) => {
+
+  const { next, onChangeGeneral } = props;
+
+  const businessName='';
+
+  console.log('step 1 props: ', props)
   return (
     <Fragment>
     <div className="logo">
@@ -48,8 +53,8 @@ const SetupCreateStep1 = ({ next, onChange, formState }) => {
               <div className="form form-item">
                 <input type="text"
                 name="businessName"
-                value="{} "
-                  onChange={e=>onChange(e)}
+                value={businessName}
+                  onChange={e=>onChangeGeneral(e)}
                 />
               </div>
               <button className="btn btn-small btn-primary my-1" onClick={next}>
