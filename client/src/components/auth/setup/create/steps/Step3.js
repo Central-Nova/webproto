@@ -1,12 +1,7 @@
 import React, { Fragment } from 'react'
-import SetupAddressForm from './SetupAddressForm';
 
-const SetupCreateStep2 = (props) => {
+const SetupCreateStep3 = ({back, next, onChangeGeneral, formData: {email, phone} }) => {
 
-  const { back, next, onChangeAddress, formData } = props;
-
-  console.log('step 2 props: ', formData)
-  
   return (
     <Fragment>
     <div className="logo">
@@ -14,7 +9,7 @@ const SetupCreateStep2 = (props) => {
     </div>
     <div className="container-company-double">
       <div className="button-back">
-        <button onClick={back} className="btn btn-light btn-large">
+        <button className="btn btn-light btn-large" onClick={back}>
           <i className="fas fa-long-arrow-alt-left"></i>Back
         </button>
       </div>
@@ -26,11 +21,11 @@ const SetupCreateStep2 = (props) => {
         <div className="side-bar-item">
           <p className="text-regular text-success">Name</p>
         </div>
-        <div className="side-bar-item item-main">
+        <div className="side-bar-item">
           <p className="text-regular text-success">Address</p>
         </div>
-        <div className="side-bar-item">
-          <p className="text-regular text-primary">Contact</p>
+        <div className="side-bar-item item-main">
+          <p className="text-regular text-success">Contact</p>
         </div>
         <div className="side-bar-item item-main">
           <div className="icon-number text-small text-primary bg-white">2</div>
@@ -41,23 +36,39 @@ const SetupCreateStep2 = (props) => {
         <div className="company-headline-text">
           <h1 className="text-large text-primary">Business Details</h1>
         </div>
-        <div className="container-address-field my-4">
+        <div className="container-field my-4">
           <div className="container-text">
-            <p className="text-regular text-primary">Business Address</p>
+            <p className="text-regular text-primary">
+              Business Contact Information
+            </p>
             <p className="text-small text-primary-light">
-              Your registered business address.
+              How your customers can reach you.
             </p>
           </div>
-          <SetupAddressForm  type='business' onChangeAddress={onChangeAddress}/>
-        </div>
-        <div className="container-address-field my-4">
-          <div className="container-text">
-            <p className="text-regular text-primary">Warehouse Address</p>
-            <p className="text-small text-primary-light">
-              Your ship from address for your orders.
-            </p>
+          <div className="form">
+            <form action="">
+              <div className="form form-item">
+                <input 
+                  type="email" 
+                  name="email"
+                  value={email}
+                  onChange={e=>onChangeGeneral(e)}
+                  placeholder="Email Address" />
+              </div>
+              <div className="form form-item">
+                <input 
+                  type="text" 
+                  name="phone"
+                  value={phone}
+                  onChange={e=>onChangeGeneral(e)}
+                  placeholder="Phone Number" />
+              </div>
+              <button className="btn btn-small btn-primary my-1" onClick={next}>
+                Next <i className="fas fa-long-arrow-alt-right"></i>
+              </button>
+
+            </form>
           </div>
-          <SetupAddressForm type='warehouse' onChangeAddress={onChangeAddress} next={next}/>
         </div>
       </div>
     </div>
@@ -65,4 +76,4 @@ const SetupCreateStep2 = (props) => {
   )
 }
 
-export default SetupCreateStep2;
+export default SetupCreateStep3;

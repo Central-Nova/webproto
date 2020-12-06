@@ -3,9 +3,7 @@ import { Link } from 'react-router-dom';
 
 const SetupCreateStep1 = ( props ) => {
 
-  const { next, onChangeGeneral } = props;
-
-  const businessName='';
+  const { next, onChangeGeneral, formData: {businessName} } = props;
 
   console.log('step 1 props: ', props)
   return (
@@ -54,7 +52,7 @@ const SetupCreateStep1 = ( props ) => {
                 <input type="text"
                 name="businessName"
                 value={businessName}
-                  onChange={e=>onChangeGeneral(e)}
+                onChange={e=>onChangeGeneral(e)}
                 />
               </div>
               <button className="btn btn-small btn-primary my-1" onClick={next}>

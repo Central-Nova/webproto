@@ -1,8 +1,8 @@
 import React from 'react'
-import SetupCreateStep1 from './SetupCreateStep1';
-import SetupCreateStep2 from './SetupCreateStep2';
-import SetupCreateStep3 from './SetupCreateStep3';
-import SetupCreateStep4 from './SetupCreateStep4';
+import Step1 from './steps/Step1';
+import Step2 from './steps/Step2';
+import Step3 from './steps/Step3';
+import Step4 from './steps/Step4';
 
 const SetupCreateStepHandler = ( props ) => {
   console.log('level 0 props: ', props)
@@ -11,22 +11,22 @@ const SetupCreateStepHandler = ( props ) => {
 
   if (step === 1) {
     return (
-      <SetupCreateStep1 {...props} />
+      <Step1 {...props} />
     )
   }
   if (step === 2) {
     return (
-      <SetupCreateStep2 {...props}/>
+      <Step2 {...props}/>
     )
   }
   if (step === 3) {
     return (
-      <SetupCreateStep3 {...props}/>
+      <Step3 {...props}/>
     )
   }
   if (step === 4) {
     return (
-      <SetupCreateStep4 {...props}/>
+      <Step4 {...props}/>
     )
   }
   return (

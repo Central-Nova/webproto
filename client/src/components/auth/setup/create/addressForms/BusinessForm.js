@@ -1,13 +1,9 @@
 import React, { Fragment } from 'react'
 
-const SetupAddressForm = (props) => {
-console.log('setupform props: ', props)
+const BusinessForm = (props) => {
+console.log('businessform props: ', props)
 
-const { type, next, onChangeAddress } = props;
-
-const addressForm = {};
-const { street, aptSuite, city, state, zip } = addressForm;
-
+const { type, next, onChangeAddress, formData: {businessAddress: {street, aptSuite, city, state, zip}} } = props;
    
   return (
     <Fragment>
@@ -55,4 +51,4 @@ const { street, aptSuite, city, state, zip } = addressForm;
   )
 }
 
-export default SetupAddressForm;
+export default BusinessForm;
