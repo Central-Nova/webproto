@@ -5,11 +5,39 @@ const CompanySchema = new mongoose.Schema({
     type: String
   },
   addressBusiness: {
-    type: String,
-    required: true
-  },
+    street: {
+      type: String
+    },
+    aptSuite: {
+      type: String
+    },
+    city: {
+      type: String
+    },
+    state: {
+      type: String
+    },
+    zip: {
+      type: String
+    }
+      },
+
   addressWarehouse: {
-    type: String
+    street: {
+      type: String
+    },
+    aptSuite: {
+      type: String
+    },
+    city: {
+      type: String
+    },
+    state: {
+      type: String
+    },
+    zip: {
+      type: String
+    }
   },
   ein: {
     type: Number,

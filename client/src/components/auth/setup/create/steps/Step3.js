@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 
 const Step3 = (props) => {
-  const {back, next, onChangeGeneral, formData: { email, phone } } = props;
+  const {back, next, onChangeGeneral, onSubmit, formData: { email, phone } } = props;
 
   let watchedFields = {email, phone}
 
@@ -39,15 +39,21 @@ const Step3 = (props) => {
 
   // On click to send array of messages to parent on click handler
   const onClick = (e) => {
-    let messages = [];
-    
-    for (let object in emptyFields) {
-      let key = Object.keys(emptyFields[object]);
-      messages.push(createErrMess(`${key}`));
-      console.log('messages: ', messages);
-  }
 
-  next(e,filled, messages);
+    if (!filled) {
+
+      let messages = [];
+      
+      for (let object in emptyFields) {
+        let key = Object.keys(emptyFields[object]);
+        messages.push(createErrMess(`${key}`));
+        console.log('messages: ', messages);
+    }
+  
+    next(e,filled, messages);
+    } else {
+      onSubmit(e);
+    }
 }
 
   return (

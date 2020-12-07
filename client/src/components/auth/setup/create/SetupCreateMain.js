@@ -3,8 +3,9 @@ import SetupCreateStepHandler from './SetupCreateStepHandler';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { setAlert } from '../../../../actions/alert';
+import { createCompany } from '../../../../actions/company';
 
-const SetupCreateMain = ({ setAlert }) => {
+const SetupCreateMain = ({ setAlert, createCompany }) => {
 
   const [formState, setFormState] = useState({
     step: 1,
@@ -32,8 +33,9 @@ const SetupCreateMain = ({ setAlert }) => {
   // Handling form changes separately to create one object to pass to api. This will make the company object cleaner in the api route.
 
   const { step, formData } = formState
-
-const onChangeAddress = (e, type) => {
+  
+  // Handles changes for address forms
+  const onChangeAddress = (e, type) => {
 
 
   if (type==='business') {
@@ -48,15 +50,19 @@ const onChangeAddress = (e, type) => {
     }})
   }
 }
-
+  // Handles change for non-address forms
   const onChangeGeneral = e => setFormState({
     ...formState, formData: {...formData, [e.target.name]: e.target.value}
   })
 
+
+  // Previous Step
   const onStepBack = e => setFormState({
     ...formState, step: step -1
   });
 
+
+  // Next Step
   const onStepNext = (e,filled, messages) => {
 
   if (filled) {
@@ -74,19 +80,27 @@ const onChangeAddress = (e, type) => {
   }
 }
 
+  // Form Submit
+
+  const onSubmit = e => {
+    e.preventDefault();
+    createCompany(formData);
+  }
+
   return (
     <Fragment>
-    <SetupCreateStepHandler back={onStepBack} next={onStepNext} onChangeGeneral={onChangeGeneral} onChangeAddress={onChangeAddress} {...formState} />
+    <SetupCreateStepHandler back={onStepBack} next={onStepNext} onChangeGeneral={onChangeGeneral} onChangeAddress={onChangeAddress} onSubmit={onSubmit} {...formState} />
     </Fragment>
   )
 }
 
 SetupCreateMain.propTypes = {
   setAlert: PropTypes.func.isRequired,
+  createCompany: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
 
 })
 
-export default connect(mapStateToProps, { setAlert })(SetupCreateMain);
+export default connect(mapStateToProps, { setAlert, createCompany })(SetupCreateMain);
