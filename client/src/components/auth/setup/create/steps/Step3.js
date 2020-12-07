@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react'
 
 const Step3 = (props) => {
-  const {back, next, onChangeGeneral, formData } = props;
+  const {back, next, onChangeGeneral, formData: { email, phone } } = props;
 
-  const { email, phone } = formData;
+  let watchedFields = {email, phone}
 
   console.log('step 3 props: ', props)
 
@@ -17,10 +17,10 @@ const Step3 = (props) => {
   let emptyFields = [];
 
   // Loop through businessAddress to push empty fields into array
-  for (let field in formData) {
-    if (formData[field] === '') {
+  for (let field in watchedFields) {
+    if (watchedFields[field] === '') {
       let key = `${field}`;
-      let emptyKey = {[key]: formData[field] }
+      let emptyKey = {[key]: watchedFields[field] }
 
       emptyFields.push(emptyKey);
     }

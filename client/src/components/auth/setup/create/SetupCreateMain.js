@@ -10,6 +10,7 @@ const SetupCreateMain = ({ setAlert }) => {
     step: 1,
     formData: {
       businessName: '',
+      ein: '',
       businessAddress: {
         street: '',
         aptSuite: '',

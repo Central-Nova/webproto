@@ -6,20 +6,54 @@ import { setAlert } from '../../../../../actions/alert';
 
 const Step1 = ( props ) => {
 
-  const { next, onChangeGeneral, formData: {businessName}  } = props;
+  const { next, onChangeGeneral, formData: {businessName, ein}  } = props;
+
+  let watchedFields = {businessName, ein}
 
   console.log('step 1 props: ', props)
 
-  const errorMsg = [{title: 'Error', description: 'Business name is required.'}]
+  const createErrMess = (field) => {
+    let capitalized = field.charAt(0).toUpperCase() + field.slice(1);
+
+    return {title: 'Error', description: `${capitalized} is required.`}
+  }
+
+  // Array to hold empty fields as objects
+  let emptyFields = [];
+
+  // Loop through businessAddress to push empty fields into array
+  for (let field in watchedFields) {
+    if (watchedFields[field] === '') {
+      let key = `${field}`;
+      let emptyKey = {[key]: watchedFields[field] }
+
+      emptyFields.push(emptyKey);
+    }
+  }
+
+
   let filled = false;
 
-  console.log('errorMsg', errorMsg);
-
-  if (businessName !== '') {
+  // If emptyFields have objects, then filled is false;
+  if (emptyFields !== null && emptyFields.length > 0) {
+    filled = false;
+  } else {
     filled = true;
-  } else filled = false;
+  }
 
-  console.log('filled: ', filled);
+
+  // On click to send array of messages to parent on click handler
+  const onClick = (e) => {
+    let messages = [];
+    
+    for (let object in emptyFields) {
+      let key = Object.keys(emptyFields[object]);
+      messages.push(createErrMess(`${key}`));
+      console.log('messages: ', messages);
+  }
+
+  next(e,filled, messages);
+}
 
   return (
     <Fragment>
@@ -71,7 +105,25 @@ const Step1 = ( props ) => {
                 placeholder="Name"
                 />
               </div>
-              <button className="btn btn-small btn-primary my-1" onClick={(e)=>next(e,filled,errorMsg)}>
+            </form>
+          </div>
+        </div>
+        <div className="container-field my-4">
+          <div className="container-text">
+            <p className="text-regular text-primary">Business EIN</p>
+            <p className="text-small text-primary-light">This will be used to verify your business.</p>
+          </div>
+          <div className="form">
+            <form action="">
+              <div className="form form-item">
+                <input type="text"
+                name="ein"
+                value={ein}
+                onChange={e=>onChangeGeneral(e)}
+                placeholder="Name"
+                />
+              </div>
+              <button className="btn btn-small btn-primary my-1" onClick={(e)=>onClick(e)}>
                 Next <i className="fas fa-long-arrow-alt-right"></i>
               </button>
             </form>

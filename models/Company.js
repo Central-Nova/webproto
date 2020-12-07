@@ -8,7 +8,7 @@ const CompanySchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  addressShipping: {
+  addressWarehouse: {
     type: String
   },
   ein: {
