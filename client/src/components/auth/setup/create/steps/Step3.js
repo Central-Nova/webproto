@@ -1,6 +1,54 @@
 import React, { Fragment } from 'react'
 
-const SetupCreateStep3 = ({back, next, onChangeGeneral, formData: {email, phone} }) => {
+const Step3 = (props) => {
+  const {back, next, onChangeGeneral, formData } = props;
+
+  const { email, phone } = formData;
+
+  console.log('step 3 props: ', props)
+
+  const createErrMess = (field) => {
+    let capitalized = field.charAt(0).toUpperCase() + field.slice(1);
+
+    return {title: 'Error', description: `${capitalized} is required.`}
+  }
+
+  // Array to hold empty fields as objects
+  let emptyFields = [];
+
+  // Loop through businessAddress to push empty fields into array
+  for (let field in formData) {
+    if (formData[field] === '') {
+      let key = `${field}`;
+      let emptyKey = {[key]: formData[field] }
+
+      emptyFields.push(emptyKey);
+    }
+  }
+
+
+  let filled = false;
+
+  // If emptyFields have objects, then filled is false;
+  if (emptyFields !== null && emptyFields.length > 0) {
+    filled = false;
+  } else {
+    filled = true;
+  }
+
+
+  // On click to send array of messages to parent on click handler
+  const onClick = (e) => {
+    let messages = [];
+    
+    for (let object in emptyFields) {
+      let key = Object.keys(emptyFields[object]);
+      messages.push(createErrMess(`${key}`));
+      console.log('messages: ', messages);
+  }
+
+  next(e,filled, messages);
+}
 
   return (
     <Fragment>
@@ -63,7 +111,7 @@ const SetupCreateStep3 = ({back, next, onChangeGeneral, formData: {email, phone}
                   onChange={e=>onChangeGeneral(e)}
                   placeholder="Phone Number" />
               </div>
-              <button className="btn btn-small btn-primary my-1" onClick={next}>
+              <button className="btn btn-small btn-primary my-1" onClick={e => onClick(e)}>
                 Next <i className="fas fa-long-arrow-alt-right"></i>
               </button>
 
@@ -76,4 +124,4 @@ const SetupCreateStep3 = ({back, next, onChangeGeneral, formData: {email, phone}
   )
 }
 
-export default SetupCreateStep3;
+export default Step3;

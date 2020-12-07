@@ -1,11 +1,26 @@
 import React, { Fragment } from 'react'
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { setAlert } from '../../../../../actions/alert';
 
-const SetupCreateStep1 = ( props ) => {
+const Step1 = ( props ) => {
 
-  const { next, onChangeGeneral, formData: {businessName} } = props;
+  const { next, onChangeGeneral, formData: {businessName}  } = props;
 
   console.log('step 1 props: ', props)
+
+  const errorMsg = [{title: 'Error', description: 'Business name is required.'}]
+  let filled = false;
+
+  console.log('errorMsg', errorMsg);
+
+  if (businessName !== '') {
+    filled = true;
+  } else filled = false;
+
+  console.log('filled: ', filled);
+
   return (
     <Fragment>
     <div className="logo">
@@ -53,9 +68,10 @@ const SetupCreateStep1 = ( props ) => {
                 name="businessName"
                 value={businessName}
                 onChange={e=>onChangeGeneral(e)}
+                placeholder="Name"
                 />
               </div>
-              <button className="btn btn-small btn-primary my-1" onClick={next}>
+              <button className="btn btn-small btn-primary my-1" onClick={(e)=>next(e,filled,errorMsg)}>
                 Next <i className="fas fa-long-arrow-alt-right"></i>
               </button>
             </form>
@@ -67,4 +83,11 @@ const SetupCreateStep1 = ( props ) => {
   )
 }
 
-export default SetupCreateStep1;
+Step1.propTypes = {
+  setAlert: PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => ({
+})
+
+export default connect(mapStateToProps, { setAlert })(Step1);

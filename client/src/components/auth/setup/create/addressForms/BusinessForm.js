@@ -40,11 +40,6 @@ const { type, next, onChangeAddress, formData: {businessAddress: {street, aptSui
             onChange={e=> onChangeAddress(e, type)}placeholder="Zip Code" />
         </div>
       </div>
-      {type==='warehouse' && 
-      <button className="btn btn-small btn-primary my-1" onClick={next}>
-      Next
-      <i className="fas fa-long-arrow-alt-right"></i>
-      </button>}
     </form>
   </div>
 </Fragment>

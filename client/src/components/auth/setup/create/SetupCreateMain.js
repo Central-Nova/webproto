@@ -1,7 +1,10 @@
 import React, { Fragment, useState } from 'react'
 import SetupCreateStepHandler from './SetupCreateStepHandler';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { setAlert } from '../../../../actions/alert';
 
-const SetupCreateMain = () => {
+const SetupCreateMain = ({ setAlert }) => {
 
   const [formState, setFormState] = useState({
     step: 1,
@@ -22,7 +25,7 @@ const SetupCreateMain = () => {
         zip: ''
       },
       email: '',
-      phoneNumber: ''
+      phone: ''
     }
   })
   // Handling form changes separately to create one object to pass to api. This will make the company object cleaner in the api route.
@@ -53,9 +56,22 @@ const onChangeAddress = (e, type) => {
     ...formState, step: step -1
   });
 
-  const onStepNext = e => setFormState({
+  const onStepNext = (e,filled, messages) => {
+
+  if (filled) {
+    setFormState({
     ...formState, step: step + 1 
-  });
+  })} 
+  else {
+    e.preventDefault();
+    
+    for (let msg in messages) {
+      console.log('messages: ', messages);
+
+      setAlert(messages[msg], 'danger');
+    }
+  }
+}
 
   return (
     <Fragment>
@@ -64,4 +80,12 @@ const onChangeAddress = (e, type) => {
   )
 }
 
-export default SetupCreateMain;
+SetupCreateMain.propTypes = {
+  setAlert: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = state => ({
+
+})
+
+export default connect(mapStateToProps, { setAlert })(SetupCreateMain);

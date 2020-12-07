@@ -2,12 +2,57 @@ import React, { Fragment } from 'react'
 import BusinessForm from '../addressForms/BusinessForm';
 import WarehouseForm from '../addressForms/WarehouseForm';
 
-const SetupCreateStep2 = (props) => {
+const Step2 = (props) => {
 
   const { back, next, onChangeAddress, formData } = props;
+  const { businessAddress, warehouseAddress } = formData;
 
-  console.log('step 2 props: ', formData)
-  
+  console.log('step 2 props: ', props)
+
+  const createErrMess = (field) => {
+    let capitalized = field.charAt(0).toUpperCase() + field.slice(1);
+
+    return {title: 'Error', description: `${capitalized} is required.`}
+  }
+
+  // Array to hold empty fields as objects
+  let emptyBusinessFields = [];
+
+  // Loop through businessAddress to push empty fields into array
+  for (let field in businessAddress) {
+    if (businessAddress[field] === '') {
+      let key = `${field}`;
+      let emptyKey = {[key]: businessAddress[field] }
+
+      emptyBusinessFields.push(emptyKey);
+    }
+  }
+
+
+  let filled = false;
+
+  // If emptyBusinessFields have objects, then filled is false;
+  if (emptyBusinessFields !== null && emptyBusinessFields.length > 0) {
+    filled = false;
+  } else {
+    filled = true;
+  }
+
+
+  // On click to send array of messages to parent on click handler
+  const onClick = (e) => {
+    let messages = [];
+    
+    for (let object in emptyBusinessFields) {
+      let key = Object.keys(emptyBusinessFields[object]);
+      messages.push(createErrMess(`${key}`));
+      console.log('messages: ', messages);
+  }
+
+  next(e,filled, messages);
+}
+
+
   return (
     <Fragment>
     <div className="logo">
@@ -58,7 +103,7 @@ const SetupCreateStep2 = (props) => {
               Your ship from address for your orders.
             </p>
           </div>
-          <WarehouseForm type='warehouse' onChangeAddress={onChangeAddress} formData={formData} next={next}/>
+          <WarehouseForm type='warehouse' onChangeAddress={onChangeAddress} formData={formData} next={onClick}/>
         </div>
       </div>
     </div>
@@ -66,4 +111,4 @@ const SetupCreateStep2 = (props) => {
   )
 }
 
-export default SetupCreateStep2;
+export default Step2;

@@ -4,6 +4,12 @@ const WarehouseForm = (props) => {
 console.log('warehouseform props: ', props)
 
 const { type, next, onChangeAddress, formData: {warehouseAddress: {street, aptSuite, city, state, zip}} } = props;
+
+const onClick = e => {
+  e.preventDefault();
+
+  next(e);
+}
    
   return (
     <Fragment>
@@ -40,11 +46,9 @@ const { type, next, onChangeAddress, formData: {warehouseAddress: {street, aptSu
             onChange={e=> onChangeAddress(e, type)}placeholder="Zip Code" />
         </div>
       </div>
-      {type==='warehouse' && 
-      <button className="btn btn-small btn-primary my-1" onClick={next}>
-      Next
-      <i className="fas fa-long-arrow-alt-right"></i>
-      </button>}
+        <button className="btn btn-small btn-primary my-1" onClick={e =>onClick(e)}>Next
+          <i className="fas fa-long-arrow-alt-right"></i>
+        </button>
     </form>
   </div>
 </Fragment>

@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 
 // Actions
 import { loginUser, loadUser } from '../../actions/auth';
-import { setAlert } from '../../actions/alert';
 
 const Login = ({ loginUser, isAuthenticated, user }) => {
 
@@ -95,7 +94,6 @@ const Login = ({ loginUser, isAuthenticated, user }) => {
 Login.propTypes = {
   loginUser: PropTypes.func.isRequired,
   loadUser: PropTypes.func.isRequired,
-  setAlert: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   user: PropTypes.object.isRequired,
 }
@@ -105,4 +103,4 @@ const mapStateToProps = state => ({
   user: state.auth.user
 })
 
-export default connect(mapStateToProps, { loginUser, setAlert, loadUser })(Login);
+export default connect(mapStateToProps, { loginUser, loadUser })(Login);
