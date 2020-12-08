@@ -14,7 +14,19 @@ const Company = require('../../models/Company');
 router.post(
   '/'
   ,
+  [
+    check('ein', {title:'Error', description:'Please enter a valid EIN.'}).isNumeric().isLength({min: 8}),
+    check('phone', {title:'Error', description:'Valid phone is required.'}).isNumeric(),
+    check('email', {title:'Error', description:'Valid email is required.'}).isEmail(),
+  ],
   async (req, res) => {
+
+    // Handle validation errors
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({errors: errors.array() })
+    }
 
     const {
       businessName,
@@ -34,7 +46,7 @@ router.post(
       if (company) {
         return res
           .status(400)
-          .json({ errors: [{ msg: 'company already exists' }] });
+          .json({ errors: [{ msg: {title: 'Error', description: 'Company already exists.'}  }] });
       }
 
       console.log('req.body: ', req.body);
@@ -53,6 +65,8 @@ router.post(
       // Figure out how to create the document without all the fields? How are addresses stored in mongodb?
 
       await company.save();
+
+      return res.status(200).json({msg: {title: 'Success', description: 'Your company has been created!'}})
 
       // Create json webtoken for company
 

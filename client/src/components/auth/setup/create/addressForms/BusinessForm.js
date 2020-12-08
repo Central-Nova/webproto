@@ -3,7 +3,7 @@ import React, { Fragment } from 'react'
 const BusinessForm = (props) => {
 console.log('businessform props: ', props)
 
-const { type, next, onChangeAddress, formData: {businessAddress: {street, aptSuite, city, state, zip}} } = props;
+const { type , onChangeAddress, formData: {businessAddress: {street, aptSuite, city, state, zip}} } = props;
    
   return (
     <Fragment>

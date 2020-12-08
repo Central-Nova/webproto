@@ -5,7 +5,7 @@ import WarehouseForm from '../addressForms/WarehouseForm';
 const Step2 = (props) => {
 
   const { back, next, onChangeAddress, formData } = props;
-  const { businessAddress, warehouseAddress } = formData;
+  const { businessAddress } = formData;
 
   console.log('step 2 props: ', props)
 

@@ -28,7 +28,11 @@ export const createCompany = (formData) => async dispatch => {
     
   } catch (err) {
 
+    console.log('company err: ', err);
+
     const errors = err.response.data.errors;
+
+    console.log('company errors: ', errors)
 
     errors.forEach(error => dispatch(setAlert(error.msg,'danger')));
 
