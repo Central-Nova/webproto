@@ -8,7 +8,7 @@ import { register } from '../../actions/auth';
 import { setAlert } from '../../actions/alert';
 
 
-const Register = ({ setAlert, register, isAuthenticated }) => {
+const Register = ({ setAlert, register, isAuthenticated, user }) => {
 
   const [formData, setFormData] = useState({
     name: '',
@@ -32,7 +32,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
     }
   };
 
-  if(isAuthenticated) {
+  if(isAuthenticated && user!== null) {
     return <Redirect to='/dashboard'/>
   }
 
@@ -124,10 +124,12 @@ Register.propTypes = {
   setAlert: PropTypes.func.isRequired,
   register: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
+  user: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated,
+  user: state.auth.user
   
 })
 

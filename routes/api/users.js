@@ -57,7 +57,7 @@ router.post(
       if (user) {
         return res
           .status(400)
-          .json({ errors: [{ msg: 'User already exists' }] });
+          .json({ errors: [{ msg: {title: 'Error', description: 'User already exists'} }] });
       }
 
       user = new User({
@@ -74,6 +74,10 @@ router.post(
       user.local.hash = hash;
 
       await user.save();
+
+      return res
+      .status(200)
+      .json({msg: {title: 'Success', description: 'User created! You may log in '}})
 
     } catch (err) {
       return res.status(500).send('Server Error');
