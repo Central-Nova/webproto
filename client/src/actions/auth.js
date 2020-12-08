@@ -8,7 +8,9 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
+  CLEAR_COMPANY
 } from './types';
+import { loadCompany } from './company';
 
 // Logout User
 export const logoutUser = () => (dispatch) => {
@@ -16,6 +18,9 @@ export const logoutUser = () => (dispatch) => {
 
   dispatch({
     type: LOGOUT,
+  })
+  dispatch({
+    type: CLEAR_COMPANY
   })
 }
 
@@ -60,8 +65,7 @@ export const loginUser = (formData) => async (dispatch) => {
   };
 
   try {
-    const res = await axios.post('/api/auth', {email, password}, config);
-    console.log('Axios Response: ', res.data);
+   await axios.post('/api/auth', {email, password}, config);
 
     
     dispatch({
@@ -89,12 +93,14 @@ export const loginUser = (formData) => async (dispatch) => {
 export const loadUser = () => async (dispatch) => {
 
   try {
-    const res = await axios.get('/api/auth');
+    const res = await axios.get('/api/users');
 
       dispatch({
         type: USER_LOADED,
         payload: res.data
       });
+
+      dispatch(loadCompany());
   } catch (err) {
     dispatch({
       type: AUTH_ERROR

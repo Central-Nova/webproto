@@ -2,7 +2,7 @@ import axios from 'axios';
 import { setAlert } from './alert';
 
 import { 
-  GET_COMPANY,
+  COMPANY_LOADED,
   COMPANY_ERROR
 } from './types';
 
@@ -16,12 +16,9 @@ export const createCompany = (formData) => async dispatch => {
       }
     };
 
-    const res = await axios.post('api/companies', formData, config);
+    await axios.post('api/companies', formData, config);
 
-    dispatch({
-      type: GET_COMPANY,
-      payload: res.data
-    })
+    dispatch(loadCompany())
 
     dispatch(setAlert({title: 'Success', description: 'Company created!'}, 'success'))
 
@@ -42,3 +39,20 @@ export const createCompany = (formData) => async dispatch => {
     })
   }
 };
+
+export const loadCompany = () => async (dispatch) => {
+
+  try {
+    const res = await axios.get('/api/companies');
+
+    dispatch({
+      type: COMPANY_LOADED,
+      payload: res.data
+    });
+
+  } catch (ererr) {
+    dispatch({
+      type: COMPANY_ERROR
+    })
+  }
+}

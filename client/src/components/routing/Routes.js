@@ -10,6 +10,7 @@ import Dashboard from '../dashboard/Dashboard';
 import AlertBox from '../layout/alerts/AlertBox';
 import SetupMain from '../auth/setup/SetupMain';
 import SetupCreateMain from '../auth/setup/create/SetupCreateMain';
+import SetupCreateTeam from '../auth/setup/create/SetupCreateTeam';
 import SetupJoin from '../auth/setup/join/SetupJoin';
 
 
@@ -31,6 +32,7 @@ const Routes = (props) => {
       <Route exact path='/login' component={Login}/>
       <SetupRoute exact path='/company' component={SetupMain}/>
       <SetupRoute exact path='/company-create' component={SetupCreateMain}/>
+      <SetupRoute exact path='/company-team' component={SetupCreateTeam}/>
       <SetupRoute exact path='/company-join' component={SetupJoin}/>
       <PrivateRoute exact path='/dashboard' component={Dashboard}/>
       <PrivateRoute exact path='/users' component={Users}/>

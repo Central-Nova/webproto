@@ -1,17 +1,12 @@
 import React, { Fragment } from 'react'
 
-const SetupCreateStep4 = ({ back, next}) => {
+const SetupCreateStep4 = () => {
   return (
     <Fragment>
     <div className="logo">
       <i className="text-primary fas fa-warehouse fa-4x"></i>
     </div>
     <div className="container-company-double">
-      <div className="button-back">
-        <button className="btn btn-light btn-large" onClick={back}>
-          <i className="fas fa-long-arrow-alt-left"></i>Back
-        </button>
-      </div>
       <div className="side-bar bg-light">
         <div className="side-bar-item item-main">
           <div className="icon-number text-small text-primary bg-white">1</div>
@@ -69,8 +64,8 @@ const SetupCreateStep4 = ({ back, next}) => {
                 <button className="btn btn-small btn-light my-1" type="submit">
                   Add Slot
                 </button>
-                <button className="btn btn-small btn-primary my-1" onClick={next}>
-                  Next <i className="fas fa-long-arrow-alt-right"></i>
+                <button className="btn btn-small btn-primary my-1">
+                  Finish 
                 </button>
               </div>
             </form>

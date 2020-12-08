@@ -7,6 +7,38 @@ const auth = require('../../middleware/auth');
 
 const Company = require('../../models/Company');
 
+// @route   GET api/companies
+// @desc    get Company
+// @access  public
+
+router.get(
+  '/'
+  ,
+  async (req, res) => {
+
+
+    try {
+      // Check for existing company
+
+      let company = await Company.findOne({ owner: req.user._id });
+
+      if (!company) {
+        return res
+          .status(401)
+          .json({ errors: [{ msg: {title: 'Error', description: 'Company not found.'}  }] });
+      }
+
+      return res.send(company)
+
+      // Create json webtoken for company
+
+    } catch (err) {
+      return res.status(500).json({msg: {title: 'Error', description: 'Server error.'}});
+    }
+  }
+);
+
+
 // @route   POST api/companies
 // @desc    Create Company
 // @access  public
@@ -39,11 +71,22 @@ router.post(
     } = req.body;
 
     try {
-      // Check for existing company
 
-      let company = await Company.findOne({ ein });
+      // Check for existing company by owner
 
-      if (company) {
+      let companyOwner = await Company.findOne({owner: req.user._id})
+      
+      if (companyOwner) {
+        return res
+        .status(400)
+        .json({errors: [{ msg: {title: 'Error', description: 'You already have a company.'}}]})
+      }
+
+      // Check for existing company by EIN
+
+      let companyEin = await Company.findOne({ ein });
+
+      if (companyEin) {
         return res
           .status(400)
           .json({ errors: [{ msg: {title: 'Error', description: 'Company already exists.'}  }] });
@@ -71,7 +114,7 @@ router.post(
       // Create json webtoken for company
 
     } catch (err) {
-      return res.status(500).send('Server Error');
+      return res.status(500).json({msg: {title: 'Error', description: 'Server error.'}});
     }
   }
 );

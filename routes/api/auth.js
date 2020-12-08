@@ -8,24 +8,6 @@ const nodemailer = require('nodemailer');
 
 const User = require('../../models/User');
 
-// @route   GET api/auth
-// @desc    Get user id from req.user
-// @access  public
-router.get('/', (req, res) => {
-
-  console.log('//* GET: API/AUTH *// get user', req.user);
-
-  if(!req.user) {
-    return res.status(401).send('No User');
-  }
-
-  try {
-    return res.send(req.user);
-    } catch (error) {
-    return res.status(500).send('Server Error');
-  }
-})
-
 // @route   GET api/auth/logout
 // @desc    Logout user
 // @access  public

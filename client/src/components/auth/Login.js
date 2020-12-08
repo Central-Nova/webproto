@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 // Actions
 import { loginUser, loadUser } from '../../actions/auth';
 
-const Login = ({ loginUser, isAuthenticated, user }) => {
+const Login = ({ loginUser, isAuthenticated, user, company }) => {
 
   const [ formData, setFormData ] = useState({
     email: '',
@@ -27,6 +27,14 @@ const Login = ({ loginUser, isAuthenticated, user }) => {
   const onGoogleClick = e => {
     console.log('Clicked!')
 
+  }
+
+  if (isAuthenticated && user !== null) {
+    if (company === null) {
+      return <Redirect to='/company'/>
+    } else {
+      return <Redirect to='/dashboard'/>
+    }
   }
 
   if(isAuthenticated && user!== null) {
@@ -96,11 +104,13 @@ Login.propTypes = {
   loadUser: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   user: PropTypes.object.isRequired,
+  company: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated,
-  user: state.auth.user
+  user: state.auth.user,
+  company: state.company.company
 })
 
 export default connect(mapStateToProps, { loginUser, loadUser })(Login);

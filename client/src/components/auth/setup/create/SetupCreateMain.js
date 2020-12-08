@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { setAlert } from '../../../../actions/alert';
 import { createCompany } from '../../../../actions/company';
+import { Redirect } from 'react-router-dom';
 
-const SetupCreateMain = ({ setAlert, createCompany }) => {
+const SetupCreateMain = ({ setAlert, createCompany, company }) => {
+
 
   const [formState, setFormState] = useState({
     step: 1,
@@ -30,10 +32,12 @@ const SetupCreateMain = ({ setAlert, createCompany }) => {
       phone: ''
     }
   })
-  // Handling form changes separately to create one object to pass to api. This will make the company object cleaner in the api route.
 
-  const { step, formData } = formState
   
+  // Handling form changes separately to create one object to pass to api. This will make the company object cleaner in the api route.
+  
+  let { step, formData } = formState;
+ 
   // Handles changes for address forms
   const onChangeAddress = (e, type) => {
 
@@ -54,7 +58,6 @@ const SetupCreateMain = ({ setAlert, createCompany }) => {
   const onChangeGeneral = e => setFormState({
     ...formState, formData: {...formData, [e.target.name]: e.target.value}
   })
-
 
   // Previous Step
   const onStepBack = e => setFormState({
@@ -85,6 +88,16 @@ const SetupCreateMain = ({ setAlert, createCompany }) => {
   const onSubmit = e => {
     e.preventDefault();
     createCompany(formData);
+
+    if (company !==null) {
+      setFormState({
+        ...formState,step: step +1
+      })
+    }
+  }
+
+  if (company !== null) {
+    return <Redirect to='/company-team'/>
   }
 
   return (
@@ -97,10 +110,11 @@ const SetupCreateMain = ({ setAlert, createCompany }) => {
 SetupCreateMain.propTypes = {
   setAlert: PropTypes.func.isRequired,
   createCompany: PropTypes.func.isRequired,
+  company: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
-
+  company: state.company.company,
 })
 
 export default connect(mapStateToProps, { setAlert, createCompany })(SetupCreateMain);

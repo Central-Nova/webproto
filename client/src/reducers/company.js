@@ -1,6 +1,7 @@
 import { 
-  GET_COMPANY,
-  COMPANY_ERROR
+  COMPANY_LOADED,
+  COMPANY_ERROR,
+  CLEAR_COMPANY
 } from '../actions/types';
 
 const initialState = {
@@ -12,13 +13,14 @@ export default function (state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
-    case GET_COMPANY:
+    case COMPANY_LOADED:
       return {
         ...state,
         loading: false,
-        COMPANY: payload
+        company: payload
       }
     case COMPANY_ERROR:
+    case CLEAR_COMPANY:
       return {
         ...state,
         loading: false,

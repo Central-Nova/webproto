@@ -5,6 +5,25 @@ const { genPassword, validPassword } = require('../../lib/passwordUtils')
 
 const User = require('../../models/User');
 
+// @route   GET api/users
+// @desc    Get user id from req.user
+// @access  public
+router.get('/', (req, res) => {
+
+  console.log('//* GET: API/AUTH *// get user', req.user);
+
+  if(!req.user) {
+    return res.status(401).send('No User');
+  }
+
+  try {
+    return res.send(req.user);
+    } catch (error) {
+    return res.status(500).send('Server Error');
+  }
+})
+
+
 // @route   POST api/users
 // @desc    Register User
 // @access  public

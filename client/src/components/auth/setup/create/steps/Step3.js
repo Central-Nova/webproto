@@ -118,7 +118,7 @@ const Step3 = (props) => {
                   placeholder="Phone Number" />
               </div>
               <button className="btn btn-small btn-primary my-1" onClick={e => onClick(e)}>
-                Next <i className="fas fa-long-arrow-alt-right"></i>
+                Create
               </button>
 
             </form>
