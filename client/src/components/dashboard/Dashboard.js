@@ -1,15 +1,33 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import {logoutUser} from '../../actions/auth';
+import { loadUser, logoutUser } from '../../actions/auth';
+import { loadRoles } from '../../actions/roles';
+import store from '../../store';
+
 import Spinner from '../layout/Spinner';
 
-const Dashboard = ( { logoutUser, auth: {user, loading} } ) => {
+const Dashboard = ( { roles, company, loadRoles, logoutUser, auth: {user, loading} } ) => {
+  
+  const {loading: companyLoading, profile } = company;
+  useEffect(()=> {
+      loadUser();
+  }, [])
+
+  
+  useEffect(()=> {
+    if (!companyLoading) {
+      loadRoles(profile._id);
+    }      
+  }, [company])
 
   const onClick = (e) => {
     logoutUser();
   }
+
+  console.log(roles)
+
 return (
 <Fragment>
     {loading && user === null ? (
@@ -31,10 +49,16 @@ return (
 Dashboard.propTypes = {
   auth: PropTypes.object.isRequired,
   logoutUser: PropTypes.func.isRequired,
+  loadUser: PropTypes.func.isRequired,
+  loadRoles: PropTypes.func.isRequired,
+  company: PropTypes.object.isRequired,
+  roles: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  company: state.company,
+  roles: state.roles
 })
 
-export default connect(mapStateToProps, { logoutUser })(Dashboard);
+export default connect(mapStateToProps, { loadUser, logoutUser, loadRoles })(Dashboard);

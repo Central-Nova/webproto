@@ -1,0 +1,890 @@
+{
+  "manager": {
+    "sales": [
+      {
+        "department": "sales",
+        "action": "quotes",
+        "role": "Manager",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "sales",
+        "action": "salesOrders",
+        "role": "Manager",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "sales",
+        "action": "refunds",
+        "role": "Manager",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      }
+    ],
+    "products": [
+      {
+        "department": "products",
+        "action": "catalogEntry",
+        "role": "Manager",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "products",
+        "action": "productLotting",
+        "role": "Manager",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "products",
+        "action": "productAdjustments",
+        "role": "Manager",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "products",
+        "action": "productTransformations",
+        "role": "Manager",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "products",
+        "action": "inventoryCounting",
+        "role": "Manager",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      }
+    ],
+    "warehouse": [
+      {
+        "department": "warehouse",
+        "action": "salesOrders",
+        "role": "Manager",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "warehouse",
+        "action": "pickingOrders",
+        "role": "Manager",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "warehouse",
+        "action": "packingOrders",
+        "role": "Manager",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      }
+    ],
+    "fleet": [
+      {
+        "department": "fleet",
+        "action": "zones",
+        "role": "Manager",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "fleet",
+        "action": "routes",
+        "role": "Manager",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "fleet",
+        "action": "drivers",
+        "role": "Manager",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      }
+    ],
+    "payments": [
+      {
+        "department": "payments",
+        "action": "payments",
+        "role": "Manager",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "payments",
+        "action": "reports",
+        "role": "Manager",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      }
+    ]
+  },
+  "worker": {
+    "sales": [
+      {
+        "department": "sales",
+        "action": "quotes",
+        "role": "Worker",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "sales",
+        "action": "salesOrders",
+        "role": "Worker",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "sales",
+        "action": "refunds",
+        "role": "Worker",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      }
+    ],
+    "products": [
+      {
+        "department": "products",
+        "action": "catalogEntry",
+        "role": "Worker",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "products",
+        "action": "productLotting",
+        "role": "Worker",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "products",
+        "action": "productAdjustments",
+        "role": "Worker",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "products",
+        "action": "productTransformations",
+        "role": "Worker",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "products",
+        "action": "inventoryCounting",
+        "role": "Worker",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      }
+    ],
+    "warehouse": [
+      {
+        "department": "warehouse",
+        "action": "salesOrders",
+        "role": "Worker",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "warehouse",
+        "action": "pickingOrders",
+        "role": "Worker",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "warehouse",
+        "action": "packingOrders",
+        "role": "Worker",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      }
+    ],
+    "fleet": [
+      {
+        "department": "fleet",
+        "action": "zones",
+        "role": "Worker",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "fleet",
+        "action": "routes",
+        "role": "Worker",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "fleet",
+        "action": "drivers",
+        "role": "Worker",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      }
+    ],
+    "payments": [
+      {
+        "department": "payments",
+        "action": "payments",
+        "role": "Worker",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      },
+      {
+        "department": "payments",
+        "action": "reports",
+        "role": "Worker",
+        "permission": [
+          {
+            "type": "View",
+            "allow": true
+        },
+          {
+            "type": "Create",
+            "allow": true
+        },
+          {
+            "type": "Edit",
+            "allow": true
+        },
+          {
+            "type": "Send",
+            "allow": true
+        },
+          {
+            "type": "Delete",
+            "allow": true
+        }
+          ]
+      }
+    ]
+  }
+}

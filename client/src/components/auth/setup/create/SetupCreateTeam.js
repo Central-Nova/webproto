@@ -1,6 +1,20 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
+import TeamSlotItem from './TeamSlotItem';
 
 const SetupCreateStep4 = () => {
+
+  const  [ formData, setFormData ] = useState({employees:[{employee: ''}]})
+
+  const { employees } = formData;
+
+  console.log('formData: ', formData)
+
+  const addSlot = () => {
+    let newSlot = {employee: ''}
+    
+    setFormData([...formData,newSlot])
+  }
+
   return (
     <Fragment>
     <div className="logo">
@@ -42,22 +56,10 @@ const SetupCreateStep4 = () => {
           <div className="form">
             <form action="">
               <div className="form-grid-roles">
-                <div className="employeeTag">
-                  <p className="text-regular">Employee</p>
-                </div>
-                <div className="roleTag">
-                  <p className="text-regular">Role</p>
-                </div>
-                <div className="employee">
-                  <input type="text" />
-                </div>
-                <div className="role">
-                  <select name="" id="">
-                    <option value="">Assign Role</option>
-                    <option value="employee">Employee</option>
-                    <option value="manager">Manager</option>
-                  </select>
-                </div>
+                {employees.forEach(slot => (<TeamSlotItem/>))}
+                {/* <TeamSlotItem/> */}
+
+                
               </div>
               <a href="../dashboard/dashboard.html" className="invisible">Next</a>
               <div className="buttons my-1">

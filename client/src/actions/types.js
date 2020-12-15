@@ -9,6 +9,9 @@ export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const LOGOUT = 'LOGOUT'; 
 export const COMPANY_LOADED ='COMPANY_LOADED'; 
 export const COMPANY_ERROR ='COMPANY_ERROR'; 
-export const CLEAR_COMPANY = 'CLEAR_COMPANY'
+export const CLEAR_COMPANY = 'CLEAR_COMPANY';
+export const ROLES_LOADED = 'ROLES_LOADED';
+export const ROLES_CLEARED = 'ROLES_CLEARED';
+export const ROLES_ERROR = 'ROLES_ERROR';
 
 

@@ -6,7 +6,7 @@ import {
 
 const initialState = {
   loading: true,
-  company: null
+  profile: null
 };
 
 export default function (state = initialState, action) {
@@ -17,14 +17,14 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        company: payload
+        profile: payload
       }
     case COMPANY_ERROR:
     case CLEAR_COMPANY:
       return {
         ...state,
         loading: false,
-        company: null
+        profile: null
       };
     default:
       return state;
