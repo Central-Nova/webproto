@@ -66,6 +66,8 @@ export const loadCompany = () => async (dispatch) => {
 
   } catch (err) {
 
+    console.log(err);
+
     // Set state.company.profile to null
     dispatch({
       type: COMPANY_ERROR

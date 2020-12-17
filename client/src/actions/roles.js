@@ -15,14 +15,17 @@ export const loadRoles = (companyId) => async (dispatch) => {
 
     // Get company roles with company ID and hold in res obj
     const res = await axios.get(`/api/roles/${companyId}`);
-    
+
+   
     // Set state.roles.roles hold company roles
     dispatch({
       type: ROLES_LOADED,
       payload: res.data
     });
+    
 
   } catch (err) {
+    console.log(err);
 
     // Set state.roles.roles to null
     dispatch({

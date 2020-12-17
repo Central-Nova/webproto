@@ -29,7 +29,8 @@ const SetupCreateMain = ({ setAlert, createCompany, company: {profile} }) => {
         zip: ''
       },
       email: '',
-      phone: ''
+      phone: '',
+      account: 'supplier'
     }
   })
 

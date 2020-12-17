@@ -28,16 +28,27 @@ const UserSchema = new mongoose.Schema({
   company: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'company'
-
   },
-  roles: [{
+  rolesBuyer: [{
     department: {
       type: String
     },
     role: {
       type: String
     }
-  }]
+  }],
+  rolesSupplier: [{
+    department: {
+      type: String
+    },
+    role: {
+      type: String
+    }
+  }],
+  defaultView: {
+    type: String,
+    default: 'Supplier'
+  }
 });
 
 module.exports = User = new mongoose.model('user', UserSchema);

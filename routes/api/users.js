@@ -4,6 +4,7 @@ const { check, validationResult } = require('express-validator');
 const { genPassword, validPassword } = require('../../lib/passwordUtils')
 
 const User = require('../../models/User');
+const Company = require('../../models/Company');
 
 // @route   GET api/users
 // @desc    Get user id from req.user
@@ -64,7 +65,29 @@ router.post(
         firstName,
         lastName,
         email,
-        roles: [
+        rolesBuyer: [
+          {
+            department: 'Sales',
+            role: 'Worker'
+          },
+          {
+            department: 'Products',
+            role: 'Worker'
+          },
+          {
+            department: 'Warehouse',
+            role: 'Worker'
+          },
+          {
+            department: 'Fleet',
+            role: 'Worker'
+          },
+          {
+            department: 'Payments',
+            role: 'Worker'
+          },
+        ],
+        rolesSupplier: [
           {
             department: 'Sales',
             role: 'Worker'
@@ -115,6 +138,14 @@ router.put(
   '/:companyId',
   async (req, res) => {
 
+    let company = Company.findById(req.params.companyId);
+
+    if(!company) {
+      return res
+        .status(400)
+        .json({ errors: [{msg: {title: 'Error', description: 'Company not added to user.' } }] })
+    }
+
     try {
       // Check for existing user
 
@@ -135,6 +166,7 @@ router.put(
       .json({msg: {title: 'Success', description: 'Company added to user.'}})
 
     } catch (err) {
+      console.log(err);
       return res.status(500).send('Server Error');
     }
   }

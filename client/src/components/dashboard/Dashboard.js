@@ -9,7 +9,7 @@ import Spinner from '../layout/Spinner';
 
 const Dashboard = ( { roles, company, loadRoles, logoutUser, auth: {user, loading} } ) => {
   
-  const {loading: companyLoading, profile } = company;
+  const {loading: { companyLoading }, profile } = company;
 
     useEffect(()=> {
     if (!companyLoading && profile !==null) {

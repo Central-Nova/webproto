@@ -63,7 +63,8 @@ router.post(
       email,
       phone,
       businessAddress,
-      warehouseAddress
+      warehouseAddress,
+      account
       // users
     } = req.body;
 
@@ -91,21 +92,23 @@ router.post(
 
       console.log('req.body: ', req.body);
 
-      company = new Company({
+            company = new Company({
         name: businessName,
-        addressBusiness: businessAddress,
-        addressWarehouse: warehouseAddress,
-        ein,
-        email,
-        phoneWork: phone,
         owner: req.user.id,
         users: [{
           user: req.user
-        }]
+        }],
+        [account]: {
+          addressBusiness: businessAddress,
+          addressWarehouse: warehouseAddress,
+          ein,
+          email,
+          phoneWork: phone,
+        }
       });
 
       // Figure out how to create the document without all the fields? How are addresses stored in mongodb?
-
+      console.log('company: ', company);
       await company.save();
 
       return res.status(200).json(company._id);
