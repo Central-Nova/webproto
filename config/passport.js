@@ -60,14 +60,37 @@ module.exports = function (passport) {
           google: {
             googleId: id,
           },
-          isVerified: true
+          isVerified: true,
+          roles: [
+            {
+              department: 'Sales',
+              role: 'Worker'
+            },
+            {
+              department: 'Products',
+              role: 'Worker'
+            },
+            {
+              department: 'Warehouse',
+              role: 'Worker'
+            },
+            {
+              department: 'Fleet',
+              role: 'Worker'
+            },
+            {
+              department: 'Payments',
+              role: 'Worker'
+            },
+          ]
         });
         console.log('Generated new user to be saved: ', newUser);
         newUser.save();
         console.log('New user saved.');
-        return done(null, newUser);
+        // res.json({msg: {title: 'Success', description: 'User created! You may log in.'}})
+        return done(null);
       } else {
-        return done(null,user)
+        return done(null)
       }
       
     }

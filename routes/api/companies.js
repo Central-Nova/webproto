@@ -1,11 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
-const jwt = require('jsonwebtoken');
-const config = require('config');
-const auth = require('../../middleware/auth');
 
 const Company = require('../../models/Company');
+const User = require('../../models/User');
 
 // @route   GET api/companies
 // @desc    get Company
@@ -30,7 +28,6 @@ router.get(
 
       return res.send(company)
 
-      // Create json webtoken for company
 
     } catch (err) {
       return res.status(500).json({msg: {title: 'Error', description: 'Server error.'}});
@@ -101,17 +98,17 @@ router.post(
         ein,
         email,
         phoneWork: phone,
-        owner: req.user.id
-
+        owner: req.user.id,
+        users: [{
+          user: req.user
+        }]
       });
 
       // Figure out how to create the document without all the fields? How are addresses stored in mongodb?
 
       await company.save();
 
-      return res.status(200).json({msg: {title: 'Success', description: 'Your company has been created!'}})
-
-      // Create json webtoken for company
+      return res.status(200).json(company._id);
 
     } catch (err) {
       return res.status(500).json({msg: {title: 'Error', description: 'Server error.'}});

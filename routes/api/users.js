@@ -63,7 +63,29 @@ router.post(
       user = new User({
         firstName,
         lastName,
-        email
+        email,
+        roles: [
+          {
+            department: 'Sales',
+            role: 'Worker'
+          },
+          {
+            department: 'Products',
+            role: 'Worker'
+          },
+          {
+            department: 'Warehouse',
+            role: 'Worker'
+          },
+          {
+            department: 'Fleet',
+            role: 'Worker'
+          },
+          {
+            department: 'Payments',
+            role: 'Worker'
+          },
+        ]
       });
 
       // Create password hash
@@ -77,7 +99,40 @@ router.post(
 
       return res
       .status(200)
-      .json({msg: {title: 'Success', description: 'User created! You may log in '}})
+      .json({msg: {title: 'Success', description: 'User created! You may log in.'}})
+
+    } catch (err) {
+      return res.status(500).send('Server Error');
+    }
+  }
+);
+
+// @route   PUT api/users/:companyId
+// @desc    Add company to user
+// @access  public
+
+router.put(
+  '/:companyId',
+  async (req, res) => {
+
+    try {
+      // Check for existing user
+
+      let user = await User.findById(req.user._id);
+
+      if (!user) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: {title: 'Error', description: 'Unauthorized user.'} }] });
+      }
+
+      user.company = req.params.companyId;
+
+      await user.save();
+
+      return res
+      .status(200)
+      .json({msg: {title: 'Success', description: 'Company added to user.'}})
 
     } catch (err) {
       return res.status(500).send('Server Error');

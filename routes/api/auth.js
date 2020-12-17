@@ -70,6 +70,8 @@ router.get(
   }
 )
 
+// 5fdaa2940392b7490081f9a4
+
 // @route   GET api/auth/google/register-callback
 // @desc    Google OAuth register callback
 // @access  public
@@ -77,60 +79,11 @@ router.get(
 router.get(
 	'/google/register-callback',
 	passport.authenticate('google-register', {
-		successRedirect: '/',
-		failureRedirect: '/'
-	})
-)
+		successRedirect: 'http://localhost:3000',
+		failureRedirect: 'http://localhost:3000'
+	}))
 
 
-// @route   POST api/auth
-// @desc    Authenticate user & get token
-// @access  public
-
-
-// router.post('/', passport.authenticate('local'), async (req,res) => {
-
-//   const sessionsCollection = sessionStore.db.collection('sessions');
-
-//   // Returns cursor for sessions containing user id
-//   sessionsCollection.find({session: new RegExp(req.user._id)}, (err, sessions) => {
-//     if(sessions !== null) {
-
-//       // Form an array from cursor
-//       sessions.toArray((a, sessionsData) => {
-
-//         // Loop through each item in sessions array. If it doesn't have the same session ID as the current session ID, then destroy the session
-//         sessionsData.forEach((element, index) => {
-//           const data = JSON.parse(element.session);
-//           if (element._id !== req.session.id) {
-//             sessionStore.destroy(element._id, (err, data) => {
-//               if (err) 
-//                 return res.status(400).send({
-//                   message: errorHandler.getErrorMessage(err)
-//                 });
-//                 res.jasonp({status: 'Previous Session Deleted'})
-//             })
-//           }
-//         })
-//       })
-//     } else {
-//       res.jsonp({ status: 'No Session Found'});
-//     }
-//     console.log("found sessions: ", sessions);
-//   })
-  
-//   // Remove local credentials of user from memory before returning
-//   console.log('//* POST/AUTH *// loggin in')
-//   const user = JSON.parse(JSON.stringify(req.user)) // hack
-//   const cleanUser = Object.assign({}, user)
-//   if (cleanUser.local) {
-//     console.log('LOGIN POST ROUTE DELETING SALT AND HASH')
-//     delete cleanUser.local.hash;
-//     delete cleanUser.local.salt;
-//   }
-//   console.log("cleanUser:", cleanUser)
-//   res.json(cleanUser)
-// });
 
 router.post('/', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
@@ -145,8 +98,10 @@ router.post('/', (req, res, next) => {
       console.log('no user');
       return res
       .status(400)
-      .json({ errors: [{ msg: {title:'Error', description:'Invalid Credentials' }}] })};
-req.logIn(user, (err) => {
+      .json({ errors: [{ msg: {title:'Error', description:'Invalid Credentials' }}] })
+    };
+
+      req.logIn(user, (err) => {
       console.log('reached req.login');
       if (err) { 
       res

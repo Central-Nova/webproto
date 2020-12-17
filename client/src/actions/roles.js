@@ -7,51 +7,24 @@ import {
   ROLES_CLEARED
 } from './types';
 
-// Create roles record
-export const createRoles = (company) => async dispatch => {
-  try {
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    let res = await axios.post('api/roles', company, config);
-
-    dispatch(loadRoles())
-
-    
-    
-  } catch (err) {
-    
-    
-    const errors = err.response.data.errors;
-    
-    
-    errors.forEach(error => dispatch(setAlert(error.msg,'danger')));
-    
-    dispatch({
-      type: ROLES_ERROR,
-      payload: {msg: err.response.statusText, status: err.response.status}
-    })
-  }
-};
 
 export const loadRoles = (companyId) => async (dispatch) => {
 
   
   try {
+
+    // Get company roles with company ID and hold in res obj
     const res = await axios.get(`/api/roles/${companyId}`);
     
+    // Set state.roles.roles hold company roles
     dispatch({
       type: ROLES_LOADED,
       payload: res.data
     });
 
-   
+  } catch (err) {
 
-  } catch (ererr) {
+    // Set state.roles.roles to null
     dispatch({
       type: ROLES_ERROR
     })

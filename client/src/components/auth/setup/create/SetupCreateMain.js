@@ -6,7 +6,7 @@ import { setAlert } from '../../../../actions/alert';
 import { createCompany } from '../../../../actions/company';
 import { Redirect } from 'react-router-dom';
 
-const SetupCreateMain = ({ setAlert, createCompany, company }) => {
+const SetupCreateMain = ({ setAlert, createCompany, company: {profile} }) => {
 
 
   const [formState, setFormState] = useState({
@@ -89,14 +89,15 @@ const SetupCreateMain = ({ setAlert, createCompany, company }) => {
     e.preventDefault();
     createCompany(formData);
 
-    if (company !==null) {
+    if (profile !==null) {
       setFormState({
-        ...formState,step: step +1
+        ...formState,
+        step: step +1
       })
     }
   }
 
-  if (company !== null) {
+  if (profile !== null) {
     return <Redirect to='/company-team'/>
   }
 
@@ -114,7 +115,7 @@ SetupCreateMain.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  company: state.company.company,
+  company: state.company,
 })
 
 export default connect(mapStateToProps, { setAlert, createCompany })(SetupCreateMain);
