@@ -87,6 +87,8 @@ router.get(
 
 router.post('/', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
+
+    // Handle server error
     if (err) { 
       res
       .status(400)
@@ -94,6 +96,8 @@ router.post('/', (req, res, next) => {
 
       console.log('err');
       return next(err); }
+
+    // Handle "no user found" error
     if (!user) { 
       console.log('no user');
       return res
@@ -101,8 +105,10 @@ router.post('/', (req, res, next) => {
       .json({ errors: [{ msg: {title:'Error', description:'Invalid Credentials' }}] })
     };
 
+      // Call passport login
       req.logIn(user, (err) => {
       console.log('reached req.login');
+      
       if (err) { 
       res
       .status(400)

@@ -9,6 +9,49 @@ import {
 } from './types';
 
 // Create company record
+export const editCompany = (formData) => async dispatch => {
+
+  const { company } = formData;
+
+  try {
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    // Creates company record, gets back companyId in res.data
+    const res = await axios.put(`/api/companies/${company}`, formData, config);
+
+    // Sets state.company.profile to hold company record
+    dispatch(loadCompany())
+
+    // Send success alert to alert box.
+    dispatch(setAlert({title: 'Success', description: 'Company created!'}, 'success'))
+    
+  } catch (err) {
+    
+    console.log('company err: ', err);
+    
+    const errors = err.response.data.errors;
+    console.log('company errors: ', errors)
+    
+    // Loop through errors array and call setAlert to display error message in alert box.
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg,'danger')));
+    }
+
+    // Set state.company.profile to null
+    dispatch({
+      type: COMPANY_ERROR,
+      payload: {msg: err.response.statusText, status: err.response.status}
+    })
+  }
+};
+
+
+// Create company record
 export const createCompany = (formData) => async dispatch => {
   try {
 
@@ -19,7 +62,7 @@ export const createCompany = (formData) => async dispatch => {
     };
 
     // Creates company record, gets back companyId in res.data
-    const res = await axios.post('api/companies', formData, config);
+    const res = await axios.post('/api/companies', formData, config);
 
     // Sets state.company.profile to hold company record
     dispatch(loadCompany())

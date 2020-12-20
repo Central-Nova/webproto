@@ -1,10 +1,12 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { setAlert } from '../../../../../actions/alert';
 
 const Step1 = ( props ) => {
+
+  const { account } = useParams();
 
   const { next, onChangeGeneral, formData: {businessName, ein}  } = props;
 
@@ -87,7 +89,7 @@ const Step1 = ( props ) => {
       </div>
       <div className="container-company-main">
         <div className="company-headline-text">
-          <h1 className="text-large text-primary">Business Details</h1>
+          <h1 className="text-large text-primary">{account.charAt(0).toUpperCase() + account.slice(1) + ' Account'} Setup</h1>
         </div>
         <div className="container-field my-4">
           <div className="container-text">

@@ -26,8 +26,11 @@ const UserSchema = new mongoose.Schema({
     default: false
   },
   company: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'company'
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'company'
+    },
+    accounts: [String]
   },
   rolesBuyer: [{
     department: {

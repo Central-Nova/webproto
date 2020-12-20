@@ -3,14 +3,16 @@ import SetupCreateStepHandler from './SetupCreateStepHandler';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { setAlert } from '../../../../actions/alert';
-import { createCompany } from '../../../../actions/company';
-import { Redirect } from 'react-router-dom';
+import { createCompany, editCompany } from '../../../../actions/company';
+import { Redirect, useParams } from 'react-router-dom';
 
 const SetupCreateMain = ({ setAlert, createCompany, company: {profile} }) => {
 
+  let { account, action } = useParams();
 
   const [formState, setFormState] = useState({
     step: 1,
+    action,
     formData: {
       businessName: '',
       ein: '',
@@ -30,15 +32,16 @@ const SetupCreateMain = ({ setAlert, createCompany, company: {profile} }) => {
       },
       email: '',
       phone: '',
-      account: 'supplier'
+      account,
+      companyId: profile !== null ? profile._id : ''
     }
   })
-
+  
   
   // Handling form changes separately to create one object to pass to api. This will make the company object cleaner in the api route.
   
   let { step, formData } = formState;
- 
+
   // Handles changes for address forms
   const onChangeAddress = (e, type) => {
 
@@ -54,6 +57,7 @@ const SetupCreateMain = ({ setAlert, createCompany, company: {profile} }) => {
       ...formState, formData: {...formData, warehouseAddress: { ...formData.warehouseAddress, [e.target.name]: e.target.value}
     }})
   }
+
 }
   // Handles change for non-address forms
   const onChangeGeneral = e => setFormState({
@@ -99,7 +103,27 @@ const SetupCreateMain = ({ setAlert, createCompany, company: {profile} }) => {
   }
 
   if (profile !== null) {
-    return <Redirect to='/company-team'/>
+    const accountsCompleted = []
+    console.log('accountsCompleted: ', accountsCompleted);
+
+    for (let e in profile) {
+      if (e === 'supplier' || e ==='buyer') {
+        accountsCompleted.push(e);
+      }
+    }
+
+    if (accountsCompleted.includes('buyer') && accountsCompleted.includes('supplier')) {
+      return <Redirect to='/company-team'/>
+    }
+
+    if (accountsCompleted.includes('buyer') && account === 'buyer') {
+      return <Redirect to='/company-create/supplier/edit'/>
+    }
+
+    if (accountsCompleted.includes('supplier') && account === 'supplier') {
+      return <Redirect to='/company-create/buyer/edit'/>
+    }
+
   }
 
   return (
@@ -112,6 +136,7 @@ const SetupCreateMain = ({ setAlert, createCompany, company: {profile} }) => {
 SetupCreateMain.propTypes = {
   setAlert: PropTypes.func.isRequired,
   createCompany: PropTypes.func.isRequired,
+  editCompany: PropTypes.func.isRequired,
   company: PropTypes.object.isRequired,
 };
 
@@ -119,4 +144,4 @@ const mapStateToProps = state => ({
   company: state.company,
 })
 
-export default connect(mapStateToProps, { setAlert, createCompany })(SetupCreateMain);
+export default connect(mapStateToProps, { setAlert, createCompany, editCompany })(SetupCreateMain);

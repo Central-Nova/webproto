@@ -14,7 +14,8 @@ router.get(
   '/:companyId'
   ,
   async (req, res) => {
-
+    
+    // Check if company ID is valid
     let company = await Company.findById(req.params.companyId);
 
     if (!company) {
@@ -28,6 +29,7 @@ router.get(
       let companyRoles = await Role.findOne({company: req.params.companyId})
       
       if (!companyRoles) {
+        // Build buyer roles
         let newRolesBuyer = {
           manager: {
             sales: [],
@@ -44,14 +46,16 @@ router.get(
             payments: []
           },
         }
-
+        // Loop through roles in buyer actions 
         for (let e in actionsBuyer) {
       
           let role = actionsBuyer[e]
-      
+          
+          // Loop through departments in each role
           for (let d in role) {
             let department = role[d];
           
+            // Loop through each department's actions and add to buyer roles
             department.forEach(action => {
               newRolesBuyer[e][d].push(action)
             });
@@ -75,13 +79,16 @@ router.get(
           },
         }
 
+        // Loop through roles in supplier actions
         for (let e in actionsSupplier) {
       
           let role = actionsSupplier[e]
       
+          // Loop through departments in each role
           for (let d in role) {
             let department = role[d];
           
+            // Loop through each department's actions and add to supplier roles
             department.forEach(action => {
               newRolesSupplier[e][d].push(action)
             });

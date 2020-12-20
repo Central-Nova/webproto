@@ -4,22 +4,20 @@ const CompanySchema = new mongoose.Schema({
   name: {
     type: String
   },
+  ein: {
+    type: Number,
+    // required: true
+  },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user'
   },
-  users: [
-    {
-      user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'user'
-      },
-      dateAdded: {
-        type: Date,
-        default: Date.now
-      }
-    }
-  ],
+  primary: {
+    type: String
+  },
+  secondary: {
+    type: String
+  },
   buyer: {
     addressBusiness: {
       street: {
@@ -55,10 +53,19 @@ const CompanySchema = new mongoose.Schema({
         type: String
       }
     },
-    ein: {
-      type: Number,
-      // required: true
-    },
+    users: [
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'user'
+        },
+        dateAdded: {
+          type: Date,
+          default: Date.now
+        }
+      }
+    ],
+
     email: {
       type: String,
       // required: true
@@ -73,10 +80,6 @@ const CompanySchema = new mongoose.Schema({
     phoneFax: {
       type: Number
     },
-    date: {
-      type: Date,
-      default: Date.now
-    }
   },
   supplier: {
     addressBusiness: {
@@ -113,10 +116,18 @@ const CompanySchema = new mongoose.Schema({
         type: String
       }
     },
-    ein: {
-      type: Number,
-      // required: true
-    },
+    users: [
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'user'
+        },
+        dateAdded: {
+          type: Date,
+          default: Date.now
+        }
+      }
+    ],
     email: {
       type: String,
       // required: true
@@ -131,10 +142,6 @@ const CompanySchema = new mongoose.Schema({
     phoneFax: {
       type: Number
     },
-    date: {
-      type: Date,
-      default: Date.now
-    }
   }
 
 });

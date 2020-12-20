@@ -31,7 +31,7 @@ const Routes = (props) => {
       <Route exact path='/register' component={Register}/>
       <Route exact path='/login' component={Login}/>
       <SetupRoute exact path='/company' component={SetupMain}/>
-      <SetupRoute exact path='/company-create' component={SetupCreateMain}/>
+      <SetupRoute path='/company-create/:account/:action' component={SetupCreateMain}/>
       <SetupRoute exact path='/company-team' component={SetupCreateTeam}/>
       <SetupRoute exact path='/company-join' component={SetupJoin}/>
       <PrivateRoute exact path='/dashboard' component={Dashboard}/>

@@ -151,13 +151,15 @@ router.put(
 
       let user = await User.findById(req.user._id);
 
+      console.log('found user: ', user.company);
+
       if (!user) {
         return res
           .status(400)
           .json({ errors: [{ msg: {title: 'Error', description: 'Unauthorized user.'} }] });
       }
 
-      user.company = req.params.companyId;
+      user.company = {id: req.params.companyId};
 
       await user.save();
 
