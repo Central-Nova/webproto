@@ -6,13 +6,12 @@ import { setAlert } from '../../../../actions/alert';
 import { createCompany, editCompany } from '../../../../actions/company';
 import { Redirect, useParams } from 'react-router-dom';
 
-const SetupCreateMain = ({ setAlert, createCompany, company: {profile} }) => {
+const AddAccounts = ({ setAlert, createCompany, company: {profile} }) => {
 
-  let { account, action } = useParams();
+  const { account } = useParams();
 
   const [formState, setFormState] = useState({
     step: 1,
-    action,
     formData: {
       businessName: '',
       ein: '',
@@ -32,8 +31,6 @@ const SetupCreateMain = ({ setAlert, createCompany, company: {profile} }) => {
       },
       email: '',
       phone: '',
-      account,
-      companyId: profile !== null ? profile._id : ''
     }
   })
   
@@ -46,13 +43,13 @@ const SetupCreateMain = ({ setAlert, createCompany, company: {profile} }) => {
   const onChangeAddress = (e, type) => {
 
 
-  if (type==='business') {
+  if (type === 'business') {
     setFormState({
       ...formState, formData: {...formData, businessAddress: { ...formData.businessAddress, [e.target.name]: e.target.value}
     }})
   }
 
-  if (type==='warehouse') {
+  if (type === 'warehouse') {
     setFormState({
       ...formState, formData: {...formData, warehouseAddress: { ...formData.warehouseAddress, [e.target.name]: e.target.value}
     }})
@@ -102,38 +99,15 @@ const SetupCreateMain = ({ setAlert, createCompany, company: {profile} }) => {
     }
   }
 
-  if (profile !== null) {
-    const accountsCompleted = []
-    console.log('accountsCompleted: ', accountsCompleted);
-
-    for (let e in profile) {
-      if (e === 'supplier' || e ==='buyer') {
-        accountsCompleted.push(e);
-      }
-    }
-
-    if (accountsCompleted.includes('buyer') && accountsCompleted.includes('supplier')) {
-      return <Redirect to='/company-team'/>
-    }
-
-    if (accountsCompleted.includes('buyer') && account === 'buyer') {
-      return <Redirect to='/company-create/supplier/edit'/>
-    }
-
-    if (accountsCompleted.includes('supplier') && account === 'supplier') {
-      return <Redirect to='/company-create/buyer/edit'/>
-    }
-
-  }
 
   return (
     <Fragment>
-    <SetupCreateStepHandler back={onStepBack} next={onStepNext} onChangeGeneral={onChangeGeneral} onChangeAddress={onChangeAddress} onSubmit={onSubmit} {...formState} />
+    <SetupCreateStepHandler account={account} back={onStepBack} next={onStepNext} onChangeGeneral={onChangeGeneral} onChangeAddress={onChangeAddress} onSubmit={onSubmit} {...formState} />
     </Fragment>
   )
 }
 
-SetupCreateMain.propTypes = {
+AddAccounts.propTypes = {
   setAlert: PropTypes.func.isRequired,
   createCompany: PropTypes.func.isRequired,
   editCompany: PropTypes.func.isRequired,
@@ -144,4 +118,4 @@ const mapStateToProps = state => ({
   company: state.company,
 })
 
-export default connect(mapStateToProps, { setAlert, createCompany, editCompany })(SetupCreateMain);
+export default connect(mapStateToProps, { setAlert, createCompany, editCompany })(AddAccounts);

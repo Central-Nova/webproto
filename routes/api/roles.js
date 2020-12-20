@@ -104,7 +104,7 @@ router.get(
         console.log('companyRoles: ', companyRoles);
         await companyRoles.save();
   
-        return res.status(200).json({msg: {title: 'Success!', description: 'Default company roles have been generated.'}}).send(companyRoles);   
+        return res.status(200).json(companyRoles); 
       }
 
       return res.send(companyRoles);

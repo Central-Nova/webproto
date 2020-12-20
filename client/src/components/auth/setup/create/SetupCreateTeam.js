@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from 'react'
+import SideNav from './SideNav';
 import TeamSlotItem from './TeamSlotItem';
 
 const SetupCreateStep4 = () => {
@@ -21,25 +22,7 @@ const SetupCreateStep4 = () => {
       <i className="text-primary fas fa-warehouse fa-4x"></i>
     </div>
     <div className="container-company-double">
-      <div className="side-bar bg-light">
-        <div className="side-bar-item item-main">
-          <div className="icon-number text-small text-primary bg-white">1</div>
-          <p className="text-regular text-success">Business</p>
-        </div>
-        <div className="side-bar-item">
-          <p className="text-regular text-success">Name</p>
-        </div>
-        <div className="side-bar-item">
-          <p className="text-regular text-success">Address</p>
-        </div>
-        <div className="side-bar-item">
-          <p className="text-regular text-success">Contact</p>
-        </div>
-        <div className="side-bar-item item-main">
-          <div className="icon-number text-small text-primary bg-white">2</div>
-          <p className="text-regular text-primary">Team</p>
-        </div>
-      </div>
+      <SideNav/>
       <div className="container-company-main">
         <div className="company-headline-text">
           <h1 className="text-large text-primary">Team Details</h1>

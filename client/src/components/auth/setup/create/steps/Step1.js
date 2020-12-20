@@ -3,12 +3,11 @@ import { connect } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { setAlert } from '../../../../../actions/alert';
+import SideNav from '../SideNav';
 
 const Step1 = ( props ) => {
 
-  const { account } = useParams();
-
-  const { next, onChangeGeneral, formData: {businessName, ein}  } = props;
+  const { account, next, onChangeGeneral, formData: {businessName, ein}  } = props;
 
   let watchedFields = {businessName, ein}
 
@@ -68,25 +67,7 @@ const Step1 = ( props ) => {
           <i className="fas fa-long-arrow-alt-left"></i>Back
         </Link>
       </div>
-      <div className="side-bar bg-light">
-        <div className="side-bar-item item-main">
-          <div className="icon-number text-small text-primary bg-white">1</div>
-          <p className="text-regular text-primary">Business</p>
-        </div>
-        <div className="side-bar-item item-main">
-          <p className="text-regular text-success">Name</p>
-        </div>
-        <div className="side-bar-item">
-          <p className="text-regular text-primary">Address</p>
-        </div>
-        <div className="side-bar-item">
-          <p className="text-regular text-primary">Contact</p>
-        </div>
-        <div className="side-bar-item item-main">
-          <div className="icon-number text-small text-primary bg-white">2</div>
-          <p className="text-regular text-primary">Team</p>
-        </div>
-      </div>
+      <SideNav/>
       <div className="container-company-main">
         <div className="company-headline-text">
           <h1 className="text-large text-primary">{account.charAt(0).toUpperCase() + account.slice(1) + ' Account'} Setup</h1>
