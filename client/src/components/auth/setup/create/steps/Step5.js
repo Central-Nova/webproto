@@ -1,21 +1,13 @@
 import React, { Fragment } from 'react'
-import { connect } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { setAlert } from '../../../../../actions/alert';
+import BusinessForm from '../addressForms/BusinessForm';
+import WarehouseForm from '../addressForms/WarehouseForm';
 
-// Components
-import SideNav from '../SideNav';
-import BusinessForm from '../addressForms/BusinessForm'
-import WarehouseForm from '../addressForms/WarehouseForm'
-
-const Step1 = ( props ) => {
+const Step2 = (props) => {
 
   const { back, next, onChangeAddress, formData } = props;
   const { businessAddress } = formData;
-  const { account } = useParams();
 
-  console.log('step 1 props: ', props)
+  console.log('step 2 props: ', props)
 
   const createErrMess = (field) => {
     let capitalized = field.charAt(0).toUpperCase() + field.slice(1);
@@ -60,6 +52,7 @@ const Step1 = ( props ) => {
   next(e,filled, messages);
 }
 
+
   return (
     <Fragment>
     <div className="logo">
@@ -67,14 +60,32 @@ const Step1 = ( props ) => {
     </div>
     <div className="container-company-double">
       <div className="button-back">
-        <Link className="btn btn-light btn-large" to="/create-company">
+        <button onClick={back} className="btn btn-light btn-large">
           <i className="fas fa-long-arrow-alt-left"></i>Back
-        </Link>
+        </button>
       </div>
-      <SideNav/>
+      <div className="side-bar bg-light">
+        <div className="side-bar-item item-main">
+          <div className="icon-number text-small text-primary bg-white">1</div>
+          <p className="text-regular text-primary">Business</p>
+        </div>
+        <div className="side-bar-item">
+          <p className="text-regular text-success">Name</p>
+        </div>
+        <div className="side-bar-item item-main">
+          <p className="text-regular text-success">Address</p>
+        </div>
+        <div className="side-bar-item">
+          <p className="text-regular text-primary">Contact</p>
+        </div>
+        <div className="side-bar-item item-main">
+          <div className="icon-number text-small text-primary bg-white">2</div>
+          <p className="text-regular text-primary">Team</p>
+        </div>
+      </div>
       <div className="container-company-main">
         <div className="company-headline-text">
-          <h1 className="text-large text-primary">{account.charAt(0).toUpperCase() + account.slice(1) + ' Account'} Setup</h1>
+          <h1 className="text-large text-primary">Business Details</h1>
         </div>
         <div className="container-address-field my-4">
           <div className="container-text">
@@ -100,11 +111,4 @@ const Step1 = ( props ) => {
   )
 }
 
-Step1.propTypes = {
-  setAlert: PropTypes.func.isRequired,
-}
-
-const mapStateToProps = state => ({
-})
-
-export default connect(mapStateToProps, { setAlert })(Step1);
+export default Step2;

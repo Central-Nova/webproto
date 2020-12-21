@@ -42,25 +42,25 @@ const CreateCompany = ({ createCompany, company: { profile } }) => {
       {profile !== null ? (
         <div className="container-company-main">
         <div className="company-headline-text">
-          <h1 className="text-large text-primary">Primary and Secondary Accounts</h1>
+          <h1 className="text-large text-primary">Primary Business Operation</h1>
         </div>
         <div className="container-buttons">
-      <Link to="/create-account/supplier" >
+      <Link to="/create-account/primary/supplier" >
         <div className="button-option btn btn-light">
           <i className="fas fa-pallet fa-4x "></i>
           <div className="text-box">
-            <p className="text-regular">Primary Operation: Supplier</p>
+            <p className="text-regular">Supplier</p>
             <p className="text-small">Use {"{App Name}"}'s functions to manage your wholesale selling tasks. Buying goods is included as a secondary feature to support your business.</p>
           </div>
           <i className="fas fa-caret-right fa-4x"></i>
         </div>
       </Link>
-      <Link to="/create-account/buyer">
+      <Link to="/create-account/primary/buyer">
         <div className="button-option btn btn-light">
           <i className="fas fa-money-check-alt fa-4x"></i>
           <div className="text-box">
-            <p className="text-regular">Primary Operation: Buyer</p>
-            <p className="text-small">Join an existing company</p>
+            <p className="text-regular">Buyer</p>
+            <p className="text-small">Connect with suppliers on {"{App Name}"} and manage your purchasing tasks.</p>
           </div>
           <i className="fas fa-caret-right fa-4x"></i>
         </div>

@@ -9,12 +9,11 @@ import {
 } from './types';
 
 // Create company record
-export const editCompany = (formData) => async dispatch => {
+export const addAccountToCompany = (formData) => async dispatch => {
 
-  const { company } = formData;
+  const { operation, account, company } = formData;
 
   try {
-
     const config = {
       headers: {
         'Content-Type': 'application/json'
@@ -25,13 +24,16 @@ export const editCompany = (formData) => async dispatch => {
     const res = await axios.put(`/api/companies/${company}`, formData, config);
 
     // Sets state.company.profile to hold company record
-    dispatch(loadCompany())
+    dispatch(loadCompany());
 
     // Send success alert to alert box.
-    dispatch(setAlert({title: 'Success', description: 'Company created!'}, 'success'))
-    
+    dispatch(setAlert({title: 'Success', description: `${operation.charAt(0).toUpperCase() + operation.slice(1)} account information added.`}, 'success'));
+
+    // Update user record with companyID
+    dispatch(addAccountToUser(account));
+
   } catch (err) {
-    
+
     console.log('company err: ', err);
     
     const errors = err.response.data.errors;
@@ -48,6 +50,7 @@ export const editCompany = (formData) => async dispatch => {
       payload: {msg: err.response.statusText, status: err.response.status}
     })
   }
+ 
 };
 
 
@@ -61,6 +64,7 @@ export const createCompany = (formData) => async dispatch => {
       }
     };
 
+
     // Creates company record, gets back companyId in res.data
     const res = await axios.post('/api/companies', formData, config);
 
@@ -72,7 +76,6 @@ export const createCompany = (formData) => async dispatch => {
     
     // Update user record with companyID
     dispatch(addCompanyToUser(res.data))
-    
     
   } catch (err) {
     
@@ -125,7 +128,37 @@ export const addCompanyToUser = (companyId) => async (dispatch) => {
   try {
 
     // Add the companyId to user record
-    await axios.put(`/api/users/${companyId}`);
+    await axios.put(`/api/users/addcompany/${companyId}`);
+
+    // Load user again which now holds companyId
+    dispatch(loadUser());
+    
+  } catch (err) {
+
+    const errors = err.response.data.errors;
+    console.log('err.response: ',err.response);
+
+    //  Loop through errors array and call setAlert to display error message in alert box.
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    // Set state.auth.isAuthenticated to false and clears state.auth.user
+    dispatch({
+      type: AUTH_ERROR
+    });
+
+
+  }
+}
+
+// Add company account to user
+export const addAccountToUser = (account) => async (dispatch) => {
+
+  try {
+
+    // Add the account to user record
+    await axios.put(`/api/users/addAccount/${account}`);
 
     // Load user again which now holds companyId
     dispatch(loadUser());

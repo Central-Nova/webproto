@@ -3,10 +3,10 @@ import React from 'react'
 // Components
 import Step1 from './steps/Step1';
 import Step2 from './steps/Step2';
-import Step3 from './steps/Step3';
+import Step3 from './steps/Step5';
 
 
-const SetupCreateStepHandler = ( props ) => {
+const AccountStepHandler = ( props ) => {
   console.log('level 0 props: ', props)
 
   const { step } = props;
@@ -34,4 +34,4 @@ null
 }
 
 
-export default SetupCreateStepHandler;
+export default AccountStepHandler;

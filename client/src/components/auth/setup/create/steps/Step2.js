@@ -1,13 +1,11 @@
 import React, { Fragment } from 'react'
-import BusinessForm from '../addressForms/BusinessForm';
-import WarehouseForm from '../addressForms/WarehouseForm';
 
 const Step2 = (props) => {
+  const {back, next, onChangeGeneral, onSubmit, formData: { email, phone } } = props;
 
-  const { back, next, onChangeAddress, formData } = props;
-  const { businessAddress } = formData;
+  let watchedFields = {email, phone}
 
-  console.log('step 2 props: ', props)
+  console.log('step 3 props: ', props)
 
   const createErrMess = (field) => {
     let capitalized = field.charAt(0).toUpperCase() + field.slice(1);
@@ -16,23 +14,23 @@ const Step2 = (props) => {
   }
 
   // Array to hold empty fields as objects
-  let emptyBusinessFields = [];
+  let emptyFields = [];
 
   // Loop through businessAddress to push empty fields into array
-  for (let field in businessAddress) {
-    if (businessAddress[field] === '') {
+  for (let field in watchedFields) {
+    if (watchedFields[field] === '') {
       let key = `${field}`;
-      let emptyKey = {[key]: businessAddress[field] }
+      let emptyKey = {[key]: watchedFields[field] }
 
-      emptyBusinessFields.push(emptyKey);
+      emptyFields.push(emptyKey);
     }
   }
 
 
   let filled = false;
 
-  // If emptyBusinessFields have objects, then filled is false;
-  if (emptyBusinessFields !== null && emptyBusinessFields.length > 0) {
+  // If emptyFields have objects, then filled is false;
+  if (emptyFields !== null && emptyFields.length > 0) {
     filled = false;
   } else {
     filled = true;
@@ -41,17 +39,22 @@ const Step2 = (props) => {
 
   // On click to send array of messages to parent on click handler
   const onClick = (e) => {
-    let messages = [];
-    
-    for (let object in emptyBusinessFields) {
-      let key = Object.keys(emptyBusinessFields[object]);
-      messages.push(createErrMess(`${key}`));
-      console.log('messages: ', messages);
-  }
 
-  next(e,filled, messages);
+    if (!filled) {
+
+      let messages = [];
+      
+      for (let object in emptyFields) {
+        let key = Object.keys(emptyFields[object]);
+        messages.push(createErrMess(`${key}`));
+        console.log('messages: ', messages);
+    }
+  
+    next(e,filled, messages);
+    } else {
+      onSubmit(e);
+    }
 }
-
 
   return (
     <Fragment>
@@ -60,7 +63,7 @@ const Step2 = (props) => {
     </div>
     <div className="container-company-double">
       <div className="button-back">
-        <button onClick={back} className="btn btn-light btn-large">
+        <button className="btn btn-light btn-large" onClick={back}>
           <i className="fas fa-long-arrow-alt-left"></i>Back
         </button>
       </div>
@@ -72,11 +75,11 @@ const Step2 = (props) => {
         <div className="side-bar-item">
           <p className="text-regular text-success">Name</p>
         </div>
-        <div className="side-bar-item item-main">
+        <div className="side-bar-item">
           <p className="text-regular text-success">Address</p>
         </div>
-        <div className="side-bar-item">
-          <p className="text-regular text-primary">Contact</p>
+        <div className="side-bar-item item-main">
+          <p className="text-regular text-success">Contact</p>
         </div>
         <div className="side-bar-item item-main">
           <div className="icon-number text-small text-primary bg-white">2</div>
@@ -87,23 +90,39 @@ const Step2 = (props) => {
         <div className="company-headline-text">
           <h1 className="text-large text-primary">Business Details</h1>
         </div>
-        <div className="container-address-field my-4">
+        <div className="container-field my-4">
           <div className="container-text">
-            <p className="text-regular text-primary">Business Address</p>
+            <p className="text-regular text-primary">
+              Business Contact Information
+            </p>
             <p className="text-small text-primary-light">
-              Your registered business address.
+              How your customers can reach you.
             </p>
           </div>
-          <BusinessForm  type='business' onChangeAddress={onChangeAddress} formData={formData} />
-        </div>
-        <div className="container-address-field my-4">
-          <div className="container-text">
-            <p className="text-regular text-primary">Warehouse Address</p>
-            <p className="text-small text-primary-light">
-              Your ship from address for your orders.
-            </p>
+          <div className="form">
+            <form action="">
+              <div className="form form-item">
+                <input 
+                  type="email" 
+                  name="email"
+                  value={email}
+                  onChange={e=>onChangeGeneral(e)}
+                  placeholder="Email Address" />
+              </div>
+              <div className="form form-item">
+                <input 
+                  type="text" 
+                  name="phone"
+                  value={phone}
+                  onChange={e=>onChangeGeneral(e)}
+                  placeholder="Phone Number" />
+              </div>
+              <button className="btn btn-small btn-primary my-1" onClick={e => onClick(e)}>
+                Create
+              </button>
+
+            </form>
           </div>
-          <WarehouseForm type='warehouse' onChangeAddress={onChangeAddress} formData={formData} next={onClick}/>
         </div>
       </div>
     </div>
