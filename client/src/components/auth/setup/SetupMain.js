@@ -1,12 +1,10 @@
-import React, { Fragment, useState } from 'react'
-import { Link } from 'react-router-dom';
-import SetupChoice from './SetupChoice';
-import CreateCompany from './create/CreateCompany'
+import React from 'react'
+import CreateCard from './cards/CreateCard';
+import JoinCard from './cards/JoinCard'
 
 const SetupMain = () => {
 
   return (
-    <Fragment>
     <div className="container-company-single">
     <div className="company-headline-text">
       <h1 className="text-primary text-large">Company Setup</h1>
@@ -15,29 +13,10 @@ const SetupMain = () => {
       </p>
     </div>
     <div className="container-buttons">
-      <Link to='/create-company'>
-        <div className="button-option btn btn-light">
-          <i className="fas fa-user-plus fa-4x "></i>
-          <div className="text-box">
-            <p className="text-regular">Create</p>
-            <p className="text-small">Create a new company</p>
-          </div>
-          <i className="fas fa-caret-right fa-4x"></i>
-        </div>
-      </Link>
-      <Link to="/company-join">
-        <div className="button-option btn btn-light">
-          <i className="fas fa-users fa-4x"></i>
-          <div className="text-box">
-            <p className="text-regular">Join</p>
-            <p className="text-small">Join an existing company</p>
-          </div>
-          <i className="fas fa-caret-right fa-4x"></i>
-        </div>
-      </Link>
+      <CreateCard />
+      <JoinCard />
     </div>
   </div>
-  </Fragment>
   )
 }
 

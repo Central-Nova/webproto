@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react'
-import SideNav from './SideNav';
+import SideNav from './sidenav/SideNav';
 import TeamSlotItem from './TeamSlotItem';
 
 const SetupCreateStep4 = () => {

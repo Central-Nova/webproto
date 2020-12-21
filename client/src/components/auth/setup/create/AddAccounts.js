@@ -102,7 +102,7 @@ const AddAccounts = ({ setAlert, addAccountToCompany, company: {id} }) => {
 AddAccounts.propTypes = {
   setAlert: PropTypes.func.isRequired,
   addAccountToCompany: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
+  company: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

@@ -1,9 +1,12 @@
 import React, { Fragment, useState } from 'react'
-import { Link, Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { createCompany } from '../../../../actions/company';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import SideNav from './SideNav';
+
+import SideNav from './sidenav/SideNav';
+import SupplierCard from './cards/SupplierCard'
+import BuyerCard from './cards/BuyerCard'
 
 
 const CreateCompany = ({ createCompany, company: { profile } }) => {
@@ -27,6 +30,8 @@ const CreateCompany = ({ createCompany, company: { profile } }) => {
     createCompany(formState);
   }
 
+  // Check if it has primary or secondary, also use that to render which ones to display
+
   return (
     <Fragment>
     <div className="logo">
@@ -41,33 +46,14 @@ const CreateCompany = ({ createCompany, company: { profile } }) => {
       <SideNav/>
       {profile !== null ? (
         <div className="container-company-main">
-        <div className="company-headline-text">
-          <h1 className="text-large text-primary">Primary Business Operation</h1>
-        </div>
-        <div className="container-buttons">
-      <Link to="/create-account/primary/supplier" >
-        <div className="button-option btn btn-light">
-          <i className="fas fa-pallet fa-4x "></i>
-          <div className="text-box">
-            <p className="text-regular">Supplier</p>
-            <p className="text-small">Use {"{App Name}"}'s functions to manage your wholesale selling tasks. Buying goods is included as a secondary feature to support your business.</p>
+          <div className="company-headline-text">
+            <h1 className="text-large text-primary">Primary Business Operation</h1>
           </div>
-          <i className="fas fa-caret-right fa-4x"></i>
-        </div>
-      </Link>
-      <Link to="/create-account/primary/buyer">
-        <div className="button-option btn btn-light">
-          <i className="fas fa-money-check-alt fa-4x"></i>
-          <div className="text-box">
-            <p className="text-regular">Buyer</p>
-            <p className="text-small">Connect with suppliers on {"{App Name}"} and manage your purchasing tasks.</p>
+          <div className="container-buttons">
+            <SupplierCard/>
+            <BuyerCard/>
           </div>
-          <i className="fas fa-caret-right fa-4x"></i>
         </div>
-      </Link>
-    </div>
-        
-      </div>
       ) : (
         <div className="container-company-main">
         <div className="company-headline-text">

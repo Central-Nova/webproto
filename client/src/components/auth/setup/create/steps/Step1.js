@@ -5,13 +5,13 @@ import PropTypes from 'prop-types';
 import { setAlert } from '../../../../../actions/alert';
 
 // Components
-import SideNav from '../SideNav';
+import SideNav from '../sidenav/SideNav';
 import BusinessForm from '../addressForms/BusinessForm'
 import WarehouseForm from '../addressForms/WarehouseForm'
 
 const Step1 = ( props ) => {
 
-  const { back, next, onChangeAddress, formData } = props;
+  const { next, onChangeAddress, formData } = props;
   const { businessAddress } = formData;
   const { account } = useParams();
 
