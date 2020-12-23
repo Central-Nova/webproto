@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react'
 import SideNav from './sidenav/SideNav';
 import TeamSlotItem from './TeamSlotItem';
 
-const SetupCreateStep4 = () => {
+const CreateTeam = () => {
 
   const  [ formData, setFormData ] = useState({employees:[{employee: ''}]})
 
@@ -62,4 +62,4 @@ const SetupCreateStep4 = () => {
   )
 }
 
-export default SetupCreateStep4;
+export default CreateTeam;

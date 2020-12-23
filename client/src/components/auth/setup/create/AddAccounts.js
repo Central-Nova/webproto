@@ -1,17 +1,21 @@
 import React, { Fragment, useState } from 'react'
-import AccountStepHandler from './AccountStepHandler';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { setAlert } from '../../../../actions/alert';
 import { addAccountToCompany } from '../../../../actions/company';
 import { Redirect, useParams } from 'react-router-dom';
 
-const AddAccounts = ({ setAlert, addAccountToCompany, company: {id} }) => {
+import Success from './steps/Success';
+import AccountStepHandler from './AccountStepHandler';
+
+const AddAccounts = ({ setAlert, addAccountToCompany, user: { company } }) => {
+
+  const { id } = company;
 
   const { account, operation } = useParams();
 
   const [formState, setFormState] = useState({
-    step: 1,
+    step: 3,
     formData: {
       company: id,
       operation,
@@ -37,9 +41,7 @@ const AddAccounts = ({ setAlert, addAccountToCompany, company: {id} }) => {
     }
   })
   
-  
-  // Handling form changes separately to create one object to pass to api. This will make the company object cleaner in the api route.
-  
+ 
   let { step, formData } = formState;
 
   // Handles changes for address forms
@@ -84,17 +86,27 @@ const AddAccounts = ({ setAlert, addAccountToCompany, company: {id} }) => {
     }
   }
 
-  // Form Submit
+    // Form Submit
 
   const onSubmit = e => {
     e.preventDefault();
     addAccountToCompany(formData);
+    setFormState({
+      ...formState, step: step + 1
+    })
   }
 
+  let accounts = [...company.accounts];
+  let completedAccounts = [];
+
+  accounts.forEach(account => completedAccounts.push(account))
+  // Check if they have been created.
+
+  let accountType = completedAccounts.length === 0 ? 'Primary' : 'Secondary'
 
   return (
     <Fragment>
-    <AccountStepHandler account={account} back={onStepBack} next={onStepNext} onChangeGeneral={onChangeGeneral} onChangeAddress={onChangeAddress} onSubmit={onSubmit} {...formState} />
+      <AccountStepHandler account={account} back={onStepBack} next={onStepNext} onChangeGeneral={onChangeGeneral} onChangeAddress={onChangeAddress} onSubmit={onSubmit} {...formState} />
     </Fragment>
   )
 }
@@ -102,11 +114,11 @@ const AddAccounts = ({ setAlert, addAccountToCompany, company: {id} }) => {
 AddAccounts.propTypes = {
   setAlert: PropTypes.func.isRequired,
   addAccountToCompany: PropTypes.func.isRequired,
-  company: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
-  company: state.auth.user.company
+  user: state.auth.user
 })
 
 export default connect(mapStateToProps, { setAlert, addAccountToCompany })(AddAccounts);

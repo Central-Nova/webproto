@@ -89,7 +89,7 @@ const Step1 = ( props ) => {
           <div className="container-text">
             <p className="text-regular text-primary">Warehouse Address</p>
             <p className="text-small text-primary-light">
-              Your ship from address for your orders.
+              Your ship from address for your orders. If left empty, business address will be used.
             </p>
           </div>
           <WarehouseForm type='warehouse' onChangeAddress={onChangeAddress} formData={formData} next={onClick}/>

@@ -3,7 +3,7 @@ import React from 'react'
 // Components
 import Step1 from './steps/Step1';
 import Step2 from './steps/Step2';
-import Step3 from './steps/Step5';
+import Success from './steps/Success';
 
 
 const AccountStepHandler = ( props ) => {
@@ -23,7 +23,7 @@ const AccountStepHandler = ( props ) => {
   }
   if (step === 3) {
     return (
-      <Step3 {...props}/>
+      <Success {...props}/>
     )
   }
   return (

@@ -7,16 +7,16 @@ import { connect } from 'react-redux';
 import SideNav from './sidenav/SideNav';
 import SupplierCard from './cards/SupplierCard'
 import BuyerCard from './cards/BuyerCard'
+import CompanyMainFields from './steps/CompanyMainFields';
 
 
-const CreateCompany = ({ createCompany, company: { profile } }) => {
+const CreateCompany = ({ createCompany, company: { profile }, user}) => {
 
   const [formState, setFormState] = useState({
     businessName: '',
     ein: ''
   })
 
-  const { businessName, ein } = formState;
 
   const formChange = (e) => {
     setFormState({
@@ -31,6 +31,20 @@ const CreateCompany = ({ createCompany, company: { profile } }) => {
   }
 
   // Check if it has primary or secondary, also use that to render which ones to display
+
+  // Track what accounts need to be created.
+  let accounts = [...user.company.accounts];
+  let completedAccounts = [];
+
+  accounts.forEach(account => completedAccounts.push(account))
+  // Check if they have been created.
+
+  let accountType = completedAccounts.length === 0 ? 'Primary' : 'Secondary'
+
+  // Render the one that needs to be completed
+
+  // If secondary isn't done, give to secondary (link). Normally, the first part would lead right into 2nd part.
+  // Check if they wanna re-use. If so, just create 2nd, if not, let them fill out again (how to show same form again).
 
   return (
     <Fragment>
@@ -47,61 +61,28 @@ const CreateCompany = ({ createCompany, company: { profile } }) => {
       {profile !== null ? (
         <div className="container-company-main">
           <div className="company-headline-text">
-            <h1 className="text-large text-primary">Primary Business Operation</h1>
+            <h1 className="text-large text-primary">{accountType} Business Operation</h1>
           </div>
           <div className="container-buttons">
-            <SupplierCard/>
-            <BuyerCard/>
+            {accountType === 'Primary' ? (
+              <Fragment>
+                <SupplierCard/>
+                <BuyerCard/>
+              </Fragment>
+            ):(
+              <Fragment>
+                {completedAccounts[0] === 'buyer' ? (
+                  <SupplierCard/>
+                ):(
+                  <BuyerCard/>
+                )}
+              </Fragment>
+            )}
           </div>
         </div>
       ) : (
-        <div className="container-company-main">
-        <div className="company-headline-text">
-          <h1 className="text-large text-primary">Company Setup</h1>
-        </div>
-        <div className="container-field my-4">
-          <div className="container-text">
-            <p className="text-regular text-primary">Business Name</p>
-            <p className="text-small text-primary-light">Your registered business name. Other businesses will need this to
-              identify you.</p>
-          </div>
-          <div className="form">
-            <form action="">
-              <div className="form form-item">
-                <input type="text"
-                name="businessName"
-                value={businessName}
-                onChange={e=>formChange(e)}
-                placeholder="Name"
-                />
-              </div>
-            </form>
-          </div>
-        </div>
-        <div className="container-field my-4">
-          <div className="container-text">
-            <p className="text-regular text-primary">Business EIN</p>
-            <p className="text-small text-primary-light">This will be used to verify your business.</p>
-          </div>
-          <div className="form">
-            <form action="">
-              <div className="form form-item">
-                <input type="text"
-                name="ein"
-                value={ein}
-                onChange={e=>formChange(e)}
-                placeholder="Name"
-                />
-              </div>
-              <button className="btn btn-small btn-primary my-1" onClick={(e)=>onClick(e)}>
-                Submit 
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
+        <CompanyMainFields formState={formState} formChange={formChange} onClick={onClick} />
       )}
-      
     </div>
     </Fragment>
   )
@@ -113,7 +94,8 @@ company: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
-company: state.company
+  user: state.auth.user,
+  company: state.company
 })
 
 export default connect(mapStateToProps, { createCompany })(CreateCompany);
