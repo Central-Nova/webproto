@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const actionsBuyer = require('../../lib/actionsBuyer.json');
-const actionsSupplier = require('../../lib/actionsSupplier.json');
+const actions = require('../../lib/actions.json');
 
 const Role = require('../../models/Role');
 const Company = require('../../models/Company');
@@ -29,8 +28,8 @@ router.get(
       let companyRoles = await Role.findOne({company: req.params.companyId})
       
       if (!companyRoles) {
-        // Build buyer roles
-        let newRolesBuyer = {
+        // Build roles
+        let newRoles = {
           manager: {
             sales: [],
             products: [],
@@ -46,59 +45,26 @@ router.get(
             payments: []
           },
         }
-        // Loop through roles in buyer actions 
-        for (let e in actionsBuyer) {
+        // Loop through roles in actions 
+        for (let e in actions) {
       
-          let role = actionsBuyer[e]
+          let role = actions[e]
           
           // Loop through departments in each role
           for (let d in role) {
             let department = role[d];
           
-            // Loop through each department's actions and add to buyer roles
+            // Loop through each department's actions and add to new roles
             department.forEach(action => {
-              newRolesBuyer[e][d].push(action)
+              newRoles[e][d].push(action)
             });
           }
         }
 
-        let newRolesSupplier = {
-          manager: {
-            sales: [],
-            products: [],
-            warehouse: [],
-            fleet: [],
-            payments: []
-          },
-          worker: {
-            sales: [],
-            products: [],
-            warehouse: [],
-            fleet: [],
-            payments: []
-          },
-        }
-
-        // Loop through roles in supplier actions
-        for (let e in actionsSupplier) {
-      
-          let role = actionsSupplier[e]
-      
-          // Loop through departments in each role
-          for (let d in role) {
-            let department = role[d];
-          
-            // Loop through each department's actions and add to supplier roles
-            department.forEach(action => {
-              newRolesSupplier[e][d].push(action)
-            });
-          }
-        }
-  
+ 
         companyRoles = new Role({
           company: req.params.companyId,
-          buyer: {...newRolesBuyer},
-          supplier: {...newRolesSupplier}
+          ...newRoles,
         });
   
         console.log('companyRoles: ', companyRoles);

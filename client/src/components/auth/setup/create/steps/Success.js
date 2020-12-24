@@ -14,12 +14,22 @@ const Success = ( { back, company } ) => {
   
   const { loading, profile } = company;
 
-  let address = {};
+  // up to two addresses
+  // one email
+  // up to three phones
+
+  let address = {
+    // street: '',
+    // aptSuite: '',
+    // city: '',
+    // state: '',
+    // zip: ''
+  };
   let email = '';
   let phone = '';
 
   if (company.profile !== null && company.profile[account] !== null) {
-    address = profile[account].addressBusiness;
+    address = {...profile[account].addressBusiness};
     email = profile[account].email;
     phone = profile[account].phoneWork;
   }
@@ -45,7 +55,6 @@ const Success = ( { back, company } ) => {
         {company.profile === null ? (
           <Spinner/>
         ):(
-
         <div className="container-text">
           <div className="text-regular text-primary my-2">
             Address

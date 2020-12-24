@@ -30,16 +30,6 @@ const CreateCompany = ({ createCompany, company: { profile }, user}) => {
     createCompany(formState);
   }
 
-  // Check if it has primary or secondary, also use that to render which ones to display
-
-  // Track what accounts need to be created.
-  let accounts = [...user.company.accounts];
-  let completedAccounts = [];
-
-  accounts.forEach(account => completedAccounts.push(account))
-  // Check if they have been created.
-
-  let accountType = completedAccounts.length === 0 ? 'Primary' : 'Secondary'
 
   // Render the one that needs to be completed
 
@@ -61,23 +51,11 @@ const CreateCompany = ({ createCompany, company: { profile }, user}) => {
       {profile !== null ? (
         <div className="container-company-main">
           <div className="company-headline-text">
-            <h1 className="text-large text-primary">{accountType} Business Operation</h1>
+            <h1 className="text-large text-primary">Primary Business Operation</h1>
           </div>
           <div className="container-buttons">
-            {accountType === 'Primary' ? (
-              <Fragment>
                 <SupplierCard/>
                 <BuyerCard/>
-              </Fragment>
-            ):(
-              <Fragment>
-                {completedAccounts[0] === 'buyer' ? (
-                  <SupplierCard/>
-                ):(
-                  <BuyerCard/>
-                )}
-              </Fragment>
-            )}
           </div>
         </div>
       ) : (

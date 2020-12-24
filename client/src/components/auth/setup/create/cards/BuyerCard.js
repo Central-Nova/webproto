@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const BuyerCard = () => {
   return (
-    <Link to="/create-account/primary/buyer">
+    <Link to="/create-account/buyer">
         <div className="button-option btn btn-light">
           <i className="fas fa-money-check-alt fa-4x"></i>
           <div className="text-box">

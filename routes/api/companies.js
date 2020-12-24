@@ -20,7 +20,7 @@ router.get(
       // Check for existing company
 
       if (req.user.company.id !== null) {
-        let company = await Company.findById(req.user.company.id);
+        let company = await Company.findById(req.user.company);
 
         if (!company) {
           return res
@@ -101,7 +101,10 @@ router.post(
       company = new Company({
         name: businessName,
         owner: req.user.id,
-        ein
+        ein,
+        users: [{
+          user: req.user.id
+        }]
       });
 
       console.log('company: ', company);
@@ -142,29 +145,31 @@ router.put(
       businessAddress,
       warehouseAddress,
       account,
-      operation
-      // users
     } = req.body;
+    console.log('req.body: ', req.body);
+
+    // Check if company already has account setup
+
+    let company = await Company.findById(req.params.companyId)
+    companyKeys = [];
+
+    for (let key in company) {
+      if (key ==='operation') {
+        companyKeys.push(key);
+      }
+    }
+
+    if (companyKeys.includes('operation')) {
+      return res.status(400).json({ errors: [{ msg: {title: 'Error', description: 'Account already exists.'} }] })
+    }
 
     try {
 
-      // Check for existing company by owner
-
-      let company = await Company.findById(req.params.companyId)
-
-      console.log('req.body: ', req.body);
-
-      company[operation] = account;
-
-      company[account] = {
-            addressBusiness: businessAddress,
-            addressWarehouse: warehouseAddress,
-            email,
-            phoneWork: phone,
-            users: [{
-              user: req.user
-            }]
-          };
+      company.operation = account;
+      company.addressBusiness = businessAddress;
+      company.addressWarehouse = warehouseAddress;
+      company.email = email;
+      company.phoneWork = phone;
 
       console.log('company: ', company);
       await company.save();

@@ -5,23 +5,17 @@ import { setAlert } from '../../../../actions/alert';
 import { addAccountToCompany } from '../../../../actions/company';
 import { Redirect, useParams } from 'react-router-dom';
 
-import Success from './steps/Success';
 import AccountStepHandler from './AccountStepHandler';
 
-const AddAccounts = ({ setAlert, addAccountToCompany, user: { company } }) => {
+const AddAccounts = ({ setAlert, addAccountToCompany, user, company }) => {
 
-  const { id } = company;
-
-  const { account, operation } = useParams();
+  const { account } = useParams();
 
   const [formState, setFormState] = useState({
-    step: 3,
+    step: 1,
     formData: {
-      company: id,
-      operation,
+      company: user.company,
       account,
-      businessName: '',
-      ein: '',
       businessAddress: {
         street: '',
         aptSuite: '',
@@ -91,22 +85,15 @@ const AddAccounts = ({ setAlert, addAccountToCompany, user: { company } }) => {
   const onSubmit = e => {
     e.preventDefault();
     addAccountToCompany(formData);
-    setFormState({
-      ...formState, step: step + 1
-    })
   }
 
-  let accounts = [...company.accounts];
-  let completedAccounts = [];
-
-  accounts.forEach(account => completedAccounts.push(account))
-  // Check if they have been created.
-
-  let accountType = completedAccounts.length === 0 ? 'Primary' : 'Secondary'
+  if (company.profile !== null ) {
+    return <Redirect to='/create-team' />
+  }
 
   return (
     <Fragment>
-      <AccountStepHandler account={account} back={onStepBack} next={onStepNext} onChangeGeneral={onChangeGeneral} onChangeAddress={onChangeAddress} onSubmit={onSubmit} {...formState} />
+      <AccountStepHandler back={onStepBack} next={onStepNext} onChangeGeneral={onChangeGeneral} onChangeAddress={onChangeAddress} onSubmit={onSubmit} {...formState} />
     </Fragment>
   )
 }
@@ -115,10 +102,12 @@ AddAccounts.propTypes = {
   setAlert: PropTypes.func.isRequired,
   addAccountToCompany: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
+  company: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
-  user: state.auth.user
+  user: state.auth.user,
+  company: state.company
 })
 
 export default connect(mapStateToProps, { setAlert, addAccountToCompany })(AddAccounts);

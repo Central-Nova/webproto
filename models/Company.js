@@ -12,138 +12,69 @@ const CompanySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user'
   },
-  primary: {
+  operation: {
     type: String
   },
-  secondary: {
-    type: String
+  addressBusiness: {
+    street: {
+      type: String
+    },
+    aptSuite: {
+      type: String
+    },
+    city: {
+      type: String
+    },
+    state: {
+      type: String
+    },
+    zip: {
+      type: String
+    }
   },
-  buyer: {
-    addressBusiness: {
-      street: {
-        type: String
-      },
-      aptSuite: {
-        type: String
-      },
-      city: {
-        type: String
-      },
-      state: {
-        type: String
-      },
-      zip: {
-        type: String
-      }
-        },
-    addressWarehouse: {
-      street: {
-        type: String
-      },
-      aptSuite: {
-        type: String
-      },
-      city: {
-        type: String
-      },
-      state: {
-        type: String
-      },
-      zip: {
-        type: String
-      }
+  addressWarehouse: {
+    street: {
+      type: String
     },
-    users: [
-      {
-        user: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'user'
-        },
-        dateAdded: {
-          type: Date,
-          default: Date.now
-        }
-      }
-    ],
-
-    email: {
-      type: String,
-      // required: true
+    aptSuite: {
+      type: String
     },
-    phoneWork: {
-      type: Number,
-      // required: true
+    city: {
+      type: String
     },
-    phonePersonal: {
-      type: Number
+    state: {
+      type: String
     },
-    phoneFax: {
-      type: Number
-    },
+    zip: {
+      type: String
+    }
   },
-  supplier: {
-    addressBusiness: {
-      street: {
-        type: String
+  users: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user'
       },
-      aptSuite: {
-        type: String
-      },
-      city: {
-        type: String
-      },
-      state: {
-        type: String
-      },
-      zip: {
-        type: String
+      dateAdded: {
+        type: Date,
+        default: Date.now
       }
-        },
-    addressWarehouse: {
-      street: {
-        type: String
-      },
-      aptSuite: {
-        type: String
-      },
-      city: {
-        type: String
-      },
-      state: {
-        type: String
-      },
-      zip: {
-        type: String
-      }
-    },
-    users: [
-      {
-        user: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'user'
-        },
-        dateAdded: {
-          type: Date,
-          default: Date.now
-        }
-      }
-    ],
-    email: {
-      type: String,
-      // required: true
-    },
-    phoneWork: {
-      type: Number,
-      // required: true
-    },
-    phonePersonal: {
-      type: Number
-    },
-    phoneFax: {
-      type: Number
-    },
-  }
-
+    }
+  ],
+  email: {
+    type: String,
+    // required: true
+  },
+  phoneWork: {
+    type: Number,
+    // required: true
+  },
+  phonePersonal: {
+    type: Number
+  },
+  phoneFax: {
+    type: Number
+  },
 });
 
 module.exports = Company = mongoose.model('company', CompanySchema);

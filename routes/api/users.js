@@ -65,7 +65,7 @@ router.post(
         firstName,
         lastName,
         email,
-        rolesBuyer: [
+        roles: [
           {
             department: 'Sales',
             role: 'Worker'
@@ -87,28 +87,6 @@ router.post(
             role: 'Worker'
           },
         ],
-        rolesSupplier: [
-          {
-            department: 'Sales',
-            role: 'Worker'
-          },
-          {
-            department: 'Products',
-            role: 'Worker'
-          },
-          {
-            department: 'Warehouse',
-            role: 'Worker'
-          },
-          {
-            department: 'Fleet',
-            role: 'Worker'
-          },
-          {
-            department: 'Payments',
-            role: 'Worker'
-          },
-        ]
       });
 
       // Create password hash
@@ -137,7 +115,8 @@ router.post(
 router.put(
   '/addCompany/:companyId',
   async (req, res) => {
-
+    
+    // Check if company exists
     let company = Company.findById(req.params.companyId);
 
     if(!company) {
@@ -147,7 +126,7 @@ router.put(
     }
 
     try {
-      // Check for existing user
+      // Check if user exists
 
       let user = await User.findById(req.user._id);
 
@@ -159,7 +138,7 @@ router.put(
           .json({ errors: [{ msg: {title: 'Error', description: 'Unauthorized user.'} }] });
       }
 
-      user.company = {id: req.params.companyId};
+      user.company = req.params.companyId;
 
       await user.save();
 
@@ -174,54 +153,6 @@ router.put(
   }
 );
 
-// @route   PUT api/users/:companyId
-// @desc    Add company to user
-// @access  public
-
-router.put(
-  '/addAccount/:account',
-  async (req, res) => {
-
-    if (req.user.company.id !==null) {
-      let company = Company.findById(req.user.company.id);
-  
-      if(!company) {
-        return res
-          .status(400)
-          .json({ errors: [{msg: {title: 'Error', description: 'Invalid Credentials.' } }] })
-      }
-    }
-
-
-    try {
-      // Check for existing user
-
-      let user = await User.findById(req.user._id);
-
-      console.log('found user: ', user.company);
-
-      if (!user) {
-        return res
-          .status(400)
-          .json({ errors: [{ msg: {title: 'Error', description: 'Unauthorized user.'} }] });
-      }
-
-      let account = req.params.account;
-
-      user.company.accounts.push(account);
-
-      await user.save();
-
-      return res
-      .status(200)
-      .json({msg: {title: 'Success', description: 'Account added to user.'}})
-
-    } catch (err) {
-      console.log(err);
-      return res.status(500).send('Server Error');
-    }
-  }
-);
 
 
 module.exports = router;

@@ -3,7 +3,6 @@ import React from 'react'
 // Components
 import Step1 from './steps/Step1';
 import Step2 from './steps/Step2';
-import Success from './steps/Success';
 
 
 const AccountStepHandler = ( props ) => {
@@ -21,13 +20,8 @@ const AccountStepHandler = ( props ) => {
       <Step2 {...props}/>
     )
   }
-  if (step === 3) {
-    return (
-      <Success {...props}/>
-    )
-  }
   return (
-null
+    null
   );
 
 

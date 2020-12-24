@@ -33,7 +33,7 @@ const Routes = (props) => {
       <Route exact path='/login' component={Login}/>
       <SetupRoute exact path='/company' component={SetupMain}/>
       <SetupRoute exact path='/create-company' component={CreateCompany}/>
-      <SetupRoute path='/create-account/:operation/:account' component={AddAccounts}/>
+      <SetupRoute path='/create-account/:account' component={AddAccounts}/>
       <SetupRoute exact path='/create-team' component={CreateTeam}/>
       <SetupRoute exact path='/company-join' component={SetupJoin}/>
       <PrivateRoute exact path='/dashboard' component={Dashboard}/>
