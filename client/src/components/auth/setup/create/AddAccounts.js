@@ -33,8 +33,7 @@ const AddAccounts = ({ setAlert, addAccountToCompany, user, company }) => {
       email: '',
       phone: '',
     }
-  })
-  
+  });
  
   let { step, formData } = formState;
 

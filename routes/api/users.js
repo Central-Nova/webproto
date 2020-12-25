@@ -2,9 +2,11 @@ const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const { genPassword, validPassword } = require('../../lib/passwordUtils')
+const { validLink } = require('../../lib/invitationUtils');
 
 const User = require('../../models/User');
 const Company = require('../../models/Company');
+const Invitation = require('../../models/Invitation');
 
 // @route   GET api/users
 // @desc    Get user id from req.user
@@ -44,7 +46,9 @@ router.post(
     // Check input fields for errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res
+      .status(400)
+      .json({ errors: errors.array() });
     }
 
     const { firstName, lastName, email, password } = req.body;
@@ -107,6 +111,122 @@ router.post(
     }
   }
 );
+
+// @route   POST api/users
+// @desc    Register User with invitation link
+// @access  public
+
+router.post(
+  '/:companyId/:expiry/:hash',
+  [
+    check('firstName', {title:'Error', description:'First name is required'}).not().isEmpty(),
+    check('lastName', {title:'Error', description:'Last name is required'}).not().isEmpty(),
+    check('email', {title:'Error', description:'Valid email is required'}).isEmail(),
+    check(
+      'password',
+      {title: 'Error', description: 'Please enter a password with 6 or more characters'}
+    ).isLength({ min: 6 })
+  ],
+  async (req, res) => {
+    // Check input fields for errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res
+      .status(400)
+      .json({ errors: errors.array() });
+    }
+
+    const { companyId, expiry, hash } = req.params;
+    const { firstName, lastName, email, password } = req.body;
+
+    // Check if invitation exists
+    let invitation = Invitation.findOne({url: {
+      hash
+    }})
+
+    invitation.toArray().forEach( doc => {
+      if (doc.url.hash === hash) {
+        console.log('found doc: ', doc)
+      } 
+    })
+
+    console.log('invitation found: ', JSON.parse(invitation));
+
+    if (!invitation) {
+      return res
+      .status(400)
+      .json({ errors: [{msg: {title: 'Error', description: 'Invitation link is invalid' }}]})
+    }
+
+    // Check if invitation link has expired
+    const isValid = validLink(companyId, expiry, invitation.url.hash, invitation.url.salt);
+
+    if (!isValid) {
+      return res
+      .status(400)
+      .json({ errors: [{msg: {title: 'Error', description: 'Invitation link is invalid' }}]})
+    }
+
+    try {
+
+      // Check for existing user
+      let user = await User.findOne({ email });
+
+      if (user) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: {title: 'Error', description: 'User already exists'} }] });
+      }
+
+      user = new User({
+        firstName,
+        lastName,
+        email,
+        company: companyId,
+        roles: [
+          {
+            department: 'Sales',
+            role: 'Worker'
+          },
+          {
+            department: 'Products',
+            role: 'Worker'
+          },
+          {
+            department: 'Warehouse',
+            role: 'Worker'
+          },
+          {
+            department: 'Fleet',
+            role: 'Worker'
+          },
+          {
+            department: 'Payments',
+            role: 'Worker'
+          },
+        ],
+      });
+
+      // Create password hash
+
+      const { salt, hash } = genPassword(password);
+
+      user.local.salt = salt;
+      user.local.hash = hash;
+
+      await user.save();
+
+      return res
+      .status(200)
+      .json({msg: {title: 'Success', description: 'User created! You may log in.'}})
+
+    } catch (err) {
+      console.log(err);
+      return res.status(500).send('Server Error');
+    }
+  }
+);
+
 
 // @route   PUT api/users/:companyId
 // @desc    Add company to user

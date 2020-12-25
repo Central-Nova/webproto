@@ -51,6 +51,8 @@ app.use('/api/users', require('./routes/api/users'));
 app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/companies', require('./routes/api/companies'));
 app.use('/api/roles', require('./routes/api/roles'));
+app.use('/api/invitation', require('./routes/api/invitation'));
+
 
 
 const PORT = process.env.PORT || 5000;
