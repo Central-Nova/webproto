@@ -15,25 +15,15 @@ const InvitationSchema = new mongoose.Schema({
   },
   expires: {
     type: Date,
-    default: Date.now
+    required: true
   },
   email: {
     type: String,
     required: true
   },
   url: {
-    salt: {
-      type: String,
-      required: true
-    },
-    hash: {
-      type: String,
-      required: true
-    },
-    link: {
-      type: String,
-      required: true
-    }
+    type: String,
+    required: true
   }
 
 })

@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
-const { genPassword, validPassword } = require('../../lib/passwordUtils')
-const { validLink } = require('../../lib/invitationUtils');
-
+const { genPassword } = require('../../lib/passwordUtils')
+const invitationCheck = require('../../middleware/invitationCheck');
 const User = require('../../models/User');
 const Company = require('../../models/Company');
 const Invitation = require('../../models/Invitation');
@@ -117,8 +116,10 @@ router.post(
 // @access  public
 
 router.post(
-  '/:companyId/:expiry/:hash',
+  '/:companyId/:docId',
   [
+    invitationCheck,
+    [
     check('firstName', {title:'Error', description:'First name is required'}).not().isEmpty(),
     check('lastName', {title:'Error', description:'Last name is required'}).not().isEmpty(),
     check('email', {title:'Error', description:'Valid email is required'}).isEmail(),
@@ -126,7 +127,7 @@ router.post(
       'password',
       {title: 'Error', description: 'Please enter a password with 6 or more characters'}
     ).isLength({ min: 6 })
-  ],
+  ]],
   async (req, res) => {
     // Check input fields for errors
     const errors = validationResult(req);
@@ -136,38 +137,11 @@ router.post(
       .json({ errors: errors.array() });
     }
 
-    const { companyId, expiry, hash } = req.params;
     const { firstName, lastName, email, password } = req.body;
-
-    // Check if invitation exists
-    let invitation = Invitation.findOne({url: {
-      hash
-    }})
-
-    invitation.toArray().forEach( doc => {
-      if (doc.url.hash === hash) {
-        console.log('found doc: ', doc)
-      } 
-    })
-
-    console.log('invitation found: ', JSON.parse(invitation));
-
-    if (!invitation) {
-      return res
-      .status(400)
-      .json({ errors: [{msg: {title: 'Error', description: 'Invitation link is invalid' }}]})
-    }
-
-    // Check if invitation link has expired
-    const isValid = validLink(companyId, expiry, invitation.url.hash, invitation.url.salt);
-
-    if (!isValid) {
-      return res
-      .status(400)
-      .json({ errors: [{msg: {title: 'Error', description: 'Invitation link is invalid' }}]})
-    }
+    const { companyId } = req.params;
 
     try {
+      
 
       // Check for existing user
       let user = await User.findOne({ email });

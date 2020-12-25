@@ -26,31 +26,28 @@ router.post('/', async (req,res) => {
   const company = req.user.company;
 
   // Create invitation expiration
-  let expiry = new Date();
-  expiry.setHours(expiry.getHours() + 24);
-  expiry = expiry.getTime();
+  let expires = new Date();
+  expires.setHours(expires.getHours() + 24);
+  expires = expires.getTime();
 
-  // Create salt and hash
-  const { salt, hash } = genLink(company, expiry);
-
-  // Create url link
-  const link = `http://localhost:3000/register/invite/${company}/${expiry}/${hash}`
-
+  
   const code = makeid(5);
-
+  
   try {
-
+    
     let invitation = new Invitation({
       company,
       code,
-      expires: expiry ,
+      expires,
       email,
-      url: {
-        salt,
-        hash,
-        link 
-      }
-    })
+      })
+
+      
+      // Create url link
+      const link = `http://localhost:3000/register/invite/${company}/${invitation._id}`
+      
+      invitation.url = link;
+      
 
     await invitation.save();
 
