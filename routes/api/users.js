@@ -7,20 +7,178 @@ const User = require('../../models/User');
 const Company = require('../../models/Company');
 const Invitation = require('../../models/Invitation');
 
+
 // @route   GET api/users
-// @desc    Get user id from req.user
+// @desc    Get all users by company
 // @access  public
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
 
-  console.log('//* GET: API/AUTH *// get user', req.user);
 
-  if(!req.user) {
-    return res.status(401).send('No User');
+  if(!req.user.company) {
+    return res
+    .status(400)
+    .json({ errors: [{ msg: {title: 'Error', description: 'You are not part of a company.'} }] });
+}
+  try {
+
+    let users = await User.find({company: req.user.company}).select('-local.hash -local.salt')
+
+    console.log(users);
+
+    return res.send(users);
+    } catch (error) {
+    return res.status(500).send('Server Error');
   }
+})
+
+// @route   GET api/users/department/:department
+// @desc    Get all users by company and department
+// @access  public
+router.get('/department/:department', async (req, res) => {
+
+  const validDepartments = ['sales', 'products', 'warehouse', 'fleet', 'payments'];
+
+   if (!validDepartments.includes(req.params.department.toLowerCase())) {
+    return res
+    .status(400)
+    .json({ errors: [{ msg: {title: 'Error', description: 'Invalid department entered.'} }] });
+
+   }
+
+  if(!req.user.company) {
+    return res
+    .status(400)
+    .json({ errors: [{ msg: {title: 'Error', description: 'You are not part of a company.'} }] });
+}
 
   try {
-    return res.send(req.user);
+
+    let users = await User.find({company: req.user.company}).select('-local.hash -local.salt')
+
+ 
+    let usersByDepartment = [];
+
+    // Loop each user
+    for (let i in users) {
+      let user = users[i];
+
+      // Loop each role
+      for (let e in user.roles) {
+        let role = user.roles[e];
+
+        if (role.department.toLowerCase() === req.params.department.toLowerCase()) {
+          usersByDepartment.push(user);
+        } 
+      }
+    }
+
+    return res.send(usersByDepartment);
     } catch (error) {
+      console.log(error);
+    return res.status(500).send('Server Error');
+  }
+})
+
+// @route   GET api/users/department/:department
+// @desc    Get all users by company and role
+// @access  public
+router.get('/role/:role', async (req, res) => {
+
+  const validroles = ['manager', 'worker'];
+
+   if (!validroles.includes(req.params.role.toLowerCase())) {
+    return res
+    .status(400)
+    .json({ errors: [{ msg: {title: 'Error', description: 'Invalid role entered.'} }] });
+
+   }
+
+  if(!req.user.company) {
+    return res
+    .status(400)
+    .json({ errors: [{ msg: {title: 'Error', description: 'You are not part of a company.'} }] });
+}
+
+  try {
+
+    let users = await User.find({company: req.user.company}).select('-local.hash -local.salt')
+
+ 
+    let usersByRole = [];
+
+    // Loop each user
+    for (let i in users) {
+      let user = users[i];
+
+      // Loop each role
+      for (let e in user.roles) {
+        let role = user.roles[e];
+
+        if (role.role.toLowerCase() === req.params.role.toLowerCase()) {
+          usersByRole.push(user);
+        } 
+      }
+    }
+
+    return res.send(usersByRole);
+    } catch (error) {
+      console.log(error);
+    return res.status(500).send('Server Error');
+  }
+})
+
+// @route   GET api/users/department/:department
+// @desc    Get all users by company, department, and role
+// @access  public
+router.get('/department/:department/role/:role', async (req, res) => {
+
+  const validDepartments = ['sales', 'products', 'warehouse', 'fleet', 'payments'];
+  const validroles = ['manager', 'worker'];
+
+  if (!validDepartments.includes(req.params.department.toLowerCase())) {
+    return res
+    .status(400)
+    .json({ errors: [{ msg: {title: 'Error', description: 'Invalid department entered.'} }] });
+    }
+
+   if (!validroles.includes(req.params.role.toLowerCase())) {
+    return res
+    .status(400)
+    .json({ errors: [{ msg: {title: 'Error', description: 'Invalid role entered.'} }] });
+    }
+
+  if(!req.user.company) {
+    return res
+    .status(400)
+    .json({ errors: [{ msg: {title: 'Error', description: 'You are not part of a company.'} }] });
+    }
+
+  try {
+
+    let users = await User.find({company: req.user.company}).select('-local.hash -local.salt')
+
+ 
+    let usersByDepartmentAndRole = [];
+
+    // Loop each user
+    for (let i in users) {
+      let user = users[i];
+
+      // Loop each role
+      for (let e in user.roles) {
+        let role = user.roles[e];
+
+        if (
+          role.role.toLowerCase() === req.params.role.toLowerCase() && 
+          role.department.toLowerCase() === req.params.department.toLowerCase()) {
+          usersByDepartmentAndRole.push(user);
+        } 
+      }
+    }
+
+    return res.send(usersByDepartmentAndRole);
+    } catch (error) {
+      console.log(error);
     return res.status(500).send('Server Error');
   }
 })
@@ -254,8 +412,8 @@ router.put(
   }
 );
 
-// @route   PUT api/users/:companyId
-// @desc    Add company to user
+// @route   PUT api/users/addCompany
+// @desc    Add company to user with invitation code
 // @access  public
 
 router.put(

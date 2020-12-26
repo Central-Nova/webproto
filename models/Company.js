@@ -2,11 +2,12 @@ const mongoose = require('mongoose');
 
 const CompanySchema = new mongoose.Schema({
   name: {
-    type: String
+    type: String,
+    required: true
   },
   ein: {
     type: Number,
-    // required: true
+    required: true
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

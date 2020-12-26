@@ -110,7 +110,7 @@ export const loginUser = (formData) => async (dispatch) => {
 export const loadUser = () => async (dispatch) => {
 
   try {
-    const res = await axios.get('/api/users');
+    const res = await axios.get('/api/auth');
 
       dispatch({
         type: USER_LOADED,

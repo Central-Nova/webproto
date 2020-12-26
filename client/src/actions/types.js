@@ -13,5 +13,9 @@ export const CLEAR_COMPANY = 'CLEAR_COMPANY';
 export const ROLES_LOADED = 'ROLES_LOADED';
 export const ROLES_CLEARED = 'ROLES_CLEARED';
 export const ROLES_ERROR = 'ROLES_ERROR';
+export const USERS_LOADED = 'USERS_LOADED';
+export const USERS_ERROR = 'USERS_ERROR';
+export const USERS_CLEARED = 'USERS_CLEARED';
+
 
 

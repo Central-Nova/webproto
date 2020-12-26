@@ -1,9 +1,24 @@
-import React from 'react'
+import React, { Fragment, useEffect } from 'react'
+import { connect } from 'react-redux'
+import { loadCompanyUsers } from '../../actions/users';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom'
 
-const Users = () => {
+import UserItem from './UserItem';
+import Spinner from '../layout/Spinner';
+
+const Users = ({ users, loadCompanyUsers}) => {
+  useEffect(()=> {
+    loadCompanyUsers();
+  }, [])
+
+  const { loading, profiles } = users;
+
   return (
-    <div className="container-dashboard">
+    <Fragment>
+    {loading ? (<Spinner/>) : (
+      
+      <div className="container-dashboard">
         <div className="container-headline">
           <p className="text-primary text-large">Users</p>
           <p className="text-primary-light text-small">
@@ -34,46 +49,26 @@ const Users = () => {
             <p className="col3 text-primary">Roles</p>
           </div>
           <hr className="my-1" />
-
-          <div className="grid-users-item text-primary text-small">
-            <p className="col1">Dave Johnson</p>
-            <p className="col2">djohn120@gmail.com</p>
-            <p className="col3">Manager</p>
-            <Link to="/user" className="col4"><i className="fas fa-ellipsis-h"></i></Link>
-          </div>
-          <hr className="my-2" />
-          <div className="grid-users-item text-primary text-small">
-            <p className="col1">Dave Johnson</p>
-            <p className="col2">djohn120@gmail.com</p>
-            <p className="col3">Manager</p>
-            <Link to="/user" className="col4"><i className="fas fa-ellipsis-h"></i></Link>
-          </div>
-          <hr className="my-2" />
-          <div className="grid-users-item text-primary text-small">
-            <p className="col1">Mark Robinson</p>
-            <p className="col2">mrobins201@gmail.com</p>
-            <p className="col3">Manager</p>
-            <Link to="/user" className="col4"><i className="fas fa-ellipsis-h"></i></Link>
-          </div>
-          <hr className="my-2" />
-          <div className="grid-users-item text-primary text-small">
-            <p className="col1">John Dawson</p>
-            <p className="col2">jdaws102@gmail.com</p>
-            <p className="col3">Worker</p>
-            <Link to="/user" className="col4"><i className="fas fa-ellipsis-h"></i></Link>
-          </div>
-          <hr className="my-2" />
-          <div className="grid-users-item text-primary text-small">
-            <p className="col1">Rick Pearson</p>
-            <p className="col2">rpears203@gmail.com</p>
-            <p className="col3">Worker</p>
-            <Link to="/user" className="col4"><i className="fas fa-ellipsis-h"></i></Link>
-          </div>
-          <hr className="my-2" />
+          {profiles.map((profile) => (
+            <UserItem key={profile._id} profile={profile}/>
+          ))}
         </div>
         <button className="btn btn-small my-2"><Link to="/roles">Edit Roles</Link></button>
       </div>
+    )}
+      </Fragment>
   )
 }
 
-export default Users;
+Users.propTypes = {
+  loadCompanyUsers: PropTypes.func.isRequired,
+  users: PropTypes.array.isRequired,
+}
+
+const mapStateToProps = state => ({
+  users: state.users
+})
+
+
+
+export default connect(mapStateToProps, { loadCompanyUsers })(Users);

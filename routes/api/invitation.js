@@ -25,6 +25,12 @@ router.post('/', async (req,res) => {
   const { email } = req.body;
   const company = req.user.company;
 
+  if (company === null || company === undefined) {
+    return res
+    .status(400)
+    .json({ errors: [{ msg: {title: 'Error', description: 'Please set up your company first.'} }] })
+  };
+
   // Create invitation expiration
   let expires = new Date();
   expires.setHours(expires.getHours() + 24);

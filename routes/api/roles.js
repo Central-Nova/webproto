@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const actions = require('../../lib/actions.json');
+const actionsBuyer = require('../../lib/actionsBuyer.json');
+const actionsSupplier = require('../../lib/actionsSupplier.json');
 
 const Role = require('../../models/Role');
 const Company = require('../../models/Company');
@@ -45,6 +46,9 @@ router.get(
             payments: []
           },
         }
+
+        let actions = company.operation === 'buyer' ? actionsBuyer : actionsSupplier;
+
         // Loop through roles in actions 
         for (let e in actions) {
       

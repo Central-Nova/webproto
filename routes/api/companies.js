@@ -119,12 +119,12 @@ router.post(
   }
 );
 
-// @route   PUT api/companies
+// @route   PUT api/companies/:companyId
 // @desc    Edit Company
 // @access  public
 
 router.put(
-  '/:companyId'
+  '/addCompany/:companyId'
   ,
   [
     check('phone', {title:'Error', description:'Valid phone is required.'}).isNumeric(),
@@ -151,15 +151,8 @@ router.put(
     // Check if company already has account setup
 
     let company = await Company.findById(req.params.companyId)
-    companyKeys = [];
 
-    for (let key in company) {
-      if (key ==='operation') {
-        companyKeys.push(key);
-      }
-    }
-
-    if (companyKeys.includes('operation')) {
+    if (company.operation !== null && company.operation!== undefined) {
       return res.status(400).json({ errors: [{ msg: {title: 'Error', description: 'Account already exists.'} }] })
     }
 
@@ -176,6 +169,61 @@ router.put(
 
       // Send company ID with response object (ised for adding company to user record)
       return res.status(200).json(company._id);
+
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({msg: {title: 'Error', description: 'Server error.'}});
+    }
+  }
+);
+
+// @route   PUT api/companies/adduser
+// @desc    Add user to company
+// @access  public
+
+router.put(
+  '/adduser'
+  ,
+  async (req, res) => {
+
+    // Check if user is part of a company
+    if (!req.user.company) {
+      return res
+      .status(400)
+      .json({ errors: [{ msg: {title: 'Error', description: 'You are not part of a company.'} }] })
+    }
+
+    // Check if company already has account setup
+
+    let company = await Company.findById(req.user.company);
+    
+    // Check if user is already added to company
+    let foundUser = [];
+
+    company.users.forEach((record) => {
+      if (record.user.toString() === req.user._id.toString()) {
+        foundUser.push(record);
+      }
+    });
+
+    if (foundUser.length >0) {
+      return res
+      .status(400)
+      .json({ errors: [{ msg: {title: 'Error', description: 'User is already part of company.'} }] });
+    }
+
+    // Add user to company
+    try {
+      newUser = {
+        user: req.user._id
+      }
+
+      company.users.push(newUser);
+      await company.save();
+
+      // Send company ID with response object (used for adding company to user record)
+      return res.status(200).json({ msg: {title: 'Success', description: 'User added to company!'} })
+      ;
 
     } catch (err) {
       console.log(err);
