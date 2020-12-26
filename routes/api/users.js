@@ -224,12 +224,19 @@ router.put(
 
       let user = await User.findById(req.user._id);
 
-      console.log('found user: ', user.company);
+      console.log('found user: ', user);
 
       if (!user) {
         return res
           .status(400)
           .json({ errors: [{ msg: {title: 'Error', description: 'Unauthorized user.'} }] });
+      }
+
+      // If user record already has a company, company can't be changed
+      if (user.company !== null && user.company !== undefined) {
+        return res
+        .status(400)
+        .json({ errors: [{ msg: {title: 'Error', description: 'User already has a company.'} }] });
       }
 
       user.company = req.params.companyId;
@@ -246,6 +253,72 @@ router.put(
     }
   }
 );
+
+// @route   PUT api/users/:companyId
+// @desc    Add company to user
+// @access  public
+
+router.put(
+  '/addCompany',
+  async (req, res) => {
+
+    const { code } = req.body;
+    
+    // Check if company exists
+    let invitation = await Invitation.findOne({code});
+
+    if(!invitation) {
+      return res
+        .status(400)
+        .json({ errors: [{msg: {title: 'Error', description: 'Invalid code submitted.' } }] })
+    }
+
+    // Check if code is expired
+    let now = new Date();
+    let isValid = invitation.expires.getTime() > now.getTime();
+
+    if (!isValid) {
+      return res
+      .status(400)
+      .json({ errors: [{ msg: {title: 'Error', description: 'Invitation link is expired.'} }] });
+    }
+
+    try {
+      // Check if user exists
+
+      let user = await User.findById(req.user._id);
+
+      console.log('found user: ', user);
+
+      if (!user) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: {title: 'Error', description: 'Unauthorized user.'} }] });
+      }
+
+      // If user record already has a company, company can't be changed
+        if (user.company !== null && user.company !== undefined) {
+          return res
+          .status(400)
+          .json({ errors: [{ msg: {title: 'Error', description: 'User already has a company.'} }] });
+        }
+
+
+      user.company = invitation.company;
+
+      await user.save();
+
+      return res
+      .status(200)
+      .json({msg: {title: 'Success', description: 'Company added to user.'}})
+
+    } catch (err) {
+      console.log(err);
+      return res.status(500).send('Server Error');
+    }
+  }
+);
+
 
 
 

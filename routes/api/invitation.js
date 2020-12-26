@@ -29,7 +29,6 @@ router.post('/', async (req,res) => {
   let expires = new Date();
   expires.setHours(expires.getHours() + 24);
   expires = expires.getTime();
-
   
   const code = makeid(5);
   

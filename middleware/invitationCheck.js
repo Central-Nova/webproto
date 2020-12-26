@@ -22,7 +22,7 @@ module.exports = async (req, res, next) => {
         .json({ errors: [{ msg: {title: 'Error', description: 'Invitation link is expired.'} }] });
       }
 
-      // Check if invitation link is expired
+      // Check if companyId matches invitation record
       isValid = invitation.company.toString() === companyId;
 
       if (!isValid) {
