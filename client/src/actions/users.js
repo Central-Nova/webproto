@@ -9,7 +9,7 @@ import {
 
 export const loadCompanyUsers = () => async (dispatch) => {
 
-  const res = await axios.get('api/users/');
+  const res = await axios.get('/api/users');
 
   try {
     dispatch({
@@ -18,6 +18,9 @@ export const loadCompanyUsers = () => async (dispatch) => {
     }) 
     
   } catch (err) {
+    const errors = err.response.data.errors;
+    console.log('err.response: ',err.response);
+
     dispatch({
       type: USERS_ERROR
     })

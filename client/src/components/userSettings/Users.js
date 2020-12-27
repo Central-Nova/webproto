@@ -10,7 +10,7 @@ import Spinner from '../layout/Spinner';
 const Users = ({ users, loadCompanyUsers}) => {
   useEffect(()=> {
     loadCompanyUsers();
-  }, [])
+  },[loadCompanyUsers])
 
   const { loading, profiles } = users;
 
@@ -62,7 +62,7 @@ const Users = ({ users, loadCompanyUsers}) => {
 
 Users.propTypes = {
   loadCompanyUsers: PropTypes.func.isRequired,
-  users: PropTypes.array.isRequired,
+  users: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
