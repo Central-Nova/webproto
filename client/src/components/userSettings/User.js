@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { loadCompanyUsers } from '../../actions/users';
 
 import Spinner from '../layout/Spinner';
+import UserRow from './UserRow';
 
 const User = ({ users, loadCompanyUsers }) => {
   useEffect(()=> {
@@ -13,18 +14,23 @@ const User = ({ users, loadCompanyUsers }) => {
 
   const { userId } = useParams();
   const { loading, profiles } = users;
-
+  
+  
   let profileToLoad = {};
+  let rolesArray = [];
 
   if (!loading) {
     let profileArray = profiles.filter((profile) => profile._id === userId);
-
+    
     profileToLoad = {...profileArray[0]}
+    rolesArray = [...profileToLoad.roles];
   }
-
+  
   const { firstName, lastName, roles } = profileToLoad;
+  
+  const [ formState, setFormState ] = useState()
 
-  const [ formState, setFormState ] = useState({})
+  console.log('formState: ', formState);
  
   return (
     <Fragment>
@@ -45,86 +51,9 @@ const User = ({ users, loadCompanyUsers }) => {
             <p className="col3">Worker</p>
           </div>
           <hr className="my-1" />
-          <div className="grid-role-item text-primary text-small">
-            <p className="col1">Sales</p>
-            <div className="col2">
-              <label className="switch">
-                <input type="checkbox" />
-                <span className="slider round"></span>
-              </label>
-            </div>
-            <div className="col3">
-              <label className="switch">
-                <input type="checkbox" />
-                <span className="slider round"></span>
-              </label>
-            </div>
-          </div>
-          <hr className="my-1" />
-          <div className="grid-role-item text-primary text-small">
-            <p className="col1">Inventory</p>
-            <div className="col2">
-              <label className="switch">
-                <input type="checkbox" />
-                <span className="slider round"></span>
-              </label>
-            </div>
-            <div className="col3">
-              <label className="switch">
-                <input type="checkbox" />
-                <span className="slider round"></span>
-              </label>
-            </div>
-          </div>
-          <hr className="my-1" />
-          <div className="grid-role-item text-primary text-small">
-            <p className="col1">Warehouse</p>
-            <div className="col2">
-              <label className="switch">
-                <input type="checkbox" />
-                <span className="slider round"></span>
-              </label>
-            </div>
-            <div className="col3">
-              <label className="switch">
-                <input type="checkbox" />
-                <span className="slider round"></span>
-              </label>
-            </div>
-          </div>
-          <hr className="my-1" />
-          <div className="grid-role-item text-primary text-small">
-            <p className="col1">Fleet</p>
-            <div className="col2">
-              <label className="switch">
-                <input type="checkbox" />
-                <span className="slider round"></span>
-              </label>
-            </div>
-            <div className="col3">
-              <label className="switch">
-                <input type="checkbox" />
-                <span className="slider round"></span>
-              </label>
-            </div>
-          </div>
-          <hr className="my-1" />
-          <div className="grid-role-item text-primary text-small">
-            <p className="col1">Accounting</p>
-            <div className="col2">
-              <label className="switch">
-                <input type="checkbox" />
-                <span className="slider round"></span>
-              </label>
-            </div>
-            <div className="col3">
-              <label className="switch">
-                <input type="checkbox" />
-                <span className="slider round"></span>
-              </label>
-            </div>
-          </div>
-          <hr className="my-1" />
+          {rolesArray.map( (role) => (
+          <UserRow role={role}/>
+          ))}
         </div>
         <button className="btn btn-small btn-back my-2">
           <i className="fas fa-long-arrow-alt-left"></i><Link to="users">Back</Link>

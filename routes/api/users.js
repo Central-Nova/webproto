@@ -315,28 +315,33 @@ router.post(
         lastName,
         email,
         company: companyId,
-        roles: [
+        roles: {
+          sales:
+            {
+            manager: false,
+            worker: true 
+            },
+          products:
           {
-            department: 'Sales',
-            role: 'Worker'
+            manager: false,
+            worker: true 
           },
+          warehouse:
           {
-            department: 'Products',
-            role: 'Worker'
+            manager: false,
+            worker: true 
           },
+          fleet:
           {
-            department: 'Warehouse',
-            role: 'Worker'
+            manager: false,
+            worker: true 
           },
+          payments:
           {
-            department: 'Fleet',
-            role: 'Worker'
+            manager: false,
+            worker: true 
           },
-          {
-            department: 'Payments',
-            role: 'Worker'
-          },
-        ],
+        },
       });
 
       // Create password hash

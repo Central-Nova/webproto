@@ -4,7 +4,7 @@ import { loadCompanyUsers } from '../../actions/users';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom'
 
-import UserItem from './UserItem';
+import UsersRow from './UsersRow';
 import Spinner from '../layout/Spinner';
 
 const Users = ({ users, loadCompanyUsers}) => {
@@ -50,7 +50,7 @@ const Users = ({ users, loadCompanyUsers}) => {
           </div>
           <hr className="my-1" />
           {profiles.map((profile) => (
-            <UserItem key={profile._id} profile={profile}/>
+            <UsersRow key={profile._id} profile={profile}/>
           ))}
         </div>
         <button className="btn btn-small my-2"><Link to="/roles">Edit Roles</Link></button>

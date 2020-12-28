@@ -167,7 +167,7 @@ router.put(
       console.log('company: ', company);
       await company.save();
 
-      // Send company ID with response object (ised for adding company to user record)
+      // Send company ID with response object (used for adding company to user record)
       return res.status(200).json(company._id);
 
     } catch (err) {
