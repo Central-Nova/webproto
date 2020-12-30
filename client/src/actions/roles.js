@@ -10,6 +10,8 @@ import {
 
 export const loadRoles = (companyId) => async (dispatch) => {
 
+  console.log('called loadRoles');
+
   
   try {
 
@@ -32,4 +34,32 @@ export const loadRoles = (companyId) => async (dispatch) => {
       type: ROLES_ERROR
     })
   }
+}
+
+export const updateCompanyRoles = (permissionsData, companyId, department) => async (dispatch) => {
+  
+  try {
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    const res = await axios.put(`/api/roles/department/${department}`, permissionsData, config);
+    
+    dispatch(loadRoles(companyId));
+
+    dispatch(setAlert(res.data.msg,'success'))
+
+  } catch (err) {
+    const errors = err.response.data.errors;
+    
+    // Loop through errors array and call setAlert to display error message in alert box.
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg,'danger')));
+    }
+
+  }
+
 }

@@ -70,6 +70,124 @@ router.get(
   }
 );
 
+// @route   PUT api/users/company
+// @desc    Add company to user with invitation code
+// @access  public
+
+router.put(
+  '/department/:department',
+  async (req, res) => {
+
+    // Check if provided roles are correct
+    let permissionsData = req.body
+
+    // Loop through to make sure it has three keys and validate
+
+    let keysToCheck = ['department', 'document', 'action', 'manager', 'worker']
+
+    console.log('keyToCheck: ', keysToCheck);
+
+    // Data validation
+    for (let role in permissionsData) {
+      
+      // Check if the role object has the 5 required keys
+      keysToCheck.forEach( key => {
+        if (permissionsData[role].hasOwnProperty(key)) {
+          return
+        } else {
+          console.log('problem key');
+        }
+
+      })
+
+      // Check if each department is a string
+      if (typeof permissionsData[role].department !== 'string') {
+        console.log('problem: ', typeof permissionsData[role].department)
+        return res
+        .status(400)
+        .json({ errors: [{ msg: {title: 'Error', description: 'User roles could not be updated with provided data.'} }] });
+
+      }
+
+      // Check if each department is a string
+      if (typeof permissionsData[role].document !== 'string') {
+        console.log('problem: ', typeof permissionsData[role].department)
+        return res
+        .status(400)
+        .json({ errors: [{ msg: {title: 'Error', description: 'User roles could not be updated with provided data.'} }] });
+
+      }
+
+      // Check if each department is a string
+      if (typeof permissionsData[role].action !== 'string') {
+        console.log('problem: ', typeof permissionsData[role].department)
+        return res
+        .status(400)
+        .json({ errors: [{ msg: {title: 'Error', description: 'User roles could not be updated with provided data.'} }] });
+
+      }
+
+      // Check if each manager is boolean
+      if (typeof permissionsData[role].manager !== 'boolean') {
+        console.log('problem: ', typeof permissionsData[role].manager)
+
+        return res
+        .status(400)
+        .json({ errors: [{ msg: {title: 'Error', description: 'User roles could not be updated with provided data.'} }] });
+
+      }
+
+      // Check if each worker is boolean
+      if (typeof permissionsData[role].worker !== 'boolean') {
+        console.log('problem: ', typeof permissionsData[role].worker)
+
+        return res
+        .status(400)
+        .json({ errors: [{ msg: {title: 'Error', description: 'User roles could not be updated with provided data.'} }] });
+    }
+
+    }
+
+    try {
+
+      let roles = await Role.findOne({company: req.user.company});
+      
+      console.log('permissions before: ', permissionsData.length);
+
+      if (!roles) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: {title: 'Error', description: 'Unauthorized user.'} }] });
+      }
+
+
+      for (let i in roles.permissions) {
+        for (let j in permissionsData) {
+          
+          
+          if (roles.permissions[i]._id.toString() === permissionsData[j]._id.toString()) {
+            console.log('permissions before: ', roles.permissions[i]);
+            roles.permissions[i] = permissionsData[j];
+            console.log('permissions after: ', roles.permissions[i]);
+          }
+        }
+      }
+
+      roles.save();
+
+      return res.status(200).json({msg: {title: 'Success!', description: 'Roles have been updated.'}});
+
+    } catch (err) {
+      console.log(err);
+
+      return res.status(500).send('Server Error');
+      
+    }
+   
+  }
+);
+
+
 
 
 module.exports = router;

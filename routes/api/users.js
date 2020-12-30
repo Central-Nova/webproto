@@ -569,13 +569,7 @@ router.put(
     } catch (err) {
 
       return res.status(500).send('Server Error');
-      
     }
-    // set roles
-
-    // save
-
-    
   }
 );
 
