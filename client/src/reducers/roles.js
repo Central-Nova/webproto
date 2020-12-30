@@ -6,7 +6,7 @@ import {
 
 const initialState = {
   loading: true,
-  roles: null
+  rolesData: null
 };
 
 export default function (state=initialState, action) {
@@ -17,7 +17,7 @@ export default function (state=initialState, action) {
     return {
       ...state, 
       loading: false,
-      roles: payload
+      rolesData: payload
     }
 
     case ROLES_ERROR:
@@ -25,7 +25,7 @@ export default function (state=initialState, action) {
       return {
         ...state,
         loading: false,
-        roles: null
+        rolesData: null
       }
       default:
         return state;

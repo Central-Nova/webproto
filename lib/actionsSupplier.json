@@ -133,112 +133,112 @@
     "worker": true
   },
   {
-    "department": "Products",
+    "department": "Inventory",
     "document": "Product Lotting",
     "action": "View",
     "manager": true,
     "worker": true
   },
   {
-    "department": "Products",
+    "department": "Inventory",
     "document": "Product Lotting",
     "action": "Create",
     "manager": true,
     "worker": true
   },
   {
-    "department": "Products",
+    "department": "Inventory",
     "document": "Product Lotting",
     "action": "Edit",
     "manager": true,
     "worker": true
   },
   {
-    "department": "Products",
+    "department": "Inventory",
     "document": "Product Lotting",
     "action": "Delete",
     "manager": true,
     "worker": true
   },
   {
-    "department": "Products",
+    "department": "Inventory",
     "document": "Product Adjustments",
     "action": "View",
     "manager": true,
     "worker": true
   },
   {
-    "department": "Products",
+    "department": "Inventory",
     "document": "Product Adjustments",
     "action": "Create",
     "manager": true,
     "worker": true
   },
   {
-    "department": "Products",
+    "department": "Inventory",
     "document": "Product Adjustments",
     "action": "Edit",
     "manager": true,
     "worker": true
   },
   {
-    "department": "Products",
+    "department": "Inventory",
     "document": "Product Adjustments",
     "action": "Delete",
     "manager": true,
     "worker": true
   },
   {
-    "department": "Products",
+    "department": "Inventory",
     "document": "Product Transformations",
     "action": "View",
     "manager": true,
     "worker": true
   },
   {
-    "department": "Products",
+    "department": "Inventory",
     "document": "Product Transformations",
     "action": "Create",
     "manager": true,
     "worker": true
   },
   {
-    "department": "Products",
+    "department": "Inventory",
     "document": "Product Transformations",
     "action": "Edit",
     "manager": true,
     "worker": true
   },
   {
-    "department": "Products",
+    "department": "Inventory",
     "document": "Product Transformations",
     "action": "Delete",
     "manager": true,
     "worker": true
   },
   {
-    "department": "Products",
+    "department": "Inventory",
     "document": "Inventory Counting",
     "action": "View",
     "manager": true,
     "worker": true
   },
   {
-    "department": "Products",
+    "department": "Inventory",
     "document": "Inventory Counting",
     "action": "Create",
     "manager": true,
     "worker": true
   },
   {
-    "department": "Products",
+    "department": "Inventory",
     "document": "Inventory Counting",
     "action": "Edit",
     "manager": true,
     "worker": true
   },
   {
-    "department": "Products",
+    "department": "Inventory",
     "document": "Inventory Counting",
     "action": "Delete",
     "manager": true,

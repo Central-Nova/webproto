@@ -1,47 +1,25 @@
 import React, { Fragment } from 'react'
+import { useParams } from 'react-router-dom';
+import RoleSectionRow from './RoleSectionRow'
 
-const RoleSection = ({ manager, worker }) => {
+const RoleSection = ({ permissions, onChange }) => {
+
+  let documentType = permissions[0].document
+
   return (
     <Fragment>
         <div className="container-roleswitches-grid my-4">
           <div className="grid-role-headers text-primary text-regular">
-            <p className="col1">Sales Quotes</p>
+            <p className="col1">{documentType}</p>
             <p className="col2">Manager (Sales)</p>
             <p className="col3">Worker (Sales)</p>
           </div>
           <hr className="my-1" />
-          <div className="grid-role-item text-primary text-small">
-            <p className="col1">See Sales Quotes</p>
-            <div className="col2">
-              <label className="switch">
-                <input type="checkbox" />
-                <span className="slider round"></span>
-              </label>
-            </div>
-            <div className="col3">
-              <label className="switch">
-                <input type="checkbox" />
-                <span className="slider round"></span>
-              </label>
-            </div>
-          </div>
-          <hr className="my-1" />
-          <div className="grid-role-item text-primary text-small">
-            <p className="col1">Create Sales Quotes</p>
-            <div className="col2">
-              <label className="switch">
-                <input type="checkbox" />
-                <span className="slider round"></span>
-              </label>
-            </div>
-            <div className="col3">
-              <label className="switch">
-                <input type="checkbox" />
-                <span className="slider round"></span>
-              </label>
-            </div>
-          </div>
-          <hr className="my-1" />
+          {
+            permissions.map((permission,id) => (
+              <RoleSectionRow key={id} permission={permission} onChange={onChange}/>
+            ))
+          }
         </div>
   </Fragment>
   )
