@@ -327,6 +327,11 @@ router.post(
             worker: true 
             },
             {
+            department: "Inventory",
+            manager: false,
+            worker: true 
+            },
+            {
             department: "Warehouse",
             manager: false,
             worker: true 

@@ -30,45 +30,28 @@ router.get(
       
       if (!companyRoles) {
         // Build roles
-        let newRoles = {
-          manager: {
-            sales: [],
-            products: [],
-            warehouse: [],
-            fleet: [],
-            payments: []
-          },
-          worker: {
-            sales: [],
-            products: [],
-            warehouse: [],
-            fleet: [],
-            payments: []
-          },
-        }
+        let newRoles = company.operation === 'buyer' ? actionsBuyer : actionsSupplier;
 
-        let actions = company.operation === 'buyer' ? actionsBuyer : actionsSupplier;
-
-        // Loop through roles in actions 
-        for (let e in actions) {
+        // // Loop through roles in actions 
+        // for (let e in actions) {
       
-          let role = actions[e]
+        //   let role = actions[e]
           
-          // Loop through departments in each role
-          for (let d in role) {
-            let department = role[d];
+        //   // Loop through departments in each role
+        //   for (let d in role) {
+        //     let department = role[d];
           
-            // Loop through each department's actions and add to new roles
-            department.forEach(action => {
-              newRoles[e][d].push(action)
-            });
-          }
-        }
+        //     // Loop through each department's actions and add to new roles
+        //     department.forEach(action => {
+        //       newRoles[e][d].push(action)
+        //     });
+        //   }
+        // }
 
  
         companyRoles = new Role({
           company: req.params.companyId,
-          ...newRoles,
+          permissions: [...newRoles]
         });
   
         console.log('companyRoles: ', companyRoles);

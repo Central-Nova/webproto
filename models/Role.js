@@ -5,189 +5,31 @@ const RoleSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'company'
   },
-  manager: {
-    sales: [
-      {
-        department: String,
-        action: String,
-        role: String,
-        permission: [
-          {
-            type: {
-              type: String,
-            },
-            allow: {
-              type: Boolean
-            }
-          }
-        ]
-      }
-    ],
-    products: [
-      {
-        department: String,
-        action: String,
-        role: String,
-        permission: [
-          {
-            type: {
-              type: String,
-            },
-            allow: {
-              type: Boolean
-            }
+  permissions: [
+    {
+      department: {
+        type: String,
+        required: true
+      },
+      document: {
+        type: String,
+        required: true
+      },
+      action: {
+        type: String,
+        required: true
+      },
+      manager: {
+        type: Boolean,
+        required: true
+      },
+      worker: {
+        type: Boolean,
+        required: true
+      },
+    }
+  ]
 
-          }
-        ]
-      }
-    ],
-    warehouse: [
-      {
-        department: String,
-        action: String,
-        role: String,
-        permission: [
-          {
-            type: {
-              type: String,
-            },
-            allow: {
-              type: Boolean
-            }
-
-          }
-        ]
-      }
-    ],
-    fleet: [
-      {
-        department: String,
-        action: String,
-        role: String,
-        permission: [
-          {
-            type: {
-              type: String,
-            },
-            allow: {
-              type: Boolean
-            }
-
-          }
-        ]
-      }
-    ],
-    payments: [
-      {
-        department: String,
-        action: String,
-        role: String,
-        permission: [
-          {
-            type: {
-              type: String,
-            },
-            allow: {
-              type: Boolean
-            }
-
-          }
-        ]
-      }
-    ]
-  },
-  worker: {
-    sales: [
-      {
-        department: String,
-        action: String,
-        role: String,
-        permission: [
-          {
-            type: {
-              type: String,
-            },
-            allow: {
-              type: Boolean
-            }
-
-          }
-        ]
-      }
-    ],
-    products: [
-      {
-        department: String,
-        action: String,
-        role: String,
-        permission: [
-          {
-            type: {
-              type: String,
-            },
-            allow: {
-              type: Boolean
-            }
-
-          }
-        ]
-      }
-    ],
-    warehouse: [
-      {
-        department: String,
-        action: String,
-        role: String,
-        permission: [
-          {
-            type: {
-              type: String,
-            },
-            allow: {
-              type: Boolean
-            }
-
-          }
-        ]
-      }
-    ],
-    fleet: [
-      {
-        department: String,
-        action: String,
-        role: String,
-        permission: [
-          {
-            type: {
-              type: String,
-            },
-            allow: {
-              type: Boolean
-            }
-
-          }
-        ]
-      }
-    ],
-    payments: [
-      {
-        department: String,
-        action: String,
-        role: String,
-        permission: [
-          {
-            type: {
-              type: String,
-            },
-            allow: {
-              type: Boolean
-            }
-
-          }
-        ]
-      }
-    ]
-  }
 })
 
 

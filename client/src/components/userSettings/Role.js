@@ -30,7 +30,6 @@ const Role = ({ auth, roles, loadRoles}) => {
         </div>
         <RoleSection/>
         <RoleSection/>
-
         <button className="btn btn-small btn-back my-2">
           <i className="fas fa-long-arrow-alt-left"></i><Link to="roles">Back</Link>
         </button>

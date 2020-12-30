@@ -4,7 +4,6 @@ const path = require('path');
 const passport = require('passport');
 const session = require('express-session');
 const actions = require('./lib/actions')
-const actionUtils = require("./lib/actionUtils");
 
 require('dotenv').config();
 
@@ -42,8 +41,6 @@ app.use((req, res, next) => {
   console.log('//* SERVER.JS MIDDLEWARE *// req.user:',req.user);
   next();
 });
-
-actionUtils.getAllPermissions();
 
 
 // Define Routes
