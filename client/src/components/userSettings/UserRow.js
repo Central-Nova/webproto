@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 
 const UserRow = ({roleData, onChange}) => {
   
-  const { _id, department, manager, worker } = roleData;
+  const { department, manager, worker } = roleData;
 
   return (
     <Fragment>

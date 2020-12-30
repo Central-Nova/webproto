@@ -62,7 +62,7 @@ const User = ({ users: { loading, profiles }, loadCompanyUsers, updateUserRoles 
 
       setFormState(roleData);
     }
-  }, [loadCompanyUsers, loading])
+  }, [loadCompanyUsers, loading, profileToLoad.roles, profiles])
 
     const { firstName, lastName } = profileToLoad;
   

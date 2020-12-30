@@ -39,19 +39,20 @@ const Role = ({ auth, roles: {loading, rolesData}, loadRoles, updateCompanyRoles
       }
        
         // Loop through each found document type
-        documentTypes.map(documentName => {
+        documentTypes.forEach(documentName => {
           
           let filteredPermissions = []
           
           // Loop through each permission and add to the set of permissions 
           // that match the document type. Push that to main permissions array.
-          selectedPermissions.map(permission => {
+          selectedPermissions.forEach(permission => {
 
             if (permission.document === documentName) {
               filteredPermissions.push(permission);
-            }
+            } 
           })
           permissionsByDocumentType.push(filteredPermissions);
+          
         })
 
         setPermissionsState([...permissionsByDocumentType])
@@ -59,28 +60,26 @@ const Role = ({ auth, roles: {loading, rolesData}, loadRoles, updateCompanyRoles
     } 
     
     
-  }, [loadRoles, auth.user.company, loading]
+  }, [loadRoles, auth.user.company, loading, department, permissionsByDocumentType, rolesData]
   
   )
 
   const handleOnChange = (document, action, e) => {
 
-    console.log('document: ', document);
-    console.log('action: ', action);
-    console.log('e.target.name: ', e.target.name);
-
     const newPermissions = [...permissionsState];
-    for (let set in newPermissions) {
+    for (let i in newPermissions) {
+      
+      let permissionSet = newPermissions[i]
 
-        for (let p in set ) {
-          if (newPermissions[set][p].document === document && newPermissions[set][p].action === action) {
-            newPermissions[set][p] = {...newPermissions[set][p], [e.target.name]: !newPermissions[set][p][e.target.name]}
+        for (let j in permissionSet ) {
+          if (permissionSet[j].document === document && permissionSet[j].action === action) {
+            permissionSet[j] = {...permissionSet[j], [e.target.name]: !permissionSet[j][e.target.name]}
             setPermissionsState([...newPermissions])
           }
-
-
         }
     }
+
+    console.log('permissionsState: ', permissionsState);
   }
 
   const handleOnSubmit = (e) => {
@@ -92,7 +91,6 @@ const Role = ({ auth, roles: {loading, rolesData}, loadRoles, updateCompanyRoles
     }
 
     updateCompanyRoles(permissionsData, rolesData.company, department);
-    console.log('rolesData.company: ', rolesData.company);
 
   }
   
@@ -104,7 +102,7 @@ const Role = ({ auth, roles: {loading, rolesData}, loadRoles, updateCompanyRoles
     ): (
       <div className="container-dashboard">
         <div className="container-headline">
-          <p className="text-primary text-large">Sales Role</p>
+          <p className="text-primary text-large">{`${department.charAt(0).toUpperCase() + department.slice(1)} Permissions`}</p>
           <p className="text-primary-light text-small">
             Customize permissions for manager and worker roles.
           </p>
