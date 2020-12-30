@@ -46,14 +46,16 @@ const Users = ({ users, loadCompanyUsers}) => {
           <div className="grid-users-headers text-regular">
             <p className="col1 text-primary">Name</p>
             <p className="col2 text-primary">Email</p>
-            <p className="col3 text-primary">Roles</p>
+            <p className="col3 text-primary">Manager Roles</p>
           </div>
           <hr className="my-1" />
           {profiles.map((profile) => (
             <UsersRow key={profile._id} profile={profile}/>
           ))}
         </div>
-        <button className="btn btn-small my-2"><Link to="/roles">Edit Roles</Link></button>
+        <Link to="/roles">
+        <button className="btn btn-small my-2">Edit Roles</button>
+        </Link>
       </div>
     )}
       </Fragment>

@@ -29,69 +29,22 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'company'
   },
-  roles: {
-    sales: {
-        manager: {
-          type: Boolean,
-          required: true,
-          default: false
-        }, 
-        worker: {
-          type: Boolean,
-          required: true,
-          default: true
-        }
-      },
-    products: {
-        manager: {
-          type: Boolean,
-          required: true,
-          default: false
-        },
-        worker: {
-          type: Boolean,
-          required: true,
-          default: true
-        }
-      },
-    warehouse: {
-        manager: {
-          type: Boolean,
-          required: true,
-          default: false
-        },
-        worker: {
-          type: Boolean,
-          required: true,
-          default: true
-        }
-      },
-    fleet: {
-        manager: {
-          type: Boolean,
-          required: true,
-          default: false
-        },
-        worker: {
-          type: Boolean,
-          required: true,
-          default: true
-        }
-      },
-    payments: 
-      {
-        manager: {
-          type: Boolean,
-          required: true,
-          default: false
-        },
-        worker: {
-          type: Boolean,
-          required: true,
-          default: true
-        }
-      }
-  },
+  roles: [{
+    department: {
+      type: String,
+      required: true,
+    },
+    manager: {
+      type: Boolean,
+      required: true,
+      default: false
+    }, 
+    worker: {
+      type: Boolean,
+      required: true,
+      default: true
+    }
+  }],
 });
 
 module.exports = User = new mongoose.model('user', UserSchema);

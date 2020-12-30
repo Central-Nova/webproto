@@ -40,7 +40,7 @@ const Routes = (props) => {
       <PrivateRoute exact path='/users' component={Users}/>
       <PrivateRoute path='/user/:userId' component={User}/>
       <PrivateRoute exact path='/roles' component={Roles}/>
-      <PrivateRoute exact path='/role' component={Role}/>
+      <PrivateRoute path='/role/:department' component={Role}/>
     </Switch>
     </Fragment>
   )

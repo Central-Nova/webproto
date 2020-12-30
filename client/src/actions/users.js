@@ -27,3 +27,31 @@ export const loadCompanyUsers = () => async (dispatch) => {
     
   }
 }
+
+export const updateUserRoles = (roleData, userId) => async (dispatch) => {
+  
+  try {
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+  
+    const res = await axios.put(`/api/users/roles/${userId}`, roleData, config);
+    
+    loadCompanyUsers();
+
+    dispatch(setAlert(res.data.msg,'success'))
+
+  } catch (err) {
+    const errors = err.response.data.errors;
+    
+    // Loop through errors array and call setAlert to display error message in alert box.
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg,'danger')));
+    }
+
+  }
+
+}

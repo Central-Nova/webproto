@@ -315,33 +315,33 @@ router.post(
         lastName,
         email,
         company: companyId,
-        roles: {
-          sales:
+        roles: [
             {
+            department: "Sales",
             manager: false,
             worker: true 
             },
-          products:
-          {
+            {
+            department: "Products",
             manager: false,
             worker: true 
-          },
-          warehouse:
-          {
+            },
+            {
+            department: "Warehouse",
             manager: false,
             worker: true 
-          },
-          fleet:
-          {
+            },
+            {
+            department: "Fleet",
             manager: false,
             worker: true 
-          },
-          payments:
-          {
+            },
+            {
+            department: "Payments",
             manager: false,
             worker: true 
-          },
-        },
+            }
+        ],
       });
 
       // Create password hash
@@ -365,12 +365,12 @@ router.post(
 );
 
 
-// @route   PUT api/users/:companyId
+// @route   PUT api/users/company/:companyId
 // @desc    Add company to user
 // @access  public
 
 router.put(
-  '/addCompany/:companyId',
+  '/company/:companyId',
   async (req, res) => {
     
     // Check if company exists
@@ -411,18 +411,22 @@ router.put(
       .json({msg: {title: 'Success', description: 'Company added to user.'}})
 
     } catch (err) {
-      console.log(err);
-      return res.status(500).send('Server Error');
+    //   if (err.kind =='ObjectId') {
+    //     return res
+    //     .status(400)
+    //     .json({ errors: [{ msg: {title: 'Error', description: 'Company not found.'} }] });
+    // }
+       res.status(500).send('Server Error');
     }
   }
 );
 
-// @route   PUT api/users/addCompany
+// @route   PUT api/users/company
 // @desc    Add company to user with invitation code
 // @access  public
 
 router.put(
-  '/addCompany',
+  '/company',
   async (req, res) => {
 
     const { code } = req.body;
@@ -476,9 +480,97 @@ router.put(
       .json({msg: {title: 'Success', description: 'Company added to user.'}})
 
     } catch (err) {
-      console.log(err);
       return res.status(500).send('Server Error');
     }
+  }
+);
+
+// @route   PUT api/users/company
+// @desc    Add company to user with invitation code
+// @access  public
+
+router.put(
+  '/roles/:userId',
+  async (req, res) => {
+
+    // Check if provided roles are correct
+    let rolesData = req.body
+
+    // Loop through to make sure it has three keys and validate
+
+    let keysToCheck = ['department', 'manager', 'worker']
+
+    console.log('keyToCheck: ', keysToCheck);
+
+    // Data validation
+    for (let role in rolesData) {
+      
+      // Check if the role object has three keys
+      keysToCheck.forEach( key => {
+        if (rolesData[role].hasOwnProperty(key)) {
+          return
+        } else {
+          console.log('problem key');
+        }
+
+      })
+
+      // Check if each department is a string
+      if (typeof rolesData[role].department !== 'string') {
+        console.log('problem: ', typeof rolesData[role].department)
+        return res
+        .status(400)
+        .json({ errors: [{ msg: {title: 'Error', description: 'User roles could not be updated with provided data.'} }] });
+
+      }
+
+      // Check if each manager is boolean
+      if (typeof rolesData[role].manager !== 'boolean') {
+        console.log('problem: ', typeof rolesData[role].manager)
+
+        return res
+        .status(400)
+        .json({ errors: [{ msg: {title: 'Error', description: 'User roles could not be updated with provided data.'} }] });
+
+      }
+
+      // Check if each worker is boolean
+      if (typeof rolesData[role].worker !== 'boolean') {
+        console.log('problem: ', typeof rolesData[role].worker)
+
+        return res
+        .status(400)
+        .json({ errors: [{ msg: {title: 'Error', description: 'User roles could not be updated with provided data.'} }] });
+    }
+
+    }
+
+    try {
+
+      let user = await User.findById(req.params.userId);
+
+      if (!user) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: {title: 'Error', description: 'Unauthorized user.'} }] });
+      }
+
+      user.roles = rolesData
+
+      user.save();
+
+      return res.status(200).json({msg: {title: 'Success!', description: `${user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1)}'s roles has been updated.`}});
+
+    } catch (err) {
+
+      return res.status(500).send('Server Error');
+      
+    }
+    // set roles
+
+    // save
+
+    
   }
 );
 

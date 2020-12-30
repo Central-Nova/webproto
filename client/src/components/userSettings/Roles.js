@@ -23,9 +23,11 @@ const Roles = () => {
               Sales quotes, sales orders, refunds, communication with buyers
             </p>
             <div className="col3">
+            <Link to="/role/sales">
               <button className="btn btn-primary btn-small btn-next">
-                <Link to="role">Manage</Link> <i className="fas fa-long-arrow-alt-right"></i>
+                Manage <i className="fas fa-long-arrow-alt-right"></i>
               </button>
+            </Link>
             </div>
           </div>
           <hr className="my-2" />
@@ -35,9 +37,11 @@ const Roles = () => {
               Inventory tracking, product lotting, product catalog, inventory counting
             </p>
             <div className="col3">
+            <Link to="/role/inventory">
               <button className="btn btn-primary btn-small btn-next">
-              <Link to="role">Manage</Link> <i className="fas fa-long-arrow-alt-right"></i>
+                Manage <i className="fas fa-long-arrow-alt-right"></i>
               </button>
+            </Link>
             </div>
           </div>
           <hr className="my-2" />
@@ -47,9 +51,11 @@ const Roles = () => {
               Sales orders, picking orders, packing orders, space management
             </p>
             <div className="col3">
+            <Link to="/role/warehouse">
               <button className="btn btn-primary btn-small btn-next">
-                <Link to="role">Manage</Link> <i className="fas fa-long-arrow-alt-right"></i>
+                Manage <i className="fas fa-long-arrow-alt-right"></i>
               </button>
+            </Link>
             </div>
           </div>
           <hr className="my-2" />
@@ -59,9 +65,11 @@ const Roles = () => {
               Zone, route, and driver management and driver actions.
             </p>
             <div className="col3">
+            <Link to="/role/fleet">
               <button className="btn btn-primary btn-small btn-next">
-                <Link to="role">Manage</Link> <i className="fas fa-long-arrow-alt-right"></i>
+                Manage <i className="fas fa-long-arrow-alt-right"></i>
               </button>
+            </Link>
             </div>
           </div>
           <hr className="my-2" />
@@ -71,15 +79,19 @@ const Roles = () => {
               Accounts receivable, cost tracking, and reports
             </p>
             <div className="col3">
+            <Link to="/role/payments">
               <button className="btn btn-primary btn-small btn-next">
-                <Link to="role">Manage</Link> <i className="fas fa-long-arrow-alt-right"></i>
+                Manage <i className="fas fa-long-arrow-alt-right"></i>
               </button>
+            </Link>
             </div>
           </div>
           <hr className="my-2" />
+          <Link to="/users">
         <button className="btn btn-small btn-back my-2">
-          <i className="fas fa-long-arrow-alt-left"></i><Link to="users">Back</Link>
+          <i className="fas fa-long-arrow-alt-left"></i>Back
         </button>
+        </Link>
       </div>
       </div>
   )
