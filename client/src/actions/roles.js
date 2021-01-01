@@ -9,9 +9,6 @@ import {
 
 
 export const loadRoles = (companyId) => async (dispatch) => {
-
-  console.log('called loadRoles');
-
   
   try {
 

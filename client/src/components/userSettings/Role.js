@@ -13,54 +13,48 @@ const Role = ({ auth, roles: {loading, rolesData}, loadRoles, updateCompanyRoles
 
   let { department } = useParams();
 
-  let permissionsByDocumentType = []
-
+  
   const [permissionsState, setPermissionsState] = useState([])
   
   
   useEffect( ()=> {
     loadRoles(auth.user.company)
-    
+    console.log('called useEffect');
     
     if (!loading && rolesData) {
-
-      let selectedPermissions = [];
-      let documentTypes = [];
-
+      
+      let permissionsByDocumentType = []
+      
       // filter roles state to only select by department based on url params
-      selectedPermissions = rolesData.permissions.filter(permission =>
+      let permissionsByDepartment = rolesData.permissions.filter(permission =>
         permission.department.toLowerCase() === department)
-
-      // Add unique document types to array;
-      for (let p in selectedPermissions) {
-          if (!documentTypes.includes(selectedPermissions[p].document)) {
-            documentTypes.push(selectedPermissions[p].document);
-          }
+        
+      // Build array of unique document types (ex. 'Sales Quotes', 'Sales Orders');
+      let documentTypes = [];
+      for (let i in permissionsByDepartment) {
+        if (!documentTypes.includes(permissionsByDepartment[i].document)) {
+          documentTypes.push(permissionsByDepartment[i].document);
+        }
       }
        
-        // Loop through each found document type
-        documentTypes.forEach(documentName => {
-          
-          let filteredPermissions = []
-          
-          // Loop through each permission and add to the set of permissions 
-          // that match the document type. Push that to main permissions array.
-          selectedPermissions.forEach(permission => {
+      // Loop through each unique document type
+      documentTypes.forEach(documentName => {
+        
+        
+        // Loop through each permission and add to the array of permissions that match the document type. Builds an array for each document type
+        
+        let filteredPermissions = permissionsByDepartment.filter( permission => permission.document === documentName)
 
-            if (permission.document === documentName) {
-              filteredPermissions.push(permission);
-            } 
-          })
-          permissionsByDocumentType.push(filteredPermissions);
-          
-        })
+        // Builds an array of arrays [[doctype1][doctype2][doctype3]...]
+        permissionsByDocumentType.push(filteredPermissions);
 
-        setPermissionsState([...permissionsByDocumentType])
+        
+      })
+
+      setPermissionsState([...permissionsByDocumentType])
 
     } 
-    
-    
-  }, [loadRoles, auth.user.company, loading, department, permissionsByDocumentType, rolesData]
+  }, [auth.user.company, loading, department, loadRoles]
   
   )
 
@@ -78,8 +72,6 @@ const Role = ({ auth, roles: {loading, rolesData}, loadRoles, updateCompanyRoles
           }
         }
     }
-
-    console.log('permissionsState: ', permissionsState);
   }
 
   const handleOnSubmit = (e) => {

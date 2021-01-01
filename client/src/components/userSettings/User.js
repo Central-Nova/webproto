@@ -40,113 +40,91 @@ const User = ({ users: { loading, profiles }, loadCompanyUsers, updateUserRoles 
   const [ formState, setFormState ] = useState(initialState)
 
   const { userId } = useParams();
-
-  let profileToLoad = {};
-
-  if (!loading && profiles) {
-    let profileArray = profiles.filter((profile) => profile._id === userId);
-    
-    profileToLoad = {...profileArray[0]}
-  }
-
+  
   // Load users and filter for requested user. Then set initialState to user's role.
   useEffect(()=> {
+    
     loadCompanyUsers();
-
-    if (!loading && profiles) {
+    
+    if (!loading) {
       const roleData = [...initialState]
+      
+      let profileToState = profiles.find((profile) => profile._id === userId);
 
-      for (let role in profileToLoad.roles) {
-        roleData[role] = profileToLoad.roles[role]
+      for (let role in profileToState.roles) {
+        roleData[role] = profileToState.roles[role]
       }
 
       setFormState(roleData);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }
-  }, [loadCompanyUsers, loading, profileToLoad.roles, profiles])
+    
+  }, [loadCompanyUsers, loading, userId])
 
-    const { firstName, lastName } = profileToLoad;
-  
-    // const handleOnChange = (roleId, e) => {
-    //   const newFormState = formState.map( (dept) => {
-    //     if (dept._id !== roleId) return dept;
-    //     return {...dept, [e.target.name]: !e.target.value }
-    //   });
-    //   setFormState(newFormState);
+  // Get user name from url params
+  let profileToLoad = {}
 
-    //   console.log('receiving: ', roleId);
-    //   console.log('receiving: ', e.target.name);
-    //   console.log('receiving: ', !e.target.value);
-    //   console.log('formState: ', formState);
-    // } 
+  if (!loading && profiles!== null) {
+    profileToLoad = profiles.find((profile) => profile._id === userId);
+  }
 
-    const handleOnChange = (dept, e) => {
-      const newRoles = [...formState]
+  let { firstName, lastName } = profileToLoad;
 
-      for (let role in newRoles) {
-        if (newRoles[role].department === dept) {
-          // console.log('receiving: ', dept);
-          // console.log('receiving: ', e.target.name);
-          // console.log('receiving: ', e.target.checked);
-          // console.log('receiving: ', e.target.value);
+  // Toggles the boolean value of worker/manager input
+  const handleOnChange = (dept, e) => {
+    const newRoles = [...formState]
 
-          console.log('newRoles[role][e.target.name]: ', newRoles[role][e.target.name]);
+    for (let role in newRoles) {
+      if (newRoles[role].department === dept) {
 
-          // if (newRoles[role][e.target.name] === false){
-          //   newRoles[role] = {...newRoles[role], [e.target.name]: true}
-          // } 
-          // if (newRoles[role][e.target.name] === true){
-          //   newRoles[role] = {...newRoles[role], [e.target.name]: false}
-          // }
+        newRoles[role] = {...newRoles[role], [e.target.name]: !newRoles[role][e.target.name]}
 
-          newRoles[role] = {...newRoles[role], [e.target.name]: !newRoles[role][e.target.name]}
-          console.log('newRoles[role][e.target.name]: ', newRoles[role][e.target.name]);
-          console.log('newRoles[role]: ', newRoles[role]);
-
-          setFormState([...newRoles]);
-        }
+        setFormState([...newRoles]);
       }
     }
+  }
 
-    const handleOnSubmit = (e) => {
-      e.preventDefault();
-      updateUserRoles(formState,userId);
-    }
+  // Dispatches updateUserRoles: put request to user route
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+    updateUserRoles(formState,userId);
+  }
 
-    return (
-    <Fragment>
-    {loading ? (
-    <Spinner/>
-    ) : (
-    <div className="container-dashboard">
-        <div className="container-headline">
-          <p className="text-primary text-large">{`${firstName} ${lastName}`}</p>
-          <p className="text-primary-light text-small">
-            Manage roles for this user.
-          </p>
-        </div>
-        <div className="container-roleswitches-grid">
-          <div className="grid-role-headers text-primary text-regular">
-            <p className="col1">Category</p>
-            <p className="col2">Manager</p>
-            <p className="col3">Worker</p>
-          </div>
-          <hr className="my-1" />
-          {formState.map( (department, id) =>(
-            <UserRow key={id} roleData={department} onChange={handleOnChange} />
-          ))}
-        </div>
-        <button onClick={(e) => handleOnSubmit(e)} className="btn btn-small btn-primary btn-back m-2">
-          Save
-        </button>
-        <Link to="/users">
-        <button className="btn btn-small btn-light btn-back m-2">
-          <i className="fas fa-long-arrow-alt-left"></i>Back
-        </button>
-        </Link>
+  return (
+  <Fragment>
+  {loading ? (
+  <Spinner/>
+  ) : (
+  <div className="container-dashboard">
+      <div className="container-headline">
+        <p className="text-primary text-large">{`${firstName} ${lastName}`}</p>
+        <p className="text-primary-light text-small">
+          Manage roles for this user.
+        </p>
       </div>
-    )
-    }
-      </Fragment>
+      <div className="container-roleswitches-grid">
+        <div className="grid-role-headers text-primary text-regular">
+          <p className="col1">Category</p>
+          <p className="col2">Manager</p>
+          <p className="col3">Worker</p>
+        </div>
+        <hr className="my-1" />
+        {formState.map( (department, id) =>(
+          <UserRow key={id} roleData={department} onChange={handleOnChange} />
+        ))}
+      </div>
+      <button onClick={(e) => handleOnSubmit(e)} className="btn btn-small btn-primary btn-back m-2">
+        Save
+      </button>
+      <Link to="/users">
+      <button className="btn btn-small btn-light btn-back m-2">
+        <i className="fas fa-long-arrow-alt-left"></i>Back
+      </button>
+      </Link>
+    </div>
+  )
+  }
+    </Fragment>
   )
 }
 

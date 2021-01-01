@@ -22,6 +22,7 @@ router.get('/', (req, res) => {
   try {
     return res.send(req.user);
     } catch (error) {
+      
     return res.status(500).send('Server Error');
   }
 })
