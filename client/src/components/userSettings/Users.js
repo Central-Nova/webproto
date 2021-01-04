@@ -18,43 +18,65 @@ const Users = ({ users, loadCompanyUsers}) => {
     <Fragment>
     {loading ? (<Spinner/>) : (
       
-      <div className="container-dashboard">
-        <div className="container-headline">
-          <p className="text-primary text-large">Users</p>
-          <p className="text-primary-light text-small">
+      <div class="container-dashboard">
+        <div class="container-headline">
+          <p class="text-primary text-medium">Users</p>
+          <p class="text-primary-light text-small">
             Manage users and their roles.
           </p>
         </div>
-        <div className="container-role-fields my-2">
-          <form action="">
-            <div className="form-grid">
-              <div className="email">
-                <input type="text" placeholder="Email" />
-              </div>
-              <div className="role">
-                <select name="" id="">
-                  <option value="">--Role--</option>
-                  <option value="employee">Employee</option>
-                  <option value="manager">Manager</option>
-                </select>
-              </div>
-              <button className="btn btn-primary btn-small">Invite</button>
-            </div>
-          </form>
-        </div>
-        <div className="container-users-grid">
-          <div className="grid-users-headers text-regular">
-            <p className="col1 text-primary">Name</p>
-            <p className="col2 text-primary">Email</p>
-            <p className="col3 text-primary">Manager Roles</p>
+        <div class="container-role-fields my-2">
+          <div class="form search">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search users by name or email" />
           </div>
-          <hr className="my-1" />
+          <div class="form email">
+            <i class="fas fa-paper-plane"></i>
+            <input
+              type="text"
+              placeholder="Send email invite. Separate emails with a comma."
+            />
+          </div>
+          <button class="btn btn-primary btn-small">Invite</button>
+        </div>
+        <div class="container-filters my-2">
+          <p class="text-small text-primary-light">Filter by:</p>
+          <div class="filter-option">
+            <i class="fas fa-sitemap"></i>
+            <select name="" id="">
+              <option value="">Role</option>
+              <option value="">Manager</option>
+              <option value="">Worker</option>
+            </select>
+          </div>
+          <div class="filter-option">
+            <i class="fas fa-briefcase"></i>
+            <select name="" id="">
+              <option value="">Department</option>
+              <option value="">Sales</option>
+              <option value="">Products</option>
+              <option value="">Inventory</option>
+              <option value="">Warehouse</option>
+              <option value="">Fleet</option>
+              <option value="">Payments</option>
+            </select>
+          </div>
+        </div>
+        <div class="container-users-grid">
+          <div class="grid-users-headers text-medium text-primary">
+            <p>Name</p>
+            <p>Email</p>
+            <p>Manager</p>
+            <p>Worker</p>
+          </div>
+          <hr class="my-1" />
+
           {profiles.map((profile) => (
             <UsersRow key={profile._id} profile={profile}/>
           ))}
         </div>
         <Link to="/roles">
-        <button className="btn btn-small my-2">Edit Roles</button>
+        <button className="btn btn-small btn-light my-2">Edit Roles</button>
         </Link>
       </div>
     )}

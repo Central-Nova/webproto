@@ -59,7 +59,7 @@ const Login = ({ loginUser, isAuthenticated, user, company }) => {
         <section className="landing-form-container">
         <i className="logo-landing fas fa-warehouse fa-5x text-primary"></i>
         <h1 className="text-medium">Sign Into Your Account</h1>
-        <form onSubmit={e=> onSubmit(e)} className="form mx-4">
+        <form className="form mx-4">
           <div className="form form-item">
             <input
               type="email"
@@ -80,12 +80,10 @@ const Login = ({ loginUser, isAuthenticated, user, company }) => {
               placeholder="Password"
             />
           </div>
-          <div className="form form-item">
-          <input type="submit" className="btn btn-large btn-primary" value="Sign In">
-          </input>
-          </div>
         </form>
         <div className="button-container my-1">
+        <s onClick={e => onSubmit(e)} class="btn btn-large btn-primary mx-4">Sign In</s>
+
           <div className="separator">or</div>
           <a className="btn btn-large btn-light mx-4" onClick={e=> onGoogleClick(e)} href='http://localhost:5000/api/auth/google/login'
             ><i className="fab fa-google mx-1"></i>Sign In with Google</a>

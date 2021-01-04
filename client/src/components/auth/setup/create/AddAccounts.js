@@ -86,7 +86,7 @@ const AddAccounts = ({ setAlert, addAccountToCompany, user, company }) => {
     addAccountToCompany(formData);
   }
 
-  if (company.profile !== null ) {
+  if (company.profile.operation !== undefined ) {
     return <Redirect to='/create-team' />
   }
 

@@ -8,10 +8,14 @@ const UserItem = ({profile}) => {
   return (
     <Fragment>
     <div className="grid-users-item text-primary text-small">
-      <p className="col1">{`${firstName} ${lastName}`}</p>
-      <p className="col2">{email}</p>
-      <p className="col3">Sales, Products, Inventory, Warehouse, Fleet, Payments</p>
-      <Link to={`/user/${_id}`} className="col4"><i className="fas fa-ellipsis-h"></i></Link>
+      <p>{`${firstName} ${lastName}`}</p>
+      <p>{email}</p>
+      <p>Sales, Products, Inventory, Warehouse, Fleet, Payments</p>
+      <p>Sales, Products, Inventory, Warehouse, Fleet, Payments</p>
+
+      <Link to={`/user/${_id}`} className="settings">
+      <i className="fas fa-ellipsis-h fa-2x"></i>
+      </Link>
     </div>
     <hr className="my-2" />
   </Fragment>

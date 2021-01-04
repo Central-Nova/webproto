@@ -32,8 +32,16 @@ return (
         <i className="logo-landing fas fa-warehouse fa-5x text-primary"></i>
         <h1 className="text-medium">Welcome, {user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1)}!</h1>
         <button className="btn btn-large btn-primary" onClick={()=>onClick()}>Log Out</button>
-        <Link className="btn btn-large btn-primary-light mx-2" to='/users'>Users</Link>
-        <Link className="btn btn-large btn-primary-light mx-2" to='/company'>Setup</Link>
+        <Link to='/users'>
+          <button className="btn btn-large btn-light mx-2" >
+          Users
+          </button>
+        </Link>
+        <Link to='/company'>
+          <button className="btn btn-large btn-light mx-2" >
+          Setup
+          </button>
+        </Link>
       </section>
       )}
 

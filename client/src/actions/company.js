@@ -125,7 +125,7 @@ export const addCompanyToUser = (companyId) => async (dispatch) => {
   try {
 
     // Add the companyId to user record
-    await axios.put(`/api/users/addcompany/${companyId}`);
+    await axios.put(`/api/users/company/${companyId}`);
 
     // Load user again which now holds companyId
     dispatch(loadUser());
