@@ -65,14 +65,14 @@ export const createCompany = (formData) => async dispatch => {
     // Creates company record, gets back companyId in res.data
     const res = await axios.post('/api/companies', formData, config);
 
-    // Sets state.company.profile to hold company record
-    dispatch(loadCompany())
-
+    // Update user record with companyID
+    dispatch(addCompanyToUser(res.data))
+    
     // Send success alert to alert box.
     dispatch(setAlert({title: 'Success', description: 'Company created!'}, 'success'))
     
-    // Update user record with companyID
-    dispatch(addCompanyToUser(res.data))
+    // Sets state.company.profile to hold company record
+    dispatch(loadCompany())
     
   } catch (err) {
     
@@ -125,7 +125,7 @@ export const addCompanyToUser = (companyId) => async (dispatch) => {
   try {
 
     // Add the companyId to user record
-    await axios.put(`/api/users/addcompany/${companyId}`);
+    await axios.put(`/api/users/company/${companyId}`);
 
     // Load user again which now holds companyId
     dispatch(loadUser());
