@@ -9,6 +9,8 @@ import AccountStepHandler from './AccountStepHandler';
 
 const AddAccounts = ({ setAlert, addAccountToCompany, user, company }) => {
 
+  console.log('company.profile.operation: ',company.profile.operation )
+
   const { account } = useParams();
 
   const [formState, setFormState] = useState({
