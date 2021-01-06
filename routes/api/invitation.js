@@ -1,4 +1,5 @@
 const express = require('express');
+const { check, validationResult } = require('express-validator');
 const router = express.Router();
 const { genLink } = require('../../lib/invitationUtils');
 
@@ -20,10 +21,15 @@ function makeid(length) {
 // @desc    Create invitation
 // @access  public
 
-router.post('/', async (req,res) => {
+router.post('/',
+[
+  check('emails.*', { title: 'Error', description: 'Please enter a valid email address' }).isEmail()
+], async (req,res) => {
 
   const { emails } = req.body;
   const company = req.user.company;
+
+  console.log('req.body: ', req.body);
 
   if (company === null || company === undefined) {
     return res
@@ -31,6 +37,13 @@ router.post('/', async (req,res) => {
     .json({ errors: [{ msg: {title: 'Error', description: 'Please set up your company first.'} }] })
   };
 
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res
+      .status(400)
+      .json({ errors: errors.array() })
+    }
 
   
   try {

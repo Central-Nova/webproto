@@ -1,8 +1,13 @@
 import React, { Fragment, useState } from 'react'
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
+import { createInvitations } from '../../../../actions/invitations';
+
 import SideNav from './sidenav/SideNav';
 import TeamSlotItem from './TeamSlotItem';
 
-const CreateTeam = () => {
+const CreateTeam = ({ createInvitations }) => {
 
   const  [ formData, setFormData ] = useState({employees:[{email: ''}]})
 
@@ -49,8 +54,10 @@ const CreateTeam = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    
+    let emails = employees.map(employee => employee.email)
 
-    // createInvitation({emails: employees});
+    createInvitations({emails});
   }
 
   return (
@@ -83,7 +90,7 @@ const CreateTeam = () => {
                 <button onClick={(e)=> addSlot(e)} className="btn btn-small btn-light my-1" type="submit">
                   Add Slot
                 </button>
-                <button className="btn btn-small btn-primary my-1">
+                <button onClick={(e) => onSubmit(e)} className="btn btn-small btn-primary my-1">
                   Finish 
                 </button>
               </div>
@@ -96,4 +103,12 @@ const CreateTeam = () => {
   )
 }
 
-export default CreateTeam;
+CreateTeam.propTypes = {
+  createInvitations: PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => ({
+
+})
+
+export default connect(mapStateToProps, { createInvitations })(CreateTeam);

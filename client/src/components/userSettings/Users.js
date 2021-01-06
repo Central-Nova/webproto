@@ -1,8 +1,10 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { loadCompanyUsers } from '../../actions/users';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom'
+
+import { loadCompanyUsers } from '../../actions/users';
+import { createInvitations } from '../../actions/invitations';
 
 import UsersRow from './UsersRow';
 import Spinner from '../layout/Spinner';
@@ -13,28 +15,21 @@ const initialState = {
   department: ''
 }
 
-const Users = ({ users, loadCompanyUsers}) => {
+const Users = ({ users, loadCompanyUsers, createInvitations}) => {
   const { loading, profiles } = users;
 
   const [profilesState, setProfilesState] = useState([])
 
   const [filterState, setFilterState] = useState(initialState)
 
-  const { search, role, department } = filterState;
+  const [emailsState, setEmailsState] = useState('')
 
-  // Load profiles into profilesState
-  useEffect(()=> {
-    loadCompanyUsers();
-
-    // Set state to state.users
-    if (!loading && profiles!== null) {
-      setProfilesState(profiles);
-    }
-    
-  },[loadCompanyUsers, loading, filterState])
+  const { search } = filterState;
 
   // Reload profilesState whenever filterState is updated
   useEffect(()=> {
+
+    loadCompanyUsers();
 
     if (!loading && profiles!==null) {
 
@@ -121,34 +116,20 @@ const Users = ({ users, loadCompanyUsers}) => {
 
   }, [loading, filterState])
 
-  // useEffect(()=> {
-  //   if (!loading && profiles!==null) {
-
-  //     if (filterState.search !== '') { 
-  //       let filteredProfiles = [...profiles]
-
-  //       // filteredProfiles.forEach( profile=> {
-  //       //   console.log('search term: ', filterState.search);
-  //       //   console.log(`${profile.firstName}: `, profile.firstName.includes(filterState.search))
-  //       // })
-
-  //       filteredProfiles = filteredProfiles.filter(profile => {
-  //         return (profile.firstName.toLowerCase().includes(filterState.search.toLowerCase()) || profile.email.toLowerCase().includes(filterState.search.toLowerCase()))
-  //       })
-
-  //       console.log('filterdProfiles: ', filteredProfiles);
-  //       setProfilesState(filteredProfiles)
-  //       console.log('profilesState: ', profilesState);
-  //     } else {
-  //       setProfilesState(profiles);
-  //     }
-  //   }
-  // }, [loading, filterState])
-
-  const onChange = (e) => { 
-    e.preventDefault();
+  const onSearchChange = (e) => { 
     setFilterState({...filterState, [e.target.name]: e.target.value})
+  }
 
+  const onEmailChange = (e) => {
+    setEmailsState(e.target.value);
+  }
+
+  const onEmailSubmit = (e) => {
+    let delimitedEmails = emailsState.split(',');
+
+    let trimmedEmails = delimitedEmails.map(email => email.trim())
+
+    createInvitations({emails: trimmedEmails})
   }
 
   return (
@@ -165,22 +146,23 @@ const Users = ({ users, loadCompanyUsers}) => {
         <div className="container-role-fields my-2">
           <div className="form search">
             <i className="fas fa-search"></i>
-            <input onChange={(e) => onChange(e)} name='search' value={search} type="text" placeholder="Search users by name or email." />
+            <input onChange={(e) => onSearchChange(e)} name='search' value={search} type="text" placeholder="Search users by name or email." />
           </div>
           <div className="form email">
             <i className="fas fa-paper-plane"></i>
             <input
+              onChange={(e)=> onEmailChange(e)}
               type="text"
               placeholder="Enter emails separated by a comma."
             />
           </div>
-          <button className="btn btn-primary btn-small">Invite</button>
+          <button onClick={(e) => onEmailSubmit(e)} className="btn btn-primary btn-small">Invite</button>
         </div>
         <div className="container-filters my-2">
           <p className="text-small text-primary-light">Filter by:</p>
           <div className="filter-option">
             <i className="fas fa-sitemap"></i>
-            <select onChange={(e)=> onChange(e)} name="role" id="">
+            <select onChange={(e)=> onSearchChange(e)} name="role" id="">
               <option value="">Role</option>
               <option value="manager">Manager</option>
               <option value="worker">Worker</option>
@@ -188,7 +170,7 @@ const Users = ({ users, loadCompanyUsers}) => {
           </div>
           <div className="filter-option">
             <i className="fas fa-briefcase"></i>
-            <select onChange={(e)=> onChange(e)} name="department" id="">
+            <select onChange={(e)=> onSearchChange(e)} name="department" id="">
               <option value="">Department</option>
               <option value="Sales">Sales</option>
               <option value="Products">Products</option>
@@ -223,6 +205,7 @@ const Users = ({ users, loadCompanyUsers}) => {
 
 Users.propTypes = {
   loadCompanyUsers: PropTypes.func.isRequired,
+  createInvitations: PropTypes.func.isRequired,
   users: PropTypes.object.isRequired,
 }
 
@@ -232,4 +215,4 @@ const mapStateToProps = state => ({
 
 
 
-export default connect(mapStateToProps, { loadCompanyUsers })(Users);
+export default connect(mapStateToProps, { loadCompanyUsers, createInvitations })(Users);
