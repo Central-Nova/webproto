@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { loadCompanyUsers } from '../../actions/users';
 import PropTypes from 'prop-types';
@@ -7,71 +7,208 @@ import { Link } from 'react-router-dom'
 import UsersRow from './UsersRow';
 import Spinner from '../layout/Spinner';
 
+const initialState = {
+  search: '',
+  role: '',
+  department: ''
+}
+
 const Users = ({ users, loadCompanyUsers}) => {
+  const { loading, profiles } = users;
+
+  const [profilesState, setProfilesState] = useState([])
+
+  const [filterState, setFilterState] = useState(initialState)
+
+  const { search, role, department } = filterState;
+
+  // Load profiles into profilesState
   useEffect(()=> {
     loadCompanyUsers();
-  },[loadCompanyUsers])
 
-  const { loading, profiles } = users;
+    // Set state to state.users
+    if (!loading && profiles!== null) {
+      setProfilesState(profiles);
+    }
+    
+  },[loadCompanyUsers, loading, filterState])
+
+  // Reload profilesState whenever filterState is updated
+  useEffect(()=> {
+
+    if (!loading && profiles!==null) {
+
+
+      if (filterState.search !== '' || filterState.department !== '' || filterState.role !== '') {
+
+        let filteredProfiles = [...profiles]
+        
+        // Filter only by search
+        if (filterState.department === '' && filterState.role ==='') {
+          // Filter by search 
+          filteredProfiles = filteredProfiles.filter(profile => {
+            return (profile.firstName.toLowerCase().includes(filterState.search.toLowerCase()) || profile.lastName.toLowerCase().includes(filterState.search.toLowerCase()) || profile.email.toLowerCase().includes(filterState.search.toLowerCase()))
+          })
+        }
+
+        // For filter by department and role
+        if (filterState.department !=='' && filterState.role !== '') {
+
+          filteredProfiles = filteredProfiles.filter(profile =>{
+          // Loop through each role item
+          let containsRole = profile.roles.map(role => {
+            // Check if the user has either worker or manager role in the specified department. If true, then containsRole will have a 'true' value
+            if (role.department.toString() === filterState.department) {
+                if (role[filterState.role] === true) {
+                  return true
+                } return false
+              }
+            })
+            // If containsRole has at least one 'true' value, then filter condition will receive 'true', adding profile to filtered array
+            return containsRole.includes(true)
+          }) 
+
+          // Filter by search 
+          filteredProfiles = filteredProfiles.filter(profile => {
+          return (profile.firstName.toLowerCase().includes(filterState.search.toLowerCase()) || profile.lastName.toLowerCase().includes(filterState.search.toLowerCase()) || profile.email.toLowerCase().includes(filterState.search.toLowerCase()))
+        })
+
+          // Filter by department
+        } if (filterState.department !=='' && filterState.role === '') {
+          filteredProfiles = filteredProfiles.filter(profile =>{
+          let containsRole = profile.roles.map(role => {
+            if (role.department.toString() === filterState.department) {
+                if (role.manager === true || role.worker === true) {
+                  return true
+                } return false
+              }
+            })
+            return containsRole.includes(true)
+          }) 
+
+          // Filter by search 
+          filteredProfiles = filteredProfiles.filter(profile => {
+            return (profile.firstName.toLowerCase().includes(filterState.search.toLowerCase()) || profile.lastName.toLowerCase().includes(filterState.search.toLowerCase()) || profile.email.toLowerCase().includes(filterState.search.toLowerCase()))
+          })
+
+          // Filter by role
+        } if (filterState.department ==='' && filterState.role !== '') {
+          filteredProfiles = filteredProfiles.filter(profile =>{
+          let containsRole = profile.roles.map(role => {
+              if (role[filterState.role] === true) {
+                return true
+              } return false
+              
+            })
+            return containsRole.includes(true)
+          }) 
+
+          // Filter by search 
+          filteredProfiles = filteredProfiles.filter(profile => {
+            return (profile.firstName.toLowerCase().includes(filterState.search.toLowerCase()) || profile.lastName.toLowerCase().includes(filterState.search.toLowerCase()) || profile.email.toLowerCase().includes(filterState.search.toLowerCase()))
+          })
+        } 
+
+        // Set profiles after filters applied
+        setProfilesState(filteredProfiles);
+      } else {
+        // If no filters applied, then show all profiles
+        setProfilesState(profiles);
+      }
+
+    }
+
+
+  }, [loading, filterState])
+
+  // useEffect(()=> {
+  //   if (!loading && profiles!==null) {
+
+  //     if (filterState.search !== '') { 
+  //       let filteredProfiles = [...profiles]
+
+  //       // filteredProfiles.forEach( profile=> {
+  //       //   console.log('search term: ', filterState.search);
+  //       //   console.log(`${profile.firstName}: `, profile.firstName.includes(filterState.search))
+  //       // })
+
+  //       filteredProfiles = filteredProfiles.filter(profile => {
+  //         return (profile.firstName.toLowerCase().includes(filterState.search.toLowerCase()) || profile.email.toLowerCase().includes(filterState.search.toLowerCase()))
+  //       })
+
+  //       console.log('filterdProfiles: ', filteredProfiles);
+  //       setProfilesState(filteredProfiles)
+  //       console.log('profilesState: ', profilesState);
+  //     } else {
+  //       setProfilesState(profiles);
+  //     }
+  //   }
+  // }, [loading, filterState])
+
+  const onChange = (e) => { 
+    e.preventDefault();
+    setFilterState({...filterState, [e.target.name]: e.target.value})
+
+  }
 
   return (
     <Fragment>
     {loading ? (<Spinner/>) : (
       
-      <div class="container-dashboard">
-        <div class="container-headline">
-          <p class="text-primary text-medium">Users</p>
-          <p class="text-primary-light text-small">
+      <div className="container-dashboard">
+        <div className="container-headline">
+          <p className="text-primary text-medium">Users</p>
+          <p className="text-primary-light text-small">
             Manage users and their roles.
           </p>
         </div>
-        <div class="container-role-fields my-2">
-          <div class="form search">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search users by name or email" />
+        <div className="container-role-fields my-2">
+          <div className="form search">
+            <i className="fas fa-search"></i>
+            <input onChange={(e) => onChange(e)} name='search' value={search} type="text" placeholder="Search users by name or email." />
           </div>
-          <div class="form email">
-            <i class="fas fa-paper-plane"></i>
+          <div className="form email">
+            <i className="fas fa-paper-plane"></i>
             <input
               type="text"
-              placeholder="Send email invite. Separate emails with a comma."
+              placeholder="Enter emails separated by a comma."
             />
           </div>
-          <button class="btn btn-primary btn-small">Invite</button>
+          <button className="btn btn-primary btn-small">Invite</button>
         </div>
-        <div class="container-filters my-2">
-          <p class="text-small text-primary-light">Filter by:</p>
-          <div class="filter-option">
-            <i class="fas fa-sitemap"></i>
-            <select name="" id="">
+        <div className="container-filters my-2">
+          <p className="text-small text-primary-light">Filter by:</p>
+          <div className="filter-option">
+            <i className="fas fa-sitemap"></i>
+            <select onChange={(e)=> onChange(e)} name="role" id="">
               <option value="">Role</option>
-              <option value="">Manager</option>
-              <option value="">Worker</option>
+              <option value="manager">Manager</option>
+              <option value="worker">Worker</option>
             </select>
           </div>
-          <div class="filter-option">
-            <i class="fas fa-briefcase"></i>
-            <select name="" id="">
+          <div className="filter-option">
+            <i className="fas fa-briefcase"></i>
+            <select onChange={(e)=> onChange(e)} name="department" id="">
               <option value="">Department</option>
-              <option value="">Sales</option>
-              <option value="">Products</option>
-              <option value="">Inventory</option>
-              <option value="">Warehouse</option>
-              <option value="">Fleet</option>
-              <option value="">Payments</option>
+              <option value="Sales">Sales</option>
+              <option value="Products">Products</option>
+              <option value="Inventory">Inventory</option>
+              <option value="Warehouse">Warehouse</option>
+              <option value="Fleet">Fleet</option>
+              <option value="Payments">Payments</option>
             </select>
           </div>
         </div>
-        <div class="container-users-grid">
-          <div class="grid-users-headers text-medium text-primary">
+        <div className="container-users-grid">
+          <div className="grid-users-headers text-medium text-primary">
             <p>Name</p>
             <p>Email</p>
             <p>Manager</p>
             <p>Worker</p>
           </div>
-          <hr class="my-1" />
+          <hr className="my-1" />
 
-          {profiles.map((profile) => (
+          {profilesState.map((profile) => (
             <UsersRow key={profile._id} profile={profile}/>
           ))}
         </div>

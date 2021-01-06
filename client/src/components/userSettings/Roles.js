@@ -88,7 +88,7 @@ const Roles = () => {
           </div>
           <hr className="my-2" />
           <Link to="/users">
-        <button className="btn btn-small btn-back my-2">
+        <button className="btn btn-small btn-light btn-back my-2">
           <i className="fas fa-long-arrow-alt-left"></i>Back
         </button>
         </Link>

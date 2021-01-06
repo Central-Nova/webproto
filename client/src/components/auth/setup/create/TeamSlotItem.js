@@ -1,24 +1,18 @@
 import React, {Fragment} from 'react'
 
-const TeamSlotItem = () => {
+const TeamSlotItem = ({index, employee: { email }, onChange, onRemove}) => {
+  console.log('index: ', index);
+  console.log('employee: ', typeof email);
   return (
     <Fragment>
-    <div className="employeeTag">
-      <p className="text-regular">Employee</p>
-    </div>
-    <div className="roleTag">
-      <p className="text-regular">Role</p>
-    </div>
-    <div className="employee">
-      <input type="text" />
-    </div>
-    <div className="role">
-      <select name="" id="">
-        <option value="">Assign Role</option>
-        <option value="employee">Employee</option>
-        <option value="manager">Manager</option>
-      </select>
-    </div>
+      <div className="employee">
+        <input onChange={e=> onChange(index,e)} name="email" value={email} placeholder="Email" type="text" />
+      </div>
+      <div className="btn-remove">
+        <button onClick={(e) => onRemove(index,e)} className="btn btn-minus">
+          <div className="circle"><i className="fas fa-minus"></i></div>
+        </button>
+      </div>
     </Fragment>
   )
 }

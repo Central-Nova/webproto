@@ -22,7 +22,7 @@ function makeid(length) {
 
 router.post('/', async (req,res) => {
 
-  const { email } = req.body;
+  const { emails } = req.body;
   const company = req.user.company;
 
   if (company === null || company === undefined) {
@@ -31,34 +31,39 @@ router.post('/', async (req,res) => {
     .json({ errors: [{ msg: {title: 'Error', description: 'Please set up your company first.'} }] })
   };
 
-  // Create invitation expiration
-  let expires = new Date();
-  expires.setHours(expires.getHours() + 24);
-  expires = expires.getTime();
-  
-  const code = makeid(5);
+
   
   try {
-    
-    let invitation = new Invitation({
-      company,
-      code,
-      expires,
-      email,
-      })
 
-      
-      // Create url link
-      const link = `http://localhost:3000/register/invite/${company}/${invitation._id}`
-      
-      invitation.url = link;
-      
+    emails.forEach(async (email) => {
 
-    await invitation.save();
+        // Create invitation expiration
+      let expires = new Date();
+      expires.setHours(expires.getHours() + 24);
+      expires = expires.getTime();
+      
+      const code = makeid(5);
+
+      let invitation = new Invitation({
+        company,
+        code,
+        expires,
+        email,
+        })
+  
+        
+        // Create url link
+        const link = `http://localhost:3000/register/invite/${company}/${invitation._id}`
+        
+        invitation.url = link;
+
+        await invitation.save();
+    })
 
     return res.status(200).json({msg: { title: 'Success', description: 'Invitation email sent to users.'} })
     
   } catch (err) {
+    console.log(err);
     return res.status(500).send('Server Error');
    
   }

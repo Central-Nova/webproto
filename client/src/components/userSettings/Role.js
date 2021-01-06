@@ -11,6 +11,8 @@ import RoleSection from './RoleSection';
 const Role = ({ auth, roles: {loading, rolesData}, loadRoles, updateCompanyRoles}) => {
 
 
+
+
   let { department } = useParams();
 
   
@@ -19,7 +21,6 @@ const Role = ({ auth, roles: {loading, rolesData}, loadRoles, updateCompanyRoles
   
   useEffect( ()=> {
     loadRoles(auth.user.company)
-    console.log('called useEffect');
     
     if (!loading && rolesData) {
       
@@ -55,8 +56,9 @@ const Role = ({ auth, roles: {loading, rolesData}, loadRoles, updateCompanyRoles
 
     } 
   }, [auth.user.company, loading, department, loadRoles]
-  
   )
+
+  console.log('permissionsState: ', permissionsState);
 
   const handleOnChange = (document, action, e) => {
 

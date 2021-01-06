@@ -82,7 +82,7 @@ const Login = ({ loginUser, isAuthenticated, user, company }) => {
           </div>
         </form>
         <div className="button-container my-1">
-        <s onClick={e => onSubmit(e)} class="btn btn-large btn-primary mx-4">Sign In</s>
+        <button onClick={e => onSubmit(e)} className="btn btn-large btn-primary mx-4">Sign In</button>
 
           <div className="separator">or</div>
           <a className="btn btn-large btn-light mx-4" onClick={e=> onGoogleClick(e)} href='http://localhost:5000/api/auth/google/login'
