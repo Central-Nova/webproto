@@ -223,8 +223,8 @@ router.post(
       }
 
       user = new User({
-        firstName,
-        lastName,
+        firstName: firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase(),
+        lastName: lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase(),
         email,
         roles: [
           {

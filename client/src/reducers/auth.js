@@ -1,5 +1,6 @@
 import {
   REGISTER_SUCCESS,
+  REGISTER_CLEARED,
   REGISTER_FAIL,
   USER_LOADED,
   AUTH_ERROR,
@@ -11,7 +12,8 @@ import {
 const initialState = {
   isAuthenticated: null,
   loading: true,
-  user: null
+  user: null,
+  registered: false
 };
 
 export default function (state = initialState, action) {
@@ -31,6 +33,7 @@ export default function (state = initialState, action) {
         ...state,
         isAuthenticated: true,
         loading: false,
+        registered: true
       };
     case REGISTER_FAIL:
     case AUTH_ERROR:
@@ -40,8 +43,13 @@ export default function (state = initialState, action) {
         ...state,
         isAuthenticated: false,
         loading: false,
-        user: null
+        user: null,
       };
+    case REGISTER_CLEARED:
+      return {
+        ...state,
+        registered: false
+      }
     default:
       return state;
   }

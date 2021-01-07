@@ -1,5 +1,6 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import { connect } from 'react-redux';
+import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { createInvitations } from '../../../../actions/invitations';
@@ -7,13 +8,19 @@ import { createInvitations } from '../../../../actions/invitations';
 import SideNav from './sidenav/SideNav';
 import TeamSlotItem from './TeamSlotItem';
 
-const CreateTeam = ({ createInvitations }) => {
+const CreateTeam = ({ createInvitations, invitations: { sent } }) => {
 
   const  [ formData, setFormData ] = useState({employees:[{email: ''}]})
 
   const { employees } = formData;
 
-  console.log('formData: ', formData)
+  useEffect(()=> {
+    // Clear formData
+    if (sent) {
+      setFormData({employees: [{email: ''}]})
+    }
+  },[sent])
+
 
   // Start with one slot
   // Add another slot for each additional email the user wants
@@ -58,6 +65,7 @@ const CreateTeam = ({ createInvitations }) => {
     let emails = employees.map(employee => employee.email)
 
     createInvitations({emails});
+
   }
 
   return (
@@ -91,8 +99,13 @@ const CreateTeam = ({ createInvitations }) => {
                   Add Slot
                 </button>
                 <button onClick={(e) => onSubmit(e)} className="btn btn-small btn-primary my-1">
-                  Finish 
+                  Send 
                 </button>
+                <Link to='/'>
+                <button className="btn btn-small btn-light my-1">
+                  Done 
+                </button>
+                </Link>
               </div>
             </form>
           </div>
@@ -105,9 +118,11 @@ const CreateTeam = ({ createInvitations }) => {
 
 CreateTeam.propTypes = {
   createInvitations: PropTypes.func.isRequired,
+  invitations: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
+  invitations: state.invitations
 
 })
 

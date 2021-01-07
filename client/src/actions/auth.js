@@ -2,6 +2,7 @@ import axios from 'axios';
 import { setAlert } from './alert';
 import {
   REGISTER_SUCCESS,
+  REGISTER_CLEARED,
   REGISTER_FAIL,
   USER_LOADED,
   AUTH_ERROR,
@@ -45,6 +46,9 @@ export const register = (formData) => async (dispatch) => {
     dispatch({
       type: REGISTER_SUCCESS,
     });
+
+    // Dispatch REGISTER_CLEARED to set state.auth.registered to false
+    setTimeout(() => dispatch({ type: REGISTER_CLEARED }), 2000);
 
     // Call setAlert to display success message in alert box.
     dispatch(setAlert(res.data.msg,'success'))

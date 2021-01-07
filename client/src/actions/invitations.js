@@ -18,9 +18,12 @@ export const createInvitations = (formData) => async (dispatch) => {
     })
 
     dispatch(setAlert(res.data.msg, 'success'))
+
+    setTimeout(() => dispatch({ type: INVITATIONS_CLEARED} ), 2000);
+
   } catch (err) {
     const errors = err.response.data.errors;
-    
+
     if (errors) {
       errors.forEach(error => dispatch(setAlert(error.msg,'danger')));
     }

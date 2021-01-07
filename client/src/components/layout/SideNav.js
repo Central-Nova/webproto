@@ -12,7 +12,7 @@ function SideNav({ company: { loading, profile }}) {
           <p className="text-primary text-regular">AppName</p>
         </div>
         <div className="info-card">
-          <p className="text-primary account-type">{!loading && profile.name}</p>
+          <p className="text-primary account-type">{!loading && profile !== null ? profile.name : ''}</p>
 
         </div>
         <hr className="my-1" />

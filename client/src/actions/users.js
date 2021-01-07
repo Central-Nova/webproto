@@ -40,7 +40,7 @@ export const updateUserRoles = (roleData, userId) => async (dispatch) => {
   
     const res = await axios.put(`/api/users/roles/${userId}`, roleData, config);
     
-    loadCompanyUsers();
+    dispatch(loadCompanyUsers());
 
     dispatch(setAlert(res.data.msg,'success'))
 

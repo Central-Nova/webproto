@@ -30,7 +30,7 @@ return (
     ) : (
     <section className="landing-form-container">
         <i className="logo-landing fas fa-warehouse fa-5x text-primary"></i>
-        <h1 className="text-medium">Welcome, {user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1)}!</h1>
+        <h1 className="text-medium">Welcome, {user.firstName}!</h1>
         <button className="btn btn-large btn-primary" onClick={()=>onClick()}>Log Out</button>
         <Link to='/users'>
           <button className="btn btn-large btn-light mx-2" >

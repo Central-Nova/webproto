@@ -15,7 +15,7 @@ const initialState = {
   department: ''
 }
 
-const Users = ({ users, loadCompanyUsers, createInvitations}) => {
+const Users = ({ users, invitations: { sent }, loadCompanyUsers, createInvitations}) => {
   const { loading, profiles } = users;
 
   const [profilesState, setProfilesState] = useState([])
@@ -116,6 +116,14 @@ const Users = ({ users, loadCompanyUsers, createInvitations}) => {
 
   }, [loading, filterState])
 
+  useEffect(()=> {
+
+    console.log('sent: ', sent);
+    if (sent) {
+      setEmailsState('');
+    }
+  },[sent])
+
   const onSearchChange = (e) => { 
     setFilterState({...filterState, [e.target.name]: e.target.value})
   }
@@ -152,6 +160,7 @@ const Users = ({ users, loadCompanyUsers, createInvitations}) => {
             <i className="fas fa-paper-plane"></i>
             <input
               onChange={(e)=> onEmailChange(e)}
+              value={emailsState}
               type="text"
               placeholder="Enter emails separated by a comma."
             />
@@ -207,10 +216,12 @@ Users.propTypes = {
   loadCompanyUsers: PropTypes.func.isRequired,
   createInvitations: PropTypes.func.isRequired,
   users: PropTypes.object.isRequired,
+  invitations: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
-  users: state.users
+  users: state.users,
+  invitations: state.invitations
 })
 
 

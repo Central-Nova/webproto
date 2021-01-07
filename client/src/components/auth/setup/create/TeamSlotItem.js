@@ -1,8 +1,6 @@
 import React, {Fragment} from 'react'
 
 const TeamSlotItem = ({index, employee: { email }, onChange, onRemove}) => {
-  console.log('index: ', index);
-  console.log('employee: ', typeof email);
   return (
     <Fragment>
       <div className="employee">
