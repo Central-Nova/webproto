@@ -4,6 +4,8 @@ import { setAlert } from './alert'
 import {
   USERS_LOADED,
   USERS_ERROR,
+  USERS_UPDATED,
+  USERS_READY,
   USERS_CLEARED
 } from './types';
 
@@ -39,10 +41,15 @@ export const updateUserRoles = (roleData, userId) => async (dispatch) => {
     };
   
     const res = await axios.put(`/api/users/roles/${userId}`, roleData, config);
-    
+
     dispatch(loadCompanyUsers());
 
+    setTimeout(dispatch({type: USERS_UPDATED}), 500)
+    
     dispatch(setAlert(res.data.msg,'success'))
+    
+    setTimeout(() => dispatch({ type: USERS_READY }), 2000);
+
 
   } catch (err) {
     const errors = err.response.data.errors;

@@ -24,7 +24,7 @@ const CreateTeam = ({ createInvitations, invitations: { sent } }) => {
 
   // Start with one slot
   // Add another slot for each additional email the user wants
-  const addSlot = (e) => {
+  const onAdd = (e) => {
     e.preventDefault();
 
     let newSlot = {email: ''}
@@ -54,7 +54,7 @@ const CreateTeam = ({ createInvitations, invitations: { sent } }) => {
     e.preventDefault();
     
     const newEmployees = [...employees]
-    newEmployees.splice(idx);
+    newEmployees.splice(idx, 1);
 
     setFormData({employees: newEmployees})
   }
@@ -93,11 +93,12 @@ const CreateTeam = ({ createInvitations, invitations: { sent } }) => {
               <div className="form-grid-emails">
                 {employees.map((employee, idx) => (<TeamSlotItem key={idx} index={idx} employee={employee} onRemove={onRemove}onChange={onChange} />))}
               </div>
-              <a href="../dashboard/dashboard.html" className="invisible">Next</a>
+                <div className="btn-remove">
+                  <button onClick={(e) => onAdd(e)} className="btn btn-plus my-1">
+                    <div className="circle"><i className="fas fa-plus"></i></div>
+                  </button>
+                </div>
               <div className="buttons my-1">
-                <button onClick={(e)=> addSlot(e)} className="btn btn-small btn-light my-1" type="submit">
-                  Add Slot
-                </button>
                 <button onClick={(e) => onSubmit(e)} className="btn btn-small btn-primary my-1">
                   Send 
                 </button>

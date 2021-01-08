@@ -1,12 +1,15 @@
 import {
   USERS_LOADED,
   USERS_ERROR,
+  USERS_UPDATED,
+  USERS_READY,
   USERS_CLEARED
 } from '../actions/types';
 
 const initialState = {
   loading: true,
   profiles: null,
+  updated: false
 }
 
 export default function (state = initialState, action) {
@@ -26,6 +29,16 @@ export default function (state = initialState, action) {
         ...state,
         loading: false,
         profiles: null
+      }
+    case USERS_UPDATED:
+      return {
+        ...state,
+        updated: true
+      }
+    case USERS_READY: 
+      return {
+        ...state,
+        updated: false
       }
     default:
       return state

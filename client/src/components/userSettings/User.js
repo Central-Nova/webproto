@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { loadCompanyUsers, updateUserRoles } from '../../actions/users';

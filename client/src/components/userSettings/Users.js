@@ -16,7 +16,7 @@ const initialState = {
 }
 
 const Users = ({ users, invitations: { sent }, loadCompanyUsers, createInvitations}) => {
-  const { loading, profiles } = users;
+  const { loading, profiles, updated } = users;
 
   const [profilesState, setProfilesState] = useState([])
 
@@ -132,12 +132,16 @@ const Users = ({ users, invitations: { sent }, loadCompanyUsers, createInvitatio
     setEmailsState(e.target.value);
   }
 
-  const onEmailSubmit = (e) => {
+  const onEmailSubmit = () => {
     let delimitedEmails = emailsState.split(',');
 
     let trimmedEmails = delimitedEmails.map(email => email.trim())
 
     createInvitations({emails: trimmedEmails})
+  }
+
+  const onClear = () => {
+    setFilterState(initialState);
   }
 
   return (
@@ -151,43 +155,51 @@ const Users = ({ users, invitations: { sent }, loadCompanyUsers, createInvitatio
             Manage users and their roles.
           </p>
         </div>
-        <div className="container-role-fields my-2">
+        <div className="container-filter-fields my-2">
           <div className="form search">
             <i className="fas fa-search"></i>
             <input onChange={(e) => onSearchChange(e)} name='search' value={search} type="text" placeholder="Search users by name or email." />
           </div>
-          <div className="form email">
-            <i className="fas fa-paper-plane"></i>
-            <input
-              onChange={(e)=> onEmailChange(e)}
-              value={emailsState}
-              type="text"
-              placeholder="Enter emails separated by a comma."
-            />
+          <div className="form grid-invite">
+            <div className="form email">
+              <i className="fas fa-paper-plane"></i>
+              <input
+                onChange={(e)=> onEmailChange(e)}
+                value={emailsState}
+                type="text"
+                placeholder="Enter emails separated by a comma."
+              />
+            </div>
+            <div className="">
+            <button onClick={() => onEmailSubmit()} className="btn btn-primary btn-small">Invite</button>
+            </div>
           </div>
-          <button onClick={(e) => onEmailSubmit(e)} className="btn btn-primary btn-small">Invite</button>
-        </div>
-        <div className="container-filters my-2">
-          <p className="text-small text-primary-light">Filter by:</p>
-          <div className="filter-option">
-            <i className="fas fa-sitemap"></i>
-            <select onChange={(e)=> onSearchChange(e)} name="role" id="">
-              <option value="">Role</option>
-              <option value="manager">Manager</option>
-              <option value="worker">Worker</option>
-            </select>
-          </div>
-          <div className="filter-option">
-            <i className="fas fa-briefcase"></i>
-            <select onChange={(e)=> onSearchChange(e)} name="department" id="">
-              <option value="">Department</option>
-              <option value="Sales">Sales</option>
-              <option value="Products">Products</option>
-              <option value="Inventory">Inventory</option>
-              <option value="Warehouse">Warehouse</option>
-              <option value="Fleet">Fleet</option>
-              <option value="Payments">Payments</option>
-            </select>
+          <div className=""></div>
+          <div className="container-filters">
+            <p className="text-small text-primary-light">Filter by:</p>
+            <div className="filter-option">
+              <i className="fas fa-sitemap"></i>
+              <select onChange={(e)=> onSearchChange(e)} name="role" id="">
+                <option value="">Role</option>
+                <option value="manager">Manager</option>
+                <option value="worker">Worker</option>
+              </select>
+            </div>
+            <div className="filter-option">
+              <i className="fas fa-briefcase"></i>
+              <select onChange={(e)=> onSearchChange(e)} name="department" id="">
+                <option value="">Department</option>
+                <option value="Sales">Sales</option>
+                <option value="Products">Products</option>
+                <option value="Inventory">Inventory</option>
+                <option value="Warehouse">Warehouse</option>
+                <option value="Fleet">Fleet</option>
+                <option value="Payments">Payments</option>
+              </select>
+            </div>
+            <div className="">
+              <button onClick={()=> onClear()} className="btn btn-tiny btn-light">Clear</button>
+            </div>
           </div>
         </div>
         <div className="container-users-grid">
@@ -196,6 +208,8 @@ const Users = ({ users, invitations: { sent }, loadCompanyUsers, createInvitatio
             <p>Email</p>
             <p>Manager</p>
             <p>Worker</p>
+            <p>Edit</p>
+
           </div>
           <hr className="my-1" />
 
