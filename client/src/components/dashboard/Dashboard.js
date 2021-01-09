@@ -11,17 +11,10 @@ const Dashboard = ( { roles, company, loadRoles, logoutUser, auth: {user, loadin
   
   const {loading: { companyLoading }, profile } = company;
 
-    useEffect(()=> {
-    if (!companyLoading && profile !==null) {
-      loadRoles(profile._id);
-    }      
-  }, [loadRoles, companyLoading, profile])
 
   const onClick = (e) => {
     logoutUser();
   }
-
-  console.log(roles)
 
 return (
 <Fragment>

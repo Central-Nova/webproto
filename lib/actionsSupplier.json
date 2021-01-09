@@ -281,41 +281,6 @@
   },
   {
     "department": "Warehouse",
-    "document": "Sales Order",
-    "action": "View",
-    "manager": true,
-    "worker": true
-  },
-  {
-    "department": "Warehouse",
-    "document": "Sales Order",
-    "action": "Create",
-    "manager": true,
-    "worker": true
-  },
-  {
-    "department": "Warehouse",
-    "document": "Sales Order",
-    "action": "Edit",
-    "manager": true,
-    "worker": true
-  },
-  {
-    "department": "Warehouse",
-    "document": "Sales Order",
-    "action": "Send",
-    "manager": true,
-    "worker": true
-  },
-  {
-    "department": "Warehouse",
-    "document": "Sales Order",
-    "action": "Delete",
-    "manager": true,
-    "worker": true
-  },
-  {
-    "department": "Warehouse",
     "document": "Picking Order",
     "action": "View",
     "manager": true,
@@ -528,6 +493,55 @@
     "department": "Payments",
     "document": "Reports",
     "action": "Delete",
+    "manager": true,
+    "worker": true
+  },
+  {
+    "department": "Admin",
+    "document": "Invitations",
+    "action": "Create",
+    "manager": true,
+    "worker": true
+  },
+  {
+    "department": "Admin",
+    "document": "Users",
+    "action": "View",
+    "manager": true,
+    "worker": true
+  },
+  {
+    "department": "Admin",
+    "document": "User Roles",
+    "action": "View",
+    "manager": true,
+    "worker": true
+  },
+  {
+    "department": "Admin",
+    "document": "User Roles",
+    "action": "Edit",
+    "manager": true,
+    "worker": true
+  },
+  {
+    "department": "Admin",
+    "document": "Role Permissions",
+    "action": "Edit",
+    "manager": true,
+    "worker": true
+  },
+  {
+    "department": "Admin",
+    "document": "Company Information",
+    "action": "Edit",
+    "manager": true,
+    "worker": true
+  },
+  {
+    "department": "Admin",
+    "document": "Payment Information",
+    "action": "Edit",
     "manager": true,
     "worker": true
   }

@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react'
 import { Link } from 'react-router-dom';
+import RoleCheck from '../layout/auth/RoleCheck';
 
 const UserItem = ({profile}) => {
 
@@ -29,9 +30,14 @@ const UserItem = ({profile}) => {
       <p>{email}</p>
       <p>{managerDepartments.join(', ')}</p>
       <p>{workerDepartments.join(', ')}</p>
-      <Link to={`/user/${_id}`} className="settings btn text-primary">
-      <i className="fas fa-cog fa-2x"></i>
-      </Link>
+      <RoleCheck department='admin' document='userroles' action='edit'
+        yes={()=>(
+          <Link to={`/user/${_id}`} className="settings btn text-primary">
+            <i className="fas fa-cog fa-2x"></i>
+          </Link>
+        )}
+        no={()=>(null)}
+      />
     </div>
     <hr className="my-2" />
   </Fragment>

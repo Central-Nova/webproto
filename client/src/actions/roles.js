@@ -8,12 +8,12 @@ import {
 } from './types';
 
 
-export const loadRoles = (companyId) => async (dispatch) => {
-  
+export const loadRoles = () => async (dispatch) => {
+
   try {
 
     // Get company roles with company ID and hold in res obj
-    const res = await axios.get(`/api/roles/${companyId}`);
+    const res = await axios.get('/api/roles');
 
    
     // Set state.roles.roles hold company roles
@@ -32,6 +32,32 @@ export const loadRoles = (companyId) => async (dispatch) => {
     })
   }
 }
+
+export const loadRolesByDocument = (document) => async (dispatch) => {
+
+  try {
+    
+    // Get company roles with company ID and hold in res obj
+    const res = await axios.get(`/api/roles/document/${document}`);
+
+   
+    // Set state.roles.roles hold company roles
+    dispatch({
+      type: ROLES_LOADED,
+      payload: res.data
+    });
+    
+
+  } catch (err) {
+    console.log(err);
+
+    // Set state.roles.roles to null
+    dispatch({
+      type: ROLES_ERROR
+    })
+  }
+}
+
 
 export const updateCompanyRoles = (permissionsData, companyId, department) => async (dispatch) => {
   

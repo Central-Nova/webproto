@@ -8,6 +8,7 @@ import { createInvitations } from '../../actions/invitations';
 
 import UsersRow from './UsersRow';
 import Spinner from '../layout/Spinner';
+import RoleCheck from '../layout/auth/RoleCheck';
 
 const initialState = {
   search: '',
@@ -117,8 +118,6 @@ const Users = ({ users, invitations: { sent }, loadCompanyUsers, createInvitatio
   }, [loading, filterState])
 
   useEffect(()=> {
-
-    console.log('sent: ', sent);
     if (sent) {
       setEmailsState('');
     }
@@ -160,21 +159,28 @@ const Users = ({ users, invitations: { sent }, loadCompanyUsers, createInvitatio
             <i className="fas fa-search"></i>
             <input onChange={(e) => onSearchChange(e)} name='search' value={search} type="text" placeholder="Search users by name or email." />
           </div>
-          <div className="form grid-invite">
-            <div className="form email">
-              <i className="fas fa-paper-plane"></i>
-              <input
-                onChange={(e)=> onEmailChange(e)}
-                value={emailsState}
-                type="text"
-                placeholder="Enter emails separated by a comma."
-              />
-            </div>
-            <div className="">
-            <button onClick={() => onEmailSubmit()} className="btn btn-primary btn-small">Invite</button>
-            </div>
-          </div>
-          <div className=""></div>
+          <RoleCheck department='admin' document='invitations' action='create' 
+          yes={()=> (
+            <Fragment>
+              <div className="form grid-invite">
+                <div className="form email">
+                  <i className="fas fa-paper-plane"></i>
+                  <input
+                    onChange={(e)=> onEmailChange(e)}
+                    value={emailsState}
+                    type="text"
+                    placeholder="Enter emails separated by a comma."
+                  />
+                </div>
+                <div className="">
+                <button onClick={() => onEmailSubmit()} className="btn btn-primary btn-small">Invite</button>
+                </div>
+              </div>
+              <div className=""></div>
+            </Fragment>
+          )}
+          no={()=> (null)}
+           />
           <div className="container-filters">
             <p className="text-small text-primary-light">Filter by:</p>
             <div className="filter-option">
@@ -203,23 +209,32 @@ const Users = ({ users, invitations: { sent }, loadCompanyUsers, createInvitatio
           </div>
         </div>
         <div className="container-users-grid">
-          <div className="grid-users-headers text-medium text-primary">
+          <div className="grid-users-headers text-regular text-primary">
             <p>Name</p>
             <p>Email</p>
             <p>Manager</p>
             <p>Worker</p>
-            <p>Edit</p>
-
+            <RoleCheck department='admin' document='userroles' action='edit'
+            yes={()=> (<p>Edit</p>)}
+            no={()=>(null)}
+            />
           </div>
           <hr className="my-1" />
-
           {profilesState.map((profile) => (
             <UsersRow key={profile._id} profile={profile}/>
           ))}
         </div>
-        <Link to="/roles">
-        <button className="btn btn-small btn-light my-2">Edit Roles</button>
-        </Link>
+        <RoleCheck 
+          department='admin'
+          document='rolepermissions'
+          action='edit'
+          yes={()=>(
+            <Link to="/roles">
+              <button className="btn btn-small btn-light my-2">Edit Roles</button>
+            </Link>
+          )}
+          no={() => (null)}
+          />
       </div>
     )}
       </Fragment>

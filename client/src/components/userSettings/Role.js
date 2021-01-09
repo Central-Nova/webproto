@@ -10,9 +10,6 @@ import RoleSection from './RoleSection';
 
 const Role = ({ auth, roles: {loading, rolesData}, loadRoles, updateCompanyRoles}) => {
 
-
-
-
   let { department } = useParams();
 
   
