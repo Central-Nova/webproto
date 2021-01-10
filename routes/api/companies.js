@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
+const companyAuth = require('../../middleware/companyAuth');
 
 const Company = require('../../models/Company');
 const User = require('../../models/User');
@@ -10,29 +11,13 @@ const User = require('../../models/User');
 // @access  public
 
 router.get(
-  '/'
-  ,
-  async (req, res) => {
-
+  '/',[companyAuth], async (req, res) => {
 
     try {
 
       // Check for existing company
 
-      if (req.user.company.id !== null) {
-        let company = await Company.findById(req.user.company);
-
-        if (!company) {
-          return res
-            .status(401)
-            .json({ errors: [{ msg: {title: 'Error', description: 'Company not found by User.'}  }] });
-        }
-
-      }
-
-      // Check for existing company
-
-      let company = await Company.findOne({ owner: req.user._id });
+      let company = await Company.findById(req.user.company);
 
       if (!company) {
         return res
@@ -121,15 +106,15 @@ router.post(
 
 // @route   PUT api/companies/:companyId
 // @desc    Edit Company
-// @access  public
+// @access  Has company and has 'Account Information':'Edit' permission
 
 router.put(
-  '/addCompany/:companyId'
+  '/company/:companyId'
   ,
-  [
+ [ companyAuth,[
     check('phone', {title:'Error', description:'Valid phone is required.'}).isNumeric(),
     check('email', {title:'Error', description:'Valid email is required.'}).isEmail(),
-  ],
+  ]],
   async (req, res) => {
 
     // Handle validation errors
@@ -179,25 +164,17 @@ router.put(
 
 // @route   PUT api/companies/adduser
 // @desc    Add user to company
-// @access  public
+// @access  Has company
 
 router.put(
-  '/adduser'
+  '/adduser', [companyAuth]
   ,
   async (req, res) => {
 
-    // Check if user is part of a company
-    if (!req.user.company) {
-      return res
-      .status(400)
-      .json({ errors: [{ msg: {title: 'Error', description: 'You are not part of a company.'} }] })
-    }
 
-    // Check if company already has account setup
-
+    // Check if user is already added to company
     let company = await Company.findById(req.user.company);
     
-    // Check if user is already added to company
     let foundUser = [];
 
     company.users.forEach((record) => {

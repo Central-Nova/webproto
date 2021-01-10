@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const { genPassword } = require('../../lib/passwordUtils')
+const companyAuth = require('../../middleware/companyAuth');
+const authorize = require('../../middleware/authorize');
 const invitationCheck = require('../../middleware/invitationCheck');
 const User = require('../../models/User');
 const Company = require('../../models/Company');
@@ -10,15 +12,10 @@ const Invitation = require('../../models/Invitation');
 
 // @route   GET api/users
 // @desc    Get all users by company
-// @access  public
-router.get('/', async (req, res) => {
+// @access  Has company
+router.get('/', [companyAuth], async (req, res) => {
 
 
-  if(!req.user.company) {
-    return res
-    .status(400)
-    .json({ errors: [{ msg: {title: 'Error', description: 'You are not part of a company.'} }] });
-}
   try {
 
     let users = await User.find({company: req.user.company}).select('-local.hash -local.salt')
@@ -33,8 +30,8 @@ router.get('/', async (req, res) => {
 
 // @route   GET api/users/department/:department
 // @desc    Get all users by company and department
-// @access  public
-router.get('/department/:department', async (req, res) => {
+// @access  Has company
+router.get('/department/:department', [companyAuth],async (req, res) => {
 
   const validDepartments = ['sales', 'products', 'warehouse', 'fleet', 'payments'];
 
@@ -45,11 +42,6 @@ router.get('/department/:department', async (req, res) => {
 
    }
 
-  if(!req.user.company) {
-    return res
-    .status(400)
-    .json({ errors: [{ msg: {title: 'Error', description: 'You are not part of a company.'} }] });
-}
 
   try {
 
@@ -81,8 +73,8 @@ router.get('/department/:department', async (req, res) => {
 
 // @route   GET api/users/department/:department
 // @desc    Get all users by company and role
-// @access  public
-router.get('/role/:role', async (req, res) => {
+// @access  Has company
+router.get('/role/:role', [companyAuth], async (req, res) => {
 
   const validroles = ['manager', 'worker'];
 
@@ -92,12 +84,6 @@ router.get('/role/:role', async (req, res) => {
     .json({ errors: [{ msg: {title: 'Error', description: 'Invalid role entered.'} }] });
 
    }
-
-  if(!req.user.company) {
-    return res
-    .status(400)
-    .json({ errors: [{ msg: {title: 'Error', description: 'You are not part of a company.'} }] });
-}
 
   try {
 
@@ -129,8 +115,8 @@ router.get('/role/:role', async (req, res) => {
 
 // @route   GET api/users/department/:department
 // @desc    Get all users by company, department, and role
-// @access  public
-router.get('/department/:department/role/:role', async (req, res) => {
+// @access  Has company
+router.get('/department/:department/role/:role', [companyAuth], async (req, res) => {
 
   const validDepartments = ['sales', 'products', 'warehouse', 'fleet', 'payments'];
   const validroles = ['manager', 'worker'];
@@ -145,12 +131,6 @@ router.get('/department/:department/role/:role', async (req, res) => {
     return res
     .status(400)
     .json({ errors: [{ msg: {title: 'Error', description: 'Invalid role entered.'} }] });
-    }
-
-  if(!req.user.company) {
-    return res
-    .status(400)
-    .json({ errors: [{ msg: {title: 'Error', description: 'You are not part of a company.'} }] });
     }
 
   try {
@@ -345,8 +325,13 @@ router.post(
             department: "Payments",
             manager: false,
             worker: true 
-            }
-        ],
+            },
+            {
+              department: "Admin",
+              manager: false,
+              worker: true 
+              },
+          ],
       });
 
       // Create password hash
@@ -491,12 +476,11 @@ router.put(
 );
 
 // @route   PUT api/users/company
-// @desc    Add company to user with invitation code
-// @access  public
+// @desc    Edit user's roles
+// @access  Has company and has 'User Roles':'Edit' permission
 
 router.put(
-  '/roles/:userId',
-  async (req, res) => {
+  '/roles/:userId',[companyAuth, authorize('Admin', 'User Roles', 'Edit')], async (req, res) => {
 
     // Check if provided roles are correct
     let rolesData = req.body

@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const actionsBuyer = require('../../lib/actionsBuyer.json');
 const actionsSupplier = require('../../lib/actionsSupplier.json');
+const companyAuth = require('../../middleware/companyAuth');
+const authorize = require('../../middleware/authorize');
 
 const Role = require('../../models/Role');
 const Company = require('../../models/Company');
@@ -9,11 +11,11 @@ const { compare } = require('bcryptjs');
 
 // @route   GET api/roles
 // @desc    Get roles
-// @access  public
+// @access  Has company
 
 router.get(
   '/'
-  ,
+  , [companyAuth], 
   async (req, res) => {
     
     // Check if company ID is valid
@@ -56,11 +58,11 @@ router.get(
 
 // @route   GET api/roles/document/:document
 // @desc    Get roles by document type
-// @access  public
+// @access  Has company
 
 router.get(
   '/document/:document'
-  ,
+  , [companyAuth],
   async (req, res) => {
 
     console.log('req.params: ', req.params.document)
@@ -97,11 +99,11 @@ router.get(
 
 
 // @route   PUT api/users/company
-// @desc    Add company to user with invitation code
-// @access  public
+// @desc    Edit company role permissions
+// @access  Has company and has 'Role Permissions':'Edit' permission
 
 router.put(
-  '/department/:department',
+  '/department/:department', [companyAuth, authorize('Admin', 'Role Permissions', 'Edit')],
   async (req, res) => {
 
     // Check if provided roles are correct

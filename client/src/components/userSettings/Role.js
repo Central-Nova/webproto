@@ -82,7 +82,7 @@ const Role = ({ auth, roles: {loading, rolesData}, loadRoles, updateCompanyRoles
     }
 
     updateCompanyRoles(permissionsData, rolesData.company, department);
-
+    window.scrollTo(0,0);
   }
   
 

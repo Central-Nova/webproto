@@ -2,6 +2,8 @@ const express = require('express');
 const { check, validationResult } = require('express-validator');
 const router = express.Router();
 const { genLink } = require('../../lib/invitationUtils');
+const companyAuth = require('../../middleware/companyAuth');
+const authorize = require('../../middleware/authorize');
 
 const Company = require('../../models/Company');
 const Invitation = require('../../models/Invitation');
@@ -19,23 +21,14 @@ function makeid(length) {
 
 // @route   POST api/invitation
 // @desc    Create invitation
-// @access  public
+// @access  Has company
 
 router.post('/',
-[
+[companyAuth, authorize('Admin', 'Invitations', 'Create'),[
   check('emails.*', { title: 'Error', description: 'Please enter a valid email address' }).isEmail()
-], async (req,res) => {
+]], async (req,res) => {
 
   const { emails } = req.body;
-  const company = req.user.company;
-
-  console.log('req.body: ', req.body);
-
-  if (company === null || company === undefined) {
-    return res
-    .status(400)
-    .json({ errors: [{ msg: {title: 'Error', description: 'Please set up your company first.'} }] })
-  };
 
     const errors = validationResult(req);
 
@@ -58,7 +51,7 @@ router.post('/',
       const code = makeid(5);
 
       let invitation = new Invitation({
-        company,
+        company: req.user.company,
         code,
         expires,
         email,
@@ -66,7 +59,7 @@ router.post('/',
   
         
         // Create url link
-        const link = `http://localhost:3000/register/invite/${company}/${invitation._id}`
+        const link = `http://localhost:3000/register/invite/${invitation.company}/${invitation._id}`
         
         invitation.url = link;
 
