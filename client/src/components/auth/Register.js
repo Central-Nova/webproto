@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 // Actions
 import { register } from '../../actions/auth';
 import { setAlert } from '../../actions/alert';
-import auth from '../../reducers/auth';
 
 
 const Register = ({ setAlert, register, isAuthenticated, user, registered }) => {

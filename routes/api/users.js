@@ -377,8 +377,6 @@ router.put(
 
       let user = await User.findById(req.user._id);
 
-      console.log('found user: ', user);
-
       if (!user) {
         return res
           .status(400)
@@ -416,7 +414,7 @@ router.put(
 // @access  public
 
 router.put(
-  '/company',
+  '/companyInvite',
   async (req, res) => {
 
     const { code } = req.body;
@@ -444,8 +442,6 @@ router.put(
       // Check if user exists
 
       let user = await User.findById(req.user._id);
-
-      console.log('found user: ', user);
 
       if (!user) {
         return res

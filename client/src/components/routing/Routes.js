@@ -15,6 +15,9 @@ import CreateTeam from '../auth/setup/create/CreateTeam';
 import SetupJoin from '../auth/setup/join/SetupJoin';
 
 
+// Products
+import Products from '../products/Products';
+
 
 // Settings
 import Users from '../userSettings/Users';
@@ -37,10 +40,15 @@ const Routes = (props) => {
       <SetupRoute exact path='/create-team' component={CreateTeam}/>
       <SetupRoute exact path='/company-join' component={SetupJoin}/>
       <PrivateRoute exact path='/dashboard' component={Dashboard}/>
+
+      {/* Settings */}
       <PrivateRoute exact path='/users' component={Users}/>
       <PrivateRoute path='/user/:userId' component={User}/>
       <PrivateRoute exact path='/roles' component={Roles}/>
       <PrivateRoute path='/role/:department' component={Role}/>
+
+      {/* Products */}
+      <PrivateRoute exact path='/products' component={Products}/>
     </Switch>
     </Fragment>
   )

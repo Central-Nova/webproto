@@ -6,6 +6,7 @@ import { Link, useParams } from 'react-router-dom'
 
 import Spinner from '../layout/Spinner';
 import RoleSection from './RoleSection';
+import RoleCheck from '../layout/auth/RoleCheck';
 
 
 const Role = ({ auth, roles: {loading, rolesData}, loadRoles, updateCompanyRoles}) => {
@@ -102,9 +103,14 @@ const Role = ({ auth, roles: {loading, rolesData}, loadRoles, updateCompanyRoles
           <RoleSection key={id} permissions={permissions} onChange={handleOnChange}/>
         ))
         }
-        <button onClick={(e) => handleOnSubmit(e)} className="btn btn-small btn-primary btn-back m-2">
+        <RoleCheck department='admin' document='rolepermissions' action='edit'
+        yes={()=> (
+          <button onClick={(e) => handleOnSubmit(e)} className="btn btn-small btn-primary btn-back m-2">
             Save
-        </button>
+          </button>
+        )}
+        no={()=> (null)}
+        />
         <Link to="/roles">
           <button className="btn btn-small btn-light btn-back m-2">
             <i className="fas fa-long-arrow-alt-left"></i>Back

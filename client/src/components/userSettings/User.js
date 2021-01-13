@@ -6,6 +6,7 @@ import { loadCompanyUsers, updateUserRoles } from '../../actions/users';
 
 import Spinner from '../layout/Spinner';
 import UserRow from './UserRow';
+import RoleCheck from '../layout/auth/RoleCheck';
 
   const initialState = [
     {
@@ -113,9 +114,14 @@ const User = ({ users: { loading, profiles }, loadCompanyUsers, updateUserRoles 
           <UserRow key={id} roleData={department} onChange={handleOnChange} />
         ))}
       </div>
-      <button onClick={(e) => handleOnSubmit(e)} className="btn btn-small btn-primary btn-back m-2">
+      <RoleCheck department='admin' document='userroles' action='edit'
+      yes={()=> (
+        <button onClick={(e) => handleOnSubmit(e)} className="btn btn-small btn-primary btn-back m-2">
         Save
       </button>
+      )}
+      no={()=> null}
+      />
       <Link to="/users">
       <button className="btn btn-small btn-light btn-back m-2">
         <i className="fas fa-long-arrow-alt-left"></i>Back

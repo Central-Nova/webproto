@@ -18,7 +18,7 @@ const UserSchema = new mongoose.Schema({
     googleId: String,
   },
   date: {
-    type: String,
+    type: Date,
     default: Date.now
   },
   isVerified: {

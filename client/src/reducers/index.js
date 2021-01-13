@@ -5,6 +5,7 @@ import company from './company';
 import roles from './roles';
 import users from './users';
 import invitations from './invitations';
+import products from './products';
 
 
 export default combineReducers({
@@ -13,5 +14,6 @@ export default combineReducers({
   company,
   roles,
   users,
-  invitations
+  invitations,
+  products
 });

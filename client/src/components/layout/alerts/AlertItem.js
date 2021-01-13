@@ -1,6 +1,9 @@
 import React from 'react'
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { removeAlert } from '../../../actions/alert';
 
-const AlertItem = ({msg, alertType}) => {
+const AlertItem = ({id, msg, alertType, removeAlert}) => {
 
   if (alertType === 'success') {
     return(
@@ -12,7 +15,7 @@ const AlertItem = ({msg, alertType}) => {
         <p className={`text-${alertType}`}>{msg.title}</p>
         <p className="text-light">{msg.description}</p>
       </div>
-      <div className="alert-close text-light">
+      <div onClick={()=>removeAlert(id)} className="alert-close text-light">
         <i className="fas fa-times"></i>
         <p className="text-light">CLOSE</p>
       </div>
@@ -28,7 +31,7 @@ const AlertItem = ({msg, alertType}) => {
           <p className={`text-${alertType}`}>{msg.title}</p>
           <p className="text-light">{msg.description}</p>
         </div>
-        <div className="alert-close text-light">
+        <div onClick={()=>removeAlert(id)} className="alert-close text-light">
           <i className="fas fa-times"></i>
           <p className="text-light">CLOSE</p>
         </div>
@@ -44,7 +47,7 @@ const AlertItem = ({msg, alertType}) => {
             <p className={`text-${alertType}`}>{msg.title}</p>
             <p className="text-light">{msg.description}</p>
           </div>
-          <div className="alert-close text-light">
+          <div onClick={()=>removeAlert(id)} className="alert-close text-light">
             <i className="fas fa-times"></i>
             <p className="text-light">CLOSE</p>
           </div>
@@ -52,4 +55,12 @@ const AlertItem = ({msg, alertType}) => {
         )}
   }
 
-export default AlertItem;
+AlertItem.propTypes = {
+  removeAlert: PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => ({
+
+})
+
+export default connect(mapStateToProps, { removeAlert })(AlertItem);

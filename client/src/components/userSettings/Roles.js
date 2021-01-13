@@ -19,7 +19,7 @@ const Roles = ({ loadRoles }) => {
           </p>
         </div>
         <div className="container-roles-manage-grid">
-          <div className="grid-users-headers text-primary text-regular">
+          <div className="grid-roles-headers text-primary text-regular">
             <p className="col1 ">Category</p>
             <p className="col2 ">Description</p>
           </div>

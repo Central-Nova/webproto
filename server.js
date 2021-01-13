@@ -3,7 +3,6 @@ const sessionStore = require('./config/db');
 const path = require('path');
 const passport = require('passport');
 const session = require('express-session');
-const actions = require('./lib/actions')
 
 require('dotenv').config();
 
@@ -49,6 +48,7 @@ app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/companies', require('./routes/api/companies'));
 app.use('/api/roles', require('./routes/api/roles'));
 app.use('/api/invitation', require('./routes/api/invitation'));
+app.use('/api/products', require('./routes/api/products'));
 
 
 

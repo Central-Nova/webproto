@@ -12,7 +12,7 @@ const AlertBox = ({ alerts }) => {
     {alerts !== null &&
     alerts.length > 0 &&
     alerts.map( (alert) => (
-      <AlertItem key={alert.id} msg={alert.msg} alertType={alert.alertType}/>
+      <AlertItem key={alert.id} id={alert.id} msg={alert.msg} alertType={alert.alertType}/>
     ))}
     
   </div>

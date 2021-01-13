@@ -1,5 +1,5 @@
-import React, { Fragment, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import React, { Fragment } from 'react'
+import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logoutUser } from '../../actions/auth';
@@ -7,13 +7,17 @@ import { loadRoles } from '../../actions/roles';
 
 import Spinner from '../layout/Spinner';
 
-const Dashboard = ( { roles, company, loadRoles, logoutUser, auth: {user, loading} } ) => {
+const Dashboard = ( { company, logoutUser, auth: {user, loading} } ) => {
   
-  const {loading: { companyLoading }, profile } = company;
-
 
   const onClick = (e) => {
     logoutUser();
+  }
+
+  if (!company.loading) {
+    if (company.profile === null) {
+      return <Redirect to='/company/'/>
+    }
   }
 
 return (

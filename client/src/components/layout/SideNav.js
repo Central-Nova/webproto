@@ -18,7 +18,7 @@ function SideNav({ company: { loading, profile }}) {
         <hr className="my-1" />
         <div className="sidebar-items">
           <Link to="/users"><i className="fas fa-file-invoice-dollar"></i> Sales</Link>
-          <Link to="/users"><i className="fas fa-tag"></i>Products</Link>
+          <Link to="/products"><i className="fas fa-tag"></i>Products</Link>
           <Link to="/users"><i className="fas fa-boxes"></i>Inventory</Link>
           <Link to="/users"><i className="fas fa-list-alt"></i>Purchasing</Link>
 
