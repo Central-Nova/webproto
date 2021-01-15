@@ -21,10 +21,10 @@ const optionsSort = [
   {value: '-name', name: 'sort', label: 'Name Descending'},
   {value: 'sku', name: 'sort', label: 'SKU Ascending'},
   {value: '-sku', name: 'sort', label: 'SKU Descending'},
-  {value: 'date', name: 'sort', label: 'Newest'},
-  {value: '-date', name: 'sort', label: 'Oldest'},
-  {value: 'basePrice.price', name: 'sort', label: 'Highest Price'},
-  {value: '-basePrice.price', name: 'sort', label: 'Lowest Price'},
+  {value: '-date', name: 'sort', label: 'Newest'},
+  {value: 'date', name: 'sort', label: 'Oldest'},
+  {value: '-basePrice.price', name: 'sort', label: 'Highest Price'},
+  {value: 'basePrice.price', name: 'sort', label: 'Lowest Price'},
 ]
 
 

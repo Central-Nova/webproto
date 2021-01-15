@@ -6,15 +6,11 @@ import PropTypes from 'prop-types';
 import ProductSF from './ProductSF';
 import ProductsCard from './ProductsCard';
 import Spinner from '../layout/Spinner';
-import Pagination from '../layout/Pagination';
+import Pagination from '../layout/pagination/Pagination';
 
 const Products = ({ products, loadProducts }) => {
 
-  // filterState to know what is the filter
-  
-  // Products state will be rendered into cards
-  
-  // When filter is changed, loadproducts run
+  // filterState holds all filter values
   const [filterState, setFilterState] = useState({
     search: [],
     promotions: [],
@@ -22,43 +18,42 @@ const Products = ({ products, loadProducts }) => {
     sort: '',
   })
 
-  const [productsState, setProductsState] = useState([])
+  const [pageState, setPageState] = useState(0);
 
   useEffect(()=> {
-    
-    // const load = async () => {
-      loadProducts(0, 5, filterState.sort);
-  
-      if (products.productsData) {
-        setProductsState(products.productsData.products)
-      }
-    // }
+    // Load products based on filters
+    loadProducts(pageState, 1, filterState.sort);
 
-    // load();
+  }, [products.loading, loadProducts, filterState, pageState])
 
-
-  }, [products.loading, loadProducts, filterState])
-
+  // Selecting filters will update the filterState
   const onFilterChange = (e) => {
-
     if (e !== null) {
-
       let name = '';
       let value = [];
 
       if (e.length > 0) {
         name = e[0].name;
         value = e.map(obj => obj.value)
-
       } else {
         name = e.name;
         value = e.value;
       }
-
       setFilterState({...filterState, [name]: value})
-      
     }
   }
+
+  const onPageIncrement = (action) => {
+    if (pageState > 0) {
+      setPageState(action === 'next' ? pageState + 1 : pageState -1)
+    }
+  }
+
+  const onPageChange = (number) => {
+      setPageState(number)
+    }
+
+
   return (
     <Fragment>
     {products.loading ? (
@@ -78,7 +73,7 @@ const Products = ({ products, loadProducts }) => {
           <ProductsCard key={product._id} product={product} />
         ))}
         </div>
-        <Pagination/>
+        <Pagination onPageIncrement={onPageIncrement} onPageChange={onPageChange} current={pageState} total={products.productsData.total / products.productsData.limit}/>
       </div>
       </Fragment>
     )}

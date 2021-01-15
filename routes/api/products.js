@@ -13,14 +13,14 @@ const Product = require('../../models/Product');
 router.get('/', [companyAuth, authorize('Products', 'Catalog Entry', 'View')], async (req, res) => {
 
   let page = parseInt(req.query.page) || 0;
-  let limit = parseInt(req.query.limit) || 5;
+  let limit = parseInt(req.query.limit) || 1;
   let sort = req.query.sort || '';
 
   console.log('req.query.sort: ', req.query.sort )
 
   try {
 
-    let products = await Product.find({company: req.user.company}).sort(sort).skip(page * limit).limit(limit);
+    let products = await Product.find({company: req.user.company}).sort(sort).skip(page  * limit).limit(limit);
 
     console.log(`sorted by: ${sort} products: `,products)
 
