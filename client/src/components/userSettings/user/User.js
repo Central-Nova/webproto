@@ -2,11 +2,11 @@ import React, { Fragment, useEffect, useState } from 'react'
 import { Link, useParams, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { loadCompanyUsers, updateUserRoles } from '../../actions/users';
+import { loadCompanyUsers, updateUserRoles } from '../../../actions/users';
 
-import Spinner from '../layout/Spinner';
+import Spinner from '../../layout/Spinner';
 import UserRow from './UserRow';
-import RoleCheck from '../layout/auth/RoleCheck';
+import RoleCheck from '../../layout/auth/RoleCheck';
 
   const initialState = [
     {

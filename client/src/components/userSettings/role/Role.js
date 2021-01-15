@@ -1,12 +1,12 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { loadRoles, updateCompanyRoles } from '../../actions/roles';
+import { loadRoles, updateCompanyRoles } from '../../../actions/roles';
 import { Link, useParams } from 'react-router-dom'
 
-import Spinner from '../layout/Spinner';
+import Spinner from '../../layout/Spinner';
 import RoleSection from './RoleSection';
-import RoleCheck from '../layout/auth/RoleCheck';
+import RoleCheck from '../../layout/auth/RoleCheck';
 
 
 const Role = ({ auth, roles: {loading, rolesData}, loadRoles, updateCompanyRoles}) => {

@@ -8,14 +8,21 @@ const Product = require('../../models/Product');
 
 
 // @route   GET api/products
-// @desc    Get all products by company id
+// @desc    Get all products by company id with paginate query
 // @access  Has company, has 'Catalog Entry':'View' permission
 router.get('/', [companyAuth, authorize('Products', 'Catalog Entry', 'View')], async (req, res) => {
 
+  let page = parseInt(req.query.page) || 0;
+  let limit = parseInt(req.query.limit) || 5;
+  let sort = req.query.sort || '';
+
+  console.log('req.query.sort: ', req.query.sort )
 
   try {
 
-    let products = await Product.find({company: req.user.company})
+    let products = await Product.find({company: req.user.company}).sort(sort).skip(page * limit).limit(limit);
+
+    console.log(`sorted by: ${sort} products: `,products)
 
     if (!products) {
       return res
@@ -23,7 +30,14 @@ router.get('/', [companyAuth, authorize('Products', 'Catalog Entry', 'View')], a
       .json({msg: { title: 'Error', description: 'No products found.'}})
     }
 
-    return res.send(products);
+    let total = await Product.countDocuments({company: req.user.company})
+
+    return res.send({
+      total,
+      page,
+      limit,
+      products
+    });
     } catch (error) {
     return res.status(500).send('Server Error');
   }

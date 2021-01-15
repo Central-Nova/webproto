@@ -2514,6 +2514,7 @@ table tbody {
   display: grid;
   -ms-grid-columns: (1fr) [4];
   grid-template-columns: repeat(4, 1fr);
+  font-weight: 500;
 }
 
 .grid-roles-headers .col1 {
@@ -2584,11 +2585,6 @@ body {
   flex-direction: row;
 }
 
-.container-main .button-create {
-  position: relative;
-  top: -30px;
-}
-
 .container-dashboard {
   margin-top: 4rem;
   margin-left: 2rem;
@@ -2599,12 +2595,20 @@ body {
 .container-filters {
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: (1fr) [6];
-  grid-template-columns: repeat(6, 1fr);
+  -ms-grid-columns: (1fr) [8];
+  grid-template-columns: repeat(8, 1fr);
   -webkit-box-align: end;
   -ms-flex-align: end;
   align-items: end;
   grid-gap: 0.5rem;
+}
+
+.container-filters .filter-option {
+  -ms-flex-item-align: end;
+  align-self: flex-end;
+  -ms-flex-line-pack: end;
+  align-content: flex-end;
+  align-content: flex-end;
 }
 
 .container-filters:nth-child(4) {
@@ -2624,6 +2628,7 @@ body {
   color: grey;
 }
 
+.container-filters .react-select,
 .container-filters select {
   background-color: #d7d7d7;
   color: #333;
@@ -2636,6 +2641,7 @@ body {
   transition: all 0.2s ease-in;
 }
 
+.container-filters .react-select:hover,
 .container-filters select:hover {
   -webkit-box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.3);
   box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.3);
@@ -2685,6 +2691,46 @@ body {
 .container-filter-fields input,
 .container-filter-fields select {
   font-size: 1rem;
+}
+
+.container-multi-filter-fields {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (minmax(400px, 1fr)) [auto-fit];
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-gap: 2rem;
+  width: 100%;
+}
+
+.container-multi-filter-fields .form {
+  -ms-flex-item-align: end;
+  -ms-grid-row-align: end;
+  align-self: end;
+}
+
+.container-multi-filter-fields .form input {
+  text-indent: 2rem;
+  min-width: 400px;
+}
+
+.container-multi-filter-fields .form i {
+  -ms-flex-item-align: start;
+  align-self: flex-start;
+  position: relative;
+  padding: 0.5rem;
+  color: grey;
+  top: 35px;
+}
+
+.container-multi-filter-fields input,
+.container-multi-filter-fields select {
+  font-size: 1rem;
+}
+
+.container-multi-filter-fields .button-create {
+  -ms-flex-item-align: end;
+  -ms-grid-row-align: end;
+  align-self: end;
 }
 
 .container-dashboard .container-headline {

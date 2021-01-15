@@ -6,10 +6,10 @@ import {
   PRODUCTS_CLEARED
 } from './types';
 
-export const loadProducts = () => async (dispatch) => {
-  
+export const loadProducts = (page, limit, sort) => async (dispatch) => {
+
   try {
-    const res = await axios.get('/api/products');
+    const res = await axios.get(`/api/products?page=${page}&limit=${limit}&sort=${sort}`);
 
     // Set state.products.
     dispatch({

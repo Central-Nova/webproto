@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { Link } from 'react-router-dom';
-import RoleCheck from '../layout/auth/RoleCheck';
+import RoleCheck from '../../layout/auth/RoleCheck';
 
 const UserItem = ({profile}) => {
 

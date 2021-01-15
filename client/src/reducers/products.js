@@ -6,7 +6,7 @@ import {
 
 const initialState = {
   loading: true,
-  products: null,
+  productsData: null,
 };
 
 export default function (state=initialState, action) {
@@ -19,14 +19,14 @@ export default function (state=initialState, action) {
       return {
         ...state,
         loading: false,
-        products: payload
+        productsData: payload
       }
     
     case PRODUCTS_ERROR:
       return {
         ...state,
         loading: false,
-        products: null
+        productsData: null
       }
       
     default:

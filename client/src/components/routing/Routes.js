@@ -20,10 +20,10 @@ import Products from '../products/Products';
 
 
 // Settings
-import Users from '../userSettings/Users';
-import User from '../userSettings/User';
-import Roles from '../userSettings/Roles';
-import Role from '../userSettings/Role';
+import Users from '../userSettings/users/Users';
+import User from '../userSettings/user/User';
+import Roles from '../userSettings/roles/Roles';
+import Role from '../userSettings/role/Role';
 
 
 

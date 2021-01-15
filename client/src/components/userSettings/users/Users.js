@@ -3,12 +3,12 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom'
 
-import { loadCompanyUsers } from '../../actions/users';
-import { createInvitations } from '../../actions/invitations';
+import { loadCompanyUsers } from '../../../actions/users';
+import { createInvitations } from '../../../actions/invitations';
 
 import UsersRow from './UsersRow';
-import Spinner from '../layout/Spinner';
-import RoleCheck from '../layout/auth/RoleCheck';
+import Spinner from '../../layout/Spinner';
+import RoleCheck from '../../layout/auth/RoleCheck';
 
 const initialState = {
   search: '',

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { loadRoles } from '../../actions/roles';
+import { loadRoles } from '../../../actions/roles';
 
 const Roles = ({ loadRoles }) => {
 
