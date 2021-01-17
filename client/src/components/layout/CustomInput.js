@@ -1,5 +1,5 @@
 import React from 'react'
-import Select from 'react-select';
+import AsyncSelect from 'react-select/async';
 import makeAnimated from 'react-select/animated';
 
 const animatedComponents = makeAnimated();
@@ -82,10 +82,10 @@ const customStyles = {
 
 
 }
-const CustomInput = ({ onChange, ...rest}) => {
+const CustomInput = ({ loadOptions, onChange, ...rest}) => {
 
   return (
-    <Select {...rest} onChange={e=> onChange(e)} components={animatedComponents} onSelectResetsInput={false} closeMenuOnSelect={false} isMulti styles={customStyles} />
+    <AsyncSelect {...rest} onChange={(e)=>onChange(e)} loadOptions={loadOptions} components={animatedComponents} onSelectResetsInput={false} closeMenuOnSelect={false} isMulti styles={customStyles} />
   )
 }
 

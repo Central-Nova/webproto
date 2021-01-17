@@ -13,16 +13,17 @@ const Product = require('../../models/Product');
 router.get('/', [companyAuth, authorize('Products', 'Catalog Entry', 'View')], async (req, res) => {
 
   let page = parseInt(req.query.page) || 0;
-  let limit = parseInt(req.query.limit) || 1;
+  let limit = parseInt(req.query.limit) || 10;
   let sort = req.query.sort || '';
+  let searchArray = req.query.search !== undefined && req.query.search.split(',') || '';
+  let searchRegex = searchArray !== '' && searchArray.join('|') || '';
 
-  console.log('req.query.sort: ', req.query.sort )
-
+  console.log('searchRegex: ', searchRegex);
   try {
 
-    let products = await Product.find({company: req.user.company}).sort(sort).skip(page  * limit).limit(limit);
+    let products = await Product.find({$and: [{company: req.user.company}, {$and: [{name: {$regex: searchRegex, $options: 'i'}}, {sku: {$regex: searchRegex, $options: 'i'}}]}]}).sort(sort).skip(page  * limit).limit(limit);
 
-    console.log(`sorted by: ${sort} products: `,products)
+    console.log('products: ', products);
 
     if (!products) {
       return res
@@ -30,7 +31,7 @@ router.get('/', [companyAuth, authorize('Products', 'Catalog Entry', 'View')], a
       .json({msg: { title: 'Error', description: 'No products found.'}})
     }
 
-    let total = await Product.countDocuments({company: req.user.company})
+    let total = await Product.countDocuments({$and: [{company: req.user.company}, {$or: [{name: {$regex: searchRegex, $options: 'i'}}, {sku: {$regex: searchRegex, $options: 'i'}}]}]}).sort(sort).skip(page  * limit).limit(limit);    console.log('total: ', total);
 
     return res.send({
       total,
@@ -38,7 +39,9 @@ router.get('/', [companyAuth, authorize('Products', 'Catalog Entry', 'View')], a
       limit,
       products
     });
+    
     } catch (error) {
+      console.log('error: ', error);
     return res.status(500).send('Server Error');
   }
 })

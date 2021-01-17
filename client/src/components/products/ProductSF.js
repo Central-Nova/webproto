@@ -1,7 +1,11 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { loadAllProducts } from '../../actions/products';
 
 import CustomSelect from '../layout/CustomSelect';
 import CustomInput from '../layout/CustomInput';
+
 
 const optionsCoupon = [
   {value: 'coupon1', name:'promotions', label: 'Coupon 1'},
@@ -12,8 +16,6 @@ const optionsInventory = [
   {value: 'inStock', label: 'In Stock', name:'inventory'},
   {value: 'lowStock', label: 'Low Stock', name:'inventory'},
   {value: 'outStock', label: 'Out of Stock', name:'inventory'},
-
-
 ]
 
 const optionsSort = [
@@ -27,15 +29,47 @@ const optionsSort = [
   {value: 'basePrice.price', name: 'sort', label: 'Lowest Price'},
 ]
 
+const ProductSF = ({ loadAllProducts, onFilterChange, products: { filteredProducts, allProducts}, onSearchChange}) => {
 
-const ProductSF = ({onFilterChange}) => {
+  const [productOptionsState, setProductOptionsState] = useState([])
+
+  useEffect(()=> {
+    loadAllProducts();
+    if (!allProducts.loading && allProducts.data) {
+      // Create array of newProductOptions. Set as state
+      let newProductOptions = allProducts.data.products.map(product => {
+        let productObject = {
+          name: 'search',
+          label: `${product.sku} | ${product.name}`,
+          value: [product.name.toLowerCase(), product.sku.toLowerCase()]
+        }
+        return productObject
+      })
+      
+      setProductOptionsState(newProductOptions);
+    }
+  },[allProducts.loading])
+
+  const filterOptions = (inputValue) => {
+    return productOptionsState.filter(option => option.value[0].includes(inputValue.toLowerCase()) || option.value[1].includes(inputValue.toLowerCase()));
+    
+  }
+
+  const loadOptions = (inputValue, callback) => {
+    setTimeout(()=> {
+      callback(filterOptions(inputValue));
+    }, 500);
+  }
 
   return (
     <div className="container-multi-filter-fields my-2">
         <CustomInput 
           name='search'
           onChange={onFilterChange}
-          isMulti placeholder="Type name or SKU and press enter" options={optionsInventory} />
+          isMulti 
+          placeholder="Type name or SKU and press enter" 
+          defaultOptions={productOptionsState}
+          loadOptions={loadOptions} />
       <div className="container-filters">
         <p className="text-small text-primary-light">Filter by:</p>
         <div className="filter-option">
@@ -52,6 +86,7 @@ const ProductSF = ({onFilterChange}) => {
             isMulti
             placeholder='Inventory'
             options={optionsInventory}
+            closeMenuOnSelect={false}
             />
         </div>
         <div className="container-filters mx-2">
@@ -75,5 +110,14 @@ const ProductSF = ({onFilterChange}) => {
   )
 }
 
-export default ProductSF
+ProductSF.propTypes = {
+  products: PropTypes.object.isRequired,
+  loadAllProducts: PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => ({
+  products: state.products
+})
+
+export default connect(mapStateToProps, { loadAllProducts})(ProductSF)
 

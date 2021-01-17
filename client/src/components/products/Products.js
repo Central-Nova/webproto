@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react'
-import { loadProducts } from '../../actions/products';
+import { loadFilteredProducts } from '../../actions/products';
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 
@@ -8,7 +8,7 @@ import ProductsCard from './ProductsCard';
 import Spinner from '../layout/Spinner';
 import Pagination from '../layout/pagination/Pagination';
 
-const Products = ({ products, loadProducts }) => {
+const Products = ({ products: {filteredProducts}, loadFilteredProducts }) => {
 
   // filterState holds all filter values
   const [filterState, setFilterState] = useState({
@@ -22,9 +22,9 @@ const Products = ({ products, loadProducts }) => {
 
   useEffect(()=> {
     // Load products based on filters
-    loadProducts(pageState, 1, filterState.sort);
+    loadFilteredProducts(pageState, 5, filterState.sort, filterState.search);
 
-  }, [products.loading, loadProducts, filterState, pageState])
+  }, [filteredProducts.loading, loadFilteredProducts, filterState, pageState])
 
   // Selecting filters will update the filterState
   const onFilterChange = (e) => {
@@ -56,7 +56,7 @@ const Products = ({ products, loadProducts }) => {
 
   return (
     <Fragment>
-    {products.loading ? (
+    {filteredProducts.loading ? (
       <Spinner/>
     ):(
       <Fragment>
@@ -67,13 +67,13 @@ const Products = ({ products, loadProducts }) => {
             Manage your product catalog.
           </p>
         </div>
-        <ProductSF onFilterChange={onFilterChange} />
+        <ProductSF onSearchChange={setFilterState} onFilterChange={onFilterChange} />
         <div className="container-products-grid">
-        {products.productsData.products.length > 0 && products.productsData.products.map(product => (
+        {filteredProducts.data.products.length > 0 && filteredProducts.data.products.map(product => (
           <ProductsCard key={product._id} product={product} />
         ))}
         </div>
-        <Pagination onPageIncrement={onPageIncrement} onPageChange={onPageChange} current={pageState} total={products.productsData.total / products.productsData.limit}/>
+        <Pagination onPageIncrement={onPageIncrement} onPageChange={onPageChange} current={pageState} total={filteredProducts.data.total / filteredProducts.data.limit < 1 ? 1 : filteredProducts.data.total / filteredProducts.data.limit} limit={filteredProducts.data.limit} />
       </div>
       </Fragment>
     )}
@@ -82,7 +82,7 @@ const Products = ({ products, loadProducts }) => {
 }
 
 Products.propTypes = {
-  loadProducts: PropTypes.func.isRequired,
+  loadFilteredProducts: PropTypes.func.isRequired,
   products: PropTypes.object.isRequired,
 }
 
@@ -90,4 +90,4 @@ const mapStateToProps = state => ({
   products: state.products
 })
 
-export default connect(mapStateToProps, { loadProducts })(Products)
+export default connect(mapStateToProps, { loadFilteredProducts })(Products)

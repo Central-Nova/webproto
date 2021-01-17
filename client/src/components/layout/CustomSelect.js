@@ -74,10 +74,10 @@ const customStyles = {
     backgroundColor: '#819cff',
     })
 }
-const CustomSelect = ({ onChange, ...rest}) => {
+const CustomSelect = ({ value,onChange, ...rest}) => {
 
   return (
-    <Select {...rest} onChange={e => onChange(e)} closeMenuOnSelect={false} styles={customStyles} />
+    <Select {...rest} onChange={e => onChange(e)} styles={customStyles} />
   )
 }
 
