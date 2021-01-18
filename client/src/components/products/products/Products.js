@@ -18,20 +18,21 @@ const Products = ({ products: {filteredProducts}, loadFilteredProducts }) => {
     sort: '',
   })
 
+  // pageState holds current page number
   const [pageState, setPageState] = useState(0);
 
   useEffect(()=> {
     // Load products based on filters
     loadFilteredProducts(pageState, 5, filterState.sort, filterState.search);
-
+    
   }, [filteredProducts.loading, loadFilteredProducts, filterState, pageState])
-
+  
   // Selecting filters will update the filterState
   const onFilterChange = (e) => {
     if (e !== null) {
       let name = '';
       let value = [];
-
+      
       if (e.length > 0) {
         name = e[0].name;
         value = e.map(obj => obj.value)
@@ -42,18 +43,17 @@ const Products = ({ products: {filteredProducts}, loadFilteredProducts }) => {
       setFilterState({...filterState, [name]: value})
     }
   }
-
+  
   const onPageIncrement = (action) => {
     if (pageState > 0) {
       setPageState(action === 'next' ? pageState + 1 : pageState -1)
     }
   }
-
+  
   const onPageChange = (number) => {
-      setPageState(number)
-    }
-
-
+    setPageState(number)
+  }
+  
   return (
     <Fragment>
     {filteredProducts.loading ? (
@@ -67,12 +67,15 @@ const Products = ({ products: {filteredProducts}, loadFilteredProducts }) => {
             Manage your product catalog.
           </p>
         </div>
+        {/* Products Sort and Filter Options */}
         <ProductSF onFilterChange={onFilterChange} />
         <div className="container-products-grid">
+        {/* Render filteredProducts */}
         {filteredProducts.data.products.length > 0 && filteredProducts.data.products.map(product => (
-          <ProductsCard key={product._id} product={product} />
+          <ProductsCard key={product._id} product={product}/>
         ))}
         </div>
+        {/* Pagination */}
         <Pagination onPageIncrement={onPageIncrement} onPageChange={onPageChange} current={pageState} total={filteredProducts.data.total / filteredProducts.data.limit < 1 ? 1 : filteredProducts.data.total / filteredProducts.data.limit} limit={filteredProducts.data.limit} />
       </div>
       </Fragment>

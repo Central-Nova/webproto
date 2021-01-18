@@ -2608,7 +2608,6 @@ body {
   align-self: flex-end;
   -ms-flex-line-pack: end;
   align-content: flex-end;
-  align-content: flex-end;
 }
 
 .container-filters:nth-child(4) {
@@ -2628,7 +2627,6 @@ body {
   color: grey;
 }
 
-.container-filters .react-select,
 .container-filters select {
   background-color: #d7d7d7;
   color: #333;
@@ -2641,7 +2639,6 @@ body {
   transition: all 0.2s ease-in;
 }
 
-.container-filters .react-select:hover,
 .container-filters select:hover {
   -webkit-box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.3);
   box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.3);
@@ -2778,7 +2775,7 @@ body {
   grid-gap: 1rem;
 }
 
-.container-products-grid .card-product .expand {
+.container-products-grid .card-product .hidden {
   opacity: 0;
   overflow-y: hidden;
   max-height: 0px;
@@ -2803,7 +2800,7 @@ body {
   justify-self: flex-end;
 }
 
-.container-products-grid .card-product:hover .expand {
+.container-products-grid .card-product .expand {
   opacity: 1;
   max-height: 1000px;
   margin-top: 1rem;

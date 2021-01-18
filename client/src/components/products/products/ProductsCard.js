@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-const ProductsCard = ({product}) => {
+const ProductsCard = ({ product}) => {
 
-  const { sku, name, basePrice } = product;
+  const { _id, sku, name, basePrice } = product;
+
+  const [toggle, setToggle] = useState(false)
 
   return (
-    <div className="card card-product">
+    <div onClick={()=> setToggle(!toggle)}className="card card-product">
     <div className="card-header">
       <p className="text-primary text-small">{sku}</p>
       <i
@@ -20,7 +22,7 @@ const ProductsCard = ({product}) => {
       <p>{`${basePrice.contains} ${basePrice.subUnit}`}</p>
       <p className="price">{basePrice.price}</p>
     </div>
-    <div className="card-line-two expand text-small">
+    <div className={`card-line-two hidden ${toggle && `expand`} text-small`}>
       <p>10 Pallets</p>
       <p>1200 Boxes</p>
       <p className="price">$554.99</p>
@@ -31,7 +33,7 @@ const ProductsCard = ({product}) => {
       <p>2400 Boxes</p>
       <p className="price">$1154.99</p>
     </div>
-    <div className="card-line-three expand text-light">
+    <div className={`card-line-three hidden ${toggle && `expand`} text-light`}>
       <p>Available</p>
       <p className="inventory">100 Pallets</p>
       <p>Inbound</p>
