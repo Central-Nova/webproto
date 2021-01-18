@@ -16,7 +16,8 @@ import SetupJoin from '../auth/setup/join/SetupJoin';
 
 
 // Products
-import Products from '../products/Products';
+import Products from '../products/products/Products';
+import Product from '../products/product/Product';
 
 
 // Settings
@@ -49,6 +50,7 @@ const Routes = (props) => {
 
       {/* Products */}
       <PrivateRoute exact path='/products' component={Products}/>
+      <PrivateRoute path='/product/:productId' component={Product}/>
     </Switch>
     </Fragment>
   )

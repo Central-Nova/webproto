@@ -1,6 +1,7 @@
 import {
   PRODUCTS_LOADED,
   PRODUCTS_FILTERED_LOADED,
+  PRODUCT_BY_ID_LOADED,
   PRODUCTS_SUCCESS,
   PRODUCTS_CLEARED,
   PRODUCTS_ERROR} from '../actions/types';
@@ -24,6 +25,7 @@ export default function (state=initialState, action) {
   switch(type) {
 
     case PRODUCTS_FILTERED_LOADED:
+    case PRODUCT_BY_ID_LOADED:
       return {
         ...state,
         filteredProducts: {

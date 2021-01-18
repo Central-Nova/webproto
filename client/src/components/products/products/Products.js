@@ -1,12 +1,12 @@
 import React, { Fragment, useState, useEffect } from 'react'
-import { loadFilteredProducts } from '../../actions/products';
+import { loadFilteredProducts } from '../../../actions/products';
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 
 import ProductSF from './ProductSF';
 import ProductsCard from './ProductsCard';
-import Spinner from '../layout/Spinner';
-import Pagination from '../layout/pagination/Pagination';
+import Spinner from '../../layout/Spinner';
+import Pagination from '../../layout/pagination/Pagination';
 
 const Products = ({ products: {filteredProducts}, loadFilteredProducts }) => {
 
@@ -67,7 +67,7 @@ const Products = ({ products: {filteredProducts}, loadFilteredProducts }) => {
             Manage your product catalog.
           </p>
         </div>
-        <ProductSF onSearchChange={setFilterState} onFilterChange={onFilterChange} />
+        <ProductSF onFilterChange={onFilterChange} />
         <div className="container-products-grid">
         {filteredProducts.data.products.length > 0 && filteredProducts.data.products.map(product => (
           <ProductsCard key={product._id} product={product} />

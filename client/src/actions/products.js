@@ -2,28 +2,52 @@ import axios from 'axios';
 import { 
   PRODUCTS_LOADED,
   PRODUCTS_FILTERED_LOADED,
+  PRODUCT_BY_ID_LOADED,
   PRODUCTS_SUCCESS,
   PRODUCTS_ERROR,
   PRODUCTS_CLEARED
 } from './types';
 
+
+// Load product by ID
+export const loadProductById = (productId) => async (dispatch) => {
+
+  try {
+    const res = await axios.get(`/api/products/product/${productId}`);
+
+    // Set state.products.filteredProducts
+    dispatch({
+      type: PRODUCT_BY_ID_LOADED,
+      payload: res.data 
+    })
+    
+  } catch (error) {
+
+    // Set state.products to null
+    dispatch({
+      type: PRODUCTS_ERROR
+    })
+  }
+}
+
+// Load products based on filter query
 export const loadFilteredProducts = (page, limit, sort, search) => async (dispatch) => {
 
   let searchString = '';
 
+  // If no search query has been entered by user
   if (search !== undefined) {
     let searchArray = [];
     search.forEach(array => array.forEach(term => searchArray.push(term)))
 
     searchString = searchArray.toString();
-    console.log('searchString: ', searchString);
   }
 
 
   try {
     const res = await axios.get(`/api/products?page=${page}&limit=${limit}&sort=${sort}&search=${searchString}`);
 
-    // Set state.products.
+    // Set state.products.filteredProducts
     dispatch({
       type: PRODUCTS_FILTERED_LOADED,
       payload: res.data 
@@ -38,9 +62,8 @@ export const loadFilteredProducts = (page, limit, sort, search) => async (dispat
   }
 }
 
+// Load all products
 export const loadAllProducts = () => async (dispatch) => {
-
-
   try {
     const res = await axios.get('/api/products');
 

@@ -61,6 +61,7 @@ router.get('/product/:productId', [companyAuth, authorize('Products', 'Catalog E
       .json({msg: { title: 'Error', description: 'Product not found.'}})
     }
 
+    console.log('product: ', product);
     return res.send(product);
     } catch (error) {
     return res.status(500).send('Server Error');

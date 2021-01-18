@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { loadAllProducts } from '../../actions/products';
+import { loadAllProducts } from '../../../actions/products';
 
-import CustomSelect from '../layout/CustomSelect';
-import CustomInput from '../layout/CustomInput';
+import CustomSelect from '../../layout/CustomSelect';
+import CustomInput from '../../layout/CustomInput';
 
 
 const optionsCoupon = [
@@ -29,7 +29,7 @@ const optionsSort = [
   {value: 'basePrice.price', name: 'sort', label: 'Lowest Price'},
 ]
 
-const ProductSF = ({ loadAllProducts, onFilterChange, products: { filteredProducts, allProducts}, onSearchChange}) => {
+const ProductSF = ({ loadAllProducts, onFilterChange, products: { allProducts}}) => {
 
   const [productOptionsState, setProductOptionsState] = useState([])
 
