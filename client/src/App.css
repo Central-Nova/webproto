@@ -2763,6 +2763,10 @@ body {
   grid-template-columns: 1fr 1fr;
 }
 
+.container-products-grid .card-product .card-header a {
+  justify-self: flex-end;
+}
+
 .container-products-grid .card-product .card-line-one {
   margin-bottom: 1rem;
 }

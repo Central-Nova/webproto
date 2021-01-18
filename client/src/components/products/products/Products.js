@@ -24,26 +24,39 @@ const Products = ({ products: {filteredProducts}, loadFilteredProducts }) => {
   useEffect(()=> {
     // Load products based on filters
     loadFilteredProducts(pageState, 5, filterState.sort, filterState.search);
-    
   }, [filteredProducts.loading, loadFilteredProducts, filterState, pageState])
   
   // Selecting filters will update the filterState
-  const onFilterChange = (e) => {
-    if (e !== null) {
-      let name = '';
-      let value = [];
-      
-      if (e.length > 0) {
-        name = e[0].name;
-        value = e.map(obj => obj.value)
+  const onFilterChange = (valueType, actionMeta) => {
+    // If valueType has a value, set the filter value to the valueType
+    if (valueType !== null) {
+      if (valueType.length > 0) {
+        let name = actionMeta.name;
+        let value = valueType.map(obj => obj.value)
+        setFilterState({...filterState, [name]: value})
       } else {
-        name = e.name;
-        value = e.value;
+        let name = actionMeta.name;
+        let value = valueType.value;
+        setFilterState({...filterState, [name]: value})
       }
-      setFilterState({...filterState, [name]: value})
+      // Allows clearing of values and setting state to blank string or array, depending on the actionMeta.name
+    } else {
+      switch (actionMeta.name) {
+        case 'search':
+        case 'inventory':
+        case 'promotions':
+          setFilterState({...filterState, [actionMeta.name]: []})
+          break;
+        case 'sort':
+          setFilterState({...filterState, [actionMeta.name]: ''})
+          break;
+        default:
+          break;
+      }
     }
   }
   
+  // Back and Next buttons
   const onPageIncrement = (action) => {
     if (pageState > 0) {
       setPageState(action === 'next' ? pageState + 1 : pageState -1)
@@ -68,7 +81,7 @@ const Products = ({ products: {filteredProducts}, loadFilteredProducts }) => {
           </p>
         </div>
         {/* Products Sort and Filter Options */}
-        <ProductSF onFilterChange={onFilterChange} />
+        <ProductSF setFilterState={setFilterState} onFilterChange={onFilterChange} />
         <div className="container-products-grid">
         {/* Render filteredProducts */}
         {filteredProducts.data.products.length > 0 && filteredProducts.data.products.map(product => (

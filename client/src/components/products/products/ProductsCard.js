@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom';
 
 const ProductsCard = ({ product}) => {
 
@@ -7,12 +8,14 @@ const ProductsCard = ({ product}) => {
   const [toggle, setToggle] = useState(false)
 
   return (
-    <div onClick={()=> setToggle(!toggle)}className="card card-product">
+    <div onClick={()=> setToggle(!toggle)} className="card card-product">
     <div className="card-header">
       <p className="text-primary text-small">{sku}</p>
-      <i
-        className="settings fas fa-ellipsis-h fa-2x text-primary-light"
-      ></i>
+      <Link to={`/product/${_id}`}>
+        <i
+          className="settings fas fa-ellipsis-h fa-2x text-primary-light"
+        ></i>
+      </Link>
     </div>
     <div className="card-line-one text-primary-light text-small">
       {name}

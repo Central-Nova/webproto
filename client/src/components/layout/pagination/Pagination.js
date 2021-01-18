@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import PageButton from './PageButton';
 import PageIncrement from './PageIncrement';
 
@@ -43,7 +43,6 @@ const Pagination = ({ current, total, onPageChange, onPageIncrement }) => {
         rightPages.push(i)
       }
     }
-    console.log('rightPages: ', rightPages);
     return rightPages
   }
 

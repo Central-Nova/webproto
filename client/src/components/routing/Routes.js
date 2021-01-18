@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import PrivateRoute from '../routing/PrivateRoute';
 import SetupRoute from '../routing/SetupRoute';
 
@@ -50,7 +50,7 @@ const Routes = (props) => {
 
       {/* Products */}
       <PrivateRoute exact path='/products' component={Products}/>
-      <PrivateRoute path='/product/:productId' component={Product}/>
+      <PrivateRoute path='/product/:productId' component={withRouter(Product)}/>
     </Switch>
     </Fragment>
   )

@@ -77,7 +77,7 @@ const customStyles = {
 const CustomSelect = ({ value,onChange, ...rest}) => {
 
   return (
-    <Select {...rest} onChange={e => onChange(e)} styles={customStyles} />
+    <Select {...rest} onChange={(valueType, actionMeta) => onChange(valueType, actionMeta)} styles={customStyles} />
   )
 }
 

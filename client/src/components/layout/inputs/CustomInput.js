@@ -82,10 +82,10 @@ const customStyles = {
 
 
 }
-const CustomInput = ({ loadOptions, onChange, ...rest}) => {
+const CustomInput = ({ setFilterState,loadOptions, onChange, ...rest}) => {
 
   return (
-    <AsyncSelect {...rest} onChange={(e)=>onChange(e)} loadOptions={loadOptions} components={animatedComponents} onSelectResetsInput={false} closeMenuOnSelect={false} isMulti styles={customStyles} />
+    <AsyncSelect {...rest} onChange={(valueType,actionMeta)=>onChange(valueType,actionMeta)} loadOptions={loadOptions} components={animatedComponents} closeMenuOnSelect={false} isMulti styles={customStyles} />
   )
 }
 

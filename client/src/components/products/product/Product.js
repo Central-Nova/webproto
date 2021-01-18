@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from 'react'
 import { connect } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { loadProductById } from '../../../actions/products';
 
@@ -9,14 +9,14 @@ import PriceRules from './PriceRules';
 import Specifications from './Specifications';
 import InventorySummary from './InventorySummary';
 
-const Product = ({ products: { filteredProducts: { loading, data } }, loadProductById }) => {
+const Product = ({ match, products: { filteredProducts: { loading, data } }, loadProductById }) => {
 
   const { productId } = useParams();
+  const { params } = match;
 
   useEffect(()=> {
     loadProductById(productId);
 
-    console.log(loading);
   }, [])
 
   return (
@@ -66,4 +66,4 @@ const mapStateToProps = state => ({
   products: state.products
 })
 
-export default connect(mapStateToProps, {loadProductById} )(Product)
+export default withRouter(connect(mapStateToProps, {loadProductById} )(Product))
