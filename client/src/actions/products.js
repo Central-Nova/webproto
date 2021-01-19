@@ -7,6 +7,7 @@ import {
   PRODUCTS_ERROR,
   PRODUCTS_CLEARED
 } from './types';
+import { setAlert } from './alert';
 
 
 // Load product by ID
@@ -67,7 +68,7 @@ export const loadAllProducts = () => async (dispatch) => {
   try {
     const res = await axios.get('/api/products');
 
-    // Set state.products.
+    // Set state.products.allProducts
     dispatch({
       type: PRODUCTS_LOADED,
       payload: res.data 
@@ -75,9 +76,39 @@ export const loadAllProducts = () => async (dispatch) => {
     
   } catch (error) {
 
-    // Set state.products to null
+    // Set state.products
     dispatch({
       type: PRODUCTS_ERROR
     })
+  }
+}
+
+// Create Product
+export const createProduct = (formData) => async (dispatch) => {
+
+
+  try {
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };    
+    
+    const res = await axios.post('/api/products', formData, config);
+
+    // Set state.products.
+    dispatch({
+      type: PRODUCTS_SUCCESS,
+    })
+
+    dispatch(setAlert(res.data.msg, 'success'))
+    
+  } catch (err) {
+
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg,'danger')));
+    }
   }
 }

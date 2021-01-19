@@ -18,6 +18,8 @@ import SetupJoin from '../auth/setup/join/SetupJoin';
 // Products
 import Products from '../products/products/Products';
 import Product from '../products/product/Product';
+import CreateProduct from '../products/productforms/CreateProduct';
+import EditProduct from '../products/productforms/EditProduct';
 
 
 // Settings
@@ -51,6 +53,9 @@ const Routes = (props) => {
       {/* Products */}
       <PrivateRoute exact path='/products' component={Products}/>
       <PrivateRoute path='/product/:productId' component={withRouter(Product)}/>
+      <PrivateRoute path='/create-product' component={CreateProduct}/>
+      <PrivateRoute path='/edit-product/:productId' component={EditProduct}/>
+      
     </Switch>
     </Fragment>
   )

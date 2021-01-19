@@ -83,10 +83,10 @@ router.post('/',
   check('basePrice.price', { title: 'Error', description: 'Please enter a price.' }).not().isEmpty().isNumeric(),
   check('priceRules.*.quantity', { title: 'Error', description: 'Please enter a valid quantity for the price rule.' }).isNumeric(),
   check('priceRules.*.price', { title: 'Error', description: 'Please enter a valid price for the price rule.' }).isNumeric(),
-  check('weight', { title: 'Error', description: 'Please only use numbers for weight.' }).isNumeric(),
-  check('dimensions.length', { title: 'Error', description: 'Please only use numbers for product length.' }).isNumeric(),
-  check('dimensions.width', { title: 'Error', description: 'Please only use numbers for product width.' }).isNumeric(),
-  check('dimensions.height', { title: 'Error', description: 'Please only use numbers for product height.' }).isNumeric(),
+  check('weight', { title: 'Error', description: 'Please only use numbers for weight.' }).optional({nullable: true}).isNumeric(),
+  check('dimensions.length', { title: 'Error', description: 'Please only use numbers for product length.' }).optional({nullable: true}).isNumeric(),
+  check('dimensions.width', { title: 'Error', description: 'Please only use numbers for product width.' }).optional({nullable: true}).isNumeric(),
+  check('dimensions.height', { title: 'Error', description: 'Please only use numbers for product height.' }).optional({nullable: true}).isNumeric(),
 
 ]], async (req,res) => {
 
@@ -102,6 +102,8 @@ router.post('/',
     primaryMaterial,
 
   } = req.body;
+
+  console.log('req.body: ', req.body);
 
     const errors = validationResult(req);
 

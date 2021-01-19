@@ -25,29 +25,29 @@ const Product = ({ match, products: { filteredProducts: { loading, data } }, loa
       <Spinner/>
     ):(
       <Fragment>
-      <div class="container-dashboard">
-    <div class="container-headline">
-      <p class="text-primary text-medium">{data.sku}</p>
-      <p class="text-primary text-regular">{data.name}</p>
-      <p class="text-primary text-small">
+      <div className="container-dashboard">
+    <div className="container-headline">
+      <p className="text-primary text-medium">{data.sku}</p>
+      <p className="text-primary text-regular">{data.name}</p>
+      <p className="text-primary text-small">
         {data.description}
       </p>
     </div>
-    <div class="container-product-info">
-      <p class="text-medium text-primary">Price Rules</p>
+    <div className="container-product-info">
+      <p className="text-medium text-primary">Price Rules</p>
       <PriceRules basePrice={data.basePrice} priceRules={data.priceRules} />
     </div>
-    <div class="container-product-info">
-      <p class="text-medium text-primary">Inventory Summary</p>
+    <div className="container-product-info">
+      <p className="text-medium text-primary">Inventory Summary</p>
       <InventorySummary />
     </div>
-    <div class="container-product-info">
-      <p class="text-medium text-primary">Specifications</p>
+    <div className="container-product-info">
+      <p className="text-medium text-primary">Specifications</p>
       <Specifications weight={data.weight} basePrice={data.basePrice} dimensions={data.dimensions} />
     </div>
-    <button class="btn btn-primary btn-small">Edit</button>
-    <button class="btn btn-light btn-back btn-small mx-2">
-      <i class="fas fa-arrow-left"></i>Back
+    <button className="btn btn-primary btn-small">Edit</button>
+    <button className="btn btn-light btn-back btn-small mx-2">
+      <i className="fas fa-arrow-left"></i>Back
     </button>
   </div>
 
