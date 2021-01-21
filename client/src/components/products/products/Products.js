@@ -89,7 +89,7 @@ const Products = ({ products: {filteredProducts}, loadFilteredProducts }) => {
         ))}
         </div>
         {/* Pagination */}
-        <Pagination onPageIncrement={onPageIncrement} onPageChange={onPageChange} current={pageState} total={filteredProducts.data.total / filteredProducts.data.limit < 1 ? 1 : filteredProducts.data.total / filteredProducts.data.limit} limit={filteredProducts.data.limit} />
+        <Pagination onPageIncrement={onPageIncrement} onPageChange={onPageChange} current={pageState} total={filteredProducts.data.total / filteredProducts.data.limit < 1 ? 1 : Math.ceil(filteredProducts.data.total / filteredProducts.data.limit)} limit={filteredProducts.data.limit} />
       </div>
       </Fragment>
     )}

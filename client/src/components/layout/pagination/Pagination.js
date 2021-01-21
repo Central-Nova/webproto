@@ -6,6 +6,9 @@ import PageIncrement from './PageIncrement';
 
 const Pagination = ({ current, total, onPageChange, onPageIncrement }) => {
 
+  console.log('current: ', current)
+  console.log('total: ', total)
+
   const generateLeftPages = (current) => {
     let leftPages = []
 

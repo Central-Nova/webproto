@@ -18,21 +18,23 @@ router.get('/', [companyAuth, authorize('Products', 'Catalog Entry', 'View')], a
   let searchArray = req.query.search !== undefined && req.query.search.split(',') || '';
   let searchRegex = searchArray !== '' && searchArray.join('|') || '';
 
-  console.log('searchRegex: ', searchRegex);
   try {
-
-    let products = await Product.find({$and: [{company: req.user.company}, {$and: [{name: {$regex: searchRegex, $options: 'i'}}, {sku: {$regex: searchRegex, $options: 'i'}}]}]}).sort(sort).skip(page  * limit).limit(limit);
-
-    console.log('products: ', products);
-
+    
+    let products = await Product.find({$and: [{company: req.user.company}, {$and: [{name: {$regex: searchRegex, $options: 'i'}}, {sku: {$regex: searchRegex, $options: 'i'}}]}]}).sort(sort).skip(page * limit).limit(limit);
+    
+    
     if (!products) {
       return res
       .status(400)
       .json({msg: { title: 'Error', description: 'No products found.'}})
     }
-
-    let total = await Product.countDocuments({$and: [{company: req.user.company}, {$or: [{name: {$regex: searchRegex, $options: 'i'}}, {sku: {$regex: searchRegex, $options: 'i'}}]}]}).sort(sort).skip(page  * limit).limit(limit);    console.log('total: ', total);
-
+    
+    let total = await Product.countDocuments({$and: [{company: req.user.company}, {$or: [{name: {$regex: searchRegex, $options: 'i'}}, {sku: {$regex: searchRegex, $options: 'i'}}]}]}).sort(sort);    
+    
+    console.log('searchRegex: ', searchRegex);
+    console.log('products: ', products);
+    console.log('total: ', total);
+    
     return res.send({
       total,
       page,
@@ -124,7 +126,7 @@ router.post('/',
     if (priceRulesError.includes(true)) {
       return res
       .status(400)
-      .json({ msg: {title: 'Error', description: 'This product does not use that unit.'}})
+      .json({errors: [{msg: {title: 'Error', description: 'This product does not use that unit.'}}]})
     }
     
     try {
@@ -135,7 +137,7 @@ router.post('/',
     if (product) {
       return res
       .status(400)
-      .json({msg: {title: 'Error', description: 'A product with that SKU already exists.'}})
+      .json({errors: [{msg: {title: 'Error', description: 'A product with that SKU already exists.'}}]})
     }
 
     product = new Product({
