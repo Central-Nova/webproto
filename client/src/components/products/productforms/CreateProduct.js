@@ -1,17 +1,35 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form';
-import { createProduct } from '../../../actions/products';
+import { createProduct, loadAllProducts } from '../../../actions/products';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { setAlert } from '../../../actions/alert';
 
 import General from './General';
 import Specifications from './Specifications';
 import BasePrice from './BasePrice';
 import PriceRules from './PriceRules';
 
-const CreateProduct = ({ createProduct }) => {
-  const { register, errors, control, handleSubmit } = useForm({
+const CreateProduct = ({ products: {allProducts: {loading, data}}, loadAllProducts, createProduct, setAlert }) => {
+  useEffect(()=> {
+    loadAllProducts();
+  },[])
+  
+  const { register, errors, control, handleSubmit, watch } = useForm({
+    mode: 'onBlur'
   });
+
+  let sku = watch('sku')
+  // Check for existing SKU and give warning.
+  if (!loading) {
+    console.log('sku : ', sku)
+    data.products.forEach(product => { 
+      if (product.sku === sku) {
+        console.log(`sku match: ${product.sku}` )
+        setAlert({title: 'Warning', description: 'Using an existing SKU will overwrite existing product.'}, 'warning')
+      }
+    })
+  }
 
   const removeEmptyFields = (data) => {
     Object.keys(data).forEach(key=> {
@@ -73,10 +91,13 @@ const CreateProduct = ({ createProduct }) => {
 
 CreateProduct.propTypes = {
   createProduct: PropTypes.func.isRequired,
+  setAlert: PropTypes.func.isRequired,
+  loadAllProducts: PropTypes.func.isRequired,
+  products: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
-
+  products: state.products
 })
 
-export default connect(mapStateToProps,{createProduct})(CreateProduct)
+export default connect(mapStateToProps,{loadAllProducts, createProduct, setAlert})(CreateProduct)

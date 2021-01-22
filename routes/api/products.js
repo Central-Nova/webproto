@@ -115,8 +115,9 @@ router.post('/',
       .json({ errors: errors.array() })
     }
 
+    // Check if units used in priceRules matches basePrice
     let priceRulesError = [];
-
+    
     priceRules.forEach(rule => { 
       if (rule.unit !== basePrice.unit) {
         priceRulesError.push(true)
@@ -129,18 +130,7 @@ router.post('/',
       .json({errors: [{msg: {title: 'Error', description: 'This product does not use that unit.'}}]})
     }
     
-    try {
-      
-    // Check if product exists
-    let product = await Product.findOne({sku});
-
-    if (product) {
-      return res
-      .status(400)
-      .json({errors: [{msg: {title: 'Error', description: 'A product with that SKU already exists.'}}]})
-    }
-
-    product = new Product({
+    let productData = {
       company: req.user.company,
       sku, 
       name, 
@@ -152,11 +142,33 @@ router.post('/',
       color,
       primaryMaterial,
       createdBy: req.user._id
-      })
+      }
 
-    product.save();
+    try {
+      
+    // Check if product exists
+    let rawResult = await Product.findOneAndUpdate(
+      {sku}, 
+      {$set: productData},
+      { new: true, 
+      upsert: true,
+      rawResult: true});
 
-    return res.status(200).json({msg: { title: 'Success', description: 'Your product has been created!'} })
+    // if (product) {
+    //   return res
+    //   .status(400)
+    //   .json({errors: [{msg: {title: 'Error', description: 'A product with that SKU already exists.'}}]})
+    // }
+
+
+    // product.save();
+
+    console.log('rawResult.value: ', rawResult);
+
+    let updatedMessage = 'Your product has been updated!';
+    let createdMessage = 'Your product has been created!';
+
+    return res.status(200).json({msg: { title: 'Success', description: rawResult.lastErrorObject.updatedExisting ? updatedMessage : createdMessage} })
     
   } catch (err) {
     console.log(err);

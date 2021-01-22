@@ -18,7 +18,7 @@ const BasePrice = ({ errors, control }) => {
             <p className="text-hint text-primary-light">
               Smallest sellable unit ex. Pallet
             </p>
-            <CustomInputErrorMessage errors={errors} valueType='object' parent='basePrice' name='unit' label='Unit' required={true}/>
+            <CustomInputErrorMessage errors={errors} valueType='object' parent='basePrice' name='unit' label='Unit'/>
           </div>
           {/* Sub Unit Name Field*/}
           <div className="form-item">
@@ -26,7 +26,7 @@ const BasePrice = ({ errors, control }) => {
             <p className="text-hint text-primary-light">
               Sub units contained within a unit ex. Boxes
             </p>
-            <CustomInputErrorMessage errors={errors} valueType='object' parent='basePrice' name='subUnit' label='Sub unit' required={true}/>
+            <CustomInputErrorMessage errors={errors} valueType='object' parent='basePrice' name='subUnit' label='Sub unit'/>
           </div>
           {/* Contains Field*/}
           <div className="form-item">
@@ -34,7 +34,7 @@ const BasePrice = ({ errors, control }) => {
             <p className="text-hint text-primary-light">
               # of "Sub Units" contained in a "Unit" ex. "40"
             </p>
-          <CustomInputErrorMessage errors={errors} valueType='object' parent='basePrice' name='contains' label='number' required={true}/>
+          <CustomInputErrorMessage errors={errors} valueType='object' parent='basePrice' name='contains' label='number'/>
           </div>
           {/* Price Field*/}
           <div className="form-item">

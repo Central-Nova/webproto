@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
 import { useFieldArray } from 'react-hook-form';
 import CustomNumberInput from '../../layout/inputs/CustomNumberInput';
+import CustomInputErrorMessage from '../../layout/inputs/CustomInputErrorMessage';
 
 const PriceRules = ({ errors, control, register }) => {
 
@@ -37,23 +38,30 @@ const PriceRules = ({ errors, control, register }) => {
               </div>
               {/* Quantity Field */}
               <div className="form-item">
-              <CustomNumberInput name={`priceRules[${index}].quantity`} placeholder='Quantity' control={control} required={true} />
-
-                <div className="text-danger">
-                {errors?.priceRules?.[index]?.quantity?.type ==='notEmpty' && 'Please enter a number'}
-                {errors?.priceRules?.[index]?.quantity?.type ==='isNumber' && 'Please use numbers only'}
-                {errors?.priceRules?.[index]?.quantity?.type ==='notZero' && 'Please enter a number > 0'}
-                </div>
+                <input type='text' ref={register({
+                  validate: {
+                    notEmpty: value => value !== '',
+                    isNumber: value => 
+                      value === '' || Number.isInteger(parseInt(value)),
+                    notZero: value => 
+                      value === '' || parseInt(value) > 0
+                  }
+                })} name={`priceRules[${index}].quantity`}  placeholder='Quantity' defaultValue={item.quantity} control={control}/>
+                <CustomInputErrorMessage errors={errors} valueType='array' parent='priceRules' index={index} name='quantity' label='quantity' />
               </div>
               {/* Price Field */}
               <div className="form-item">
-              <CustomNumberInput name={`priceRules[${index}].price`} placeholder='Price' control={control} required={true} />
+              <input type='text' ref={register({
+                  validate: {
+                    notEmpty: value => value !== '',
+                    isNumber: value => 
+                      value === '' || Number.isInteger(parseInt(value)),
+                    notZero: value => 
+                      value === '' || parseInt(value) > 0
+                  }
+                })} name={`priceRules[${index}].price`} placeholder='Price' defaultValue={item.price} control={control}/>
+                <CustomInputErrorMessage errors={errors} valueType='array' parent='priceRules' index={index} name='price' label='price' />
 
-                <div className="text-danger">
-                {errors?.priceRules?.[index]?.price?.type ==='notEmpty' && 'Please enter a number'}
-                {errors?.priceRules?.[index]?.price?.type ==='isNumber' && 'Please use numbers only'}
-                {errors?.priceRules?.[index]?.price?.type ==='notZero' && 'Please enter a number > 0'}
-                </div>
               </div>
               <div className="btn-remove">
                 <button onClick={()=>remove(index)} className="btn btn-minus">
@@ -63,9 +71,6 @@ const PriceRules = ({ errors, control, register }) => {
             </Fragment>
           )
         })}
-        </div>
-        <div className="text-danger">
-          {errors.priceRules && errors.priceRules.forEach(obj=> Object.keys(obj).forEach(field=> field.message))}
         </div>
         <button onClick={(e) => onAddClick(e)}  className="btn btn-plus">
           <div className="circle"><i className="fas fa-plus"></i></div>

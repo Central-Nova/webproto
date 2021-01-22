@@ -986,6 +986,9 @@ table tbody {
   grid-template-columns: 1fr;
   grid-gap: 1rem;
   justify-items: flex-start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
 }
 
 .container-product-fields
@@ -1002,9 +1005,8 @@ table tbody {
   .container-form-price-grid
   .container-price-field-grid
   .btn-remove {
+  margin-top: 1rem;
   justify-self: flex-start;
-  -ms-flex-item-align: end;
-  align-self: flex-end;
 }
 
 .container-product-fields

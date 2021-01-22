@@ -37,7 +37,6 @@ export default function (state=initialState, action) {
     case PRODUCTS_LOADED:
       return {
         ...state,
-        loading: false,
         allProducts: {
           loading: false,
           data: payload

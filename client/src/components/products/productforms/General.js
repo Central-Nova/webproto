@@ -1,8 +1,12 @@
 import React, {Fragment} from 'react'
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
 import CustomTextInput from '../../layout/inputs/CustomTextInput';
 import CustomInputErrorMessage from '../../layout/inputs/CustomInputErrorMessage';
 
 const General = ({ register, errors, control }) => {
+
   return (
     <Fragment>
       <div className="container-product-fields">
@@ -40,4 +44,10 @@ const General = ({ register, errors, control }) => {
   )
 }
 
-export default General
+General.propTypes = {
+}
+
+const mapStateToProps = state => ({
+})
+
+export default connect(mapStateToProps, {})(General)

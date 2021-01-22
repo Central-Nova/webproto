@@ -1,7 +1,7 @@
 import React from 'react'
 import { useController } from 'react-hook-form';
 
-const CustomNumberInput = ({ control, name, required = false, placeholder}) => {
+const CustomNumberInput = ({ control, name, required = false, placeholder }) => {
 
   const { 
     field: { ref, ...inputProps },
@@ -29,8 +29,9 @@ const CustomNumberInput = ({ control, name, required = false, placeholder}) => {
     defaultValue: ''
   })
 
+  
   return (
-    <input type="text" placeholder={placeholder} {...inputProps} ref={ref}/>
+    <input type="text" placeholder={placeholder} {...inputProps} inpuetref={ref}/>
   )
 }
 

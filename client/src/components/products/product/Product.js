@@ -43,7 +43,7 @@ const Product = ({ match, products: { filteredProducts: { loading, data } }, loa
     </div>
     <div className="container-product-info">
       <p className="text-medium text-primary">Specifications</p>
-      <Specifications weight={data.weight} basePrice={data.basePrice} dimensions={data.dimensions} />
+      <Specifications weight={data.weight || 0} basePrice={data.basePrice} dimensions={data.dimensions || 0} />
     </div>
     <button className="btn btn-primary btn-small">Edit</button>
     <button className="btn btn-light btn-back btn-small mx-2">
