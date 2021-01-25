@@ -4,6 +4,7 @@ const actionsBuyer = require('../../lib/actionsBuyer.json');
 const actionsSupplier = require('../../lib/actionsSupplier.json');
 const companyAuth = require('../../middleware/companyAuth');
 const authorize = require('../../middleware/authorize');
+const { check, validationResult } = require('express-validator')
 
 const Role = require('../../models/Role');
 const Company = require('../../models/Company');
@@ -103,77 +104,21 @@ router.get(
 // @access  Has company and has 'Role Permissions':'Edit' permission
 
 router.put(
-  '/department/:department', [companyAuth, authorize('Admin', 'Role Permissions', 'Edit')],
+  '/department/:department', [companyAuth, authorize('Admin', 'Role Permissions', 'Edit'),[
+    check('permissions.*.department').not().isEmpty(),
+    check('permissions.*.document').not().isEmpty(),
+    check('permissions.*.action').not().isEmpty(),
+    check('permissions.*.manager').not().isEmpty().isBoolean(),    
+    check('permissions.*.worker').not().isEmpty().isBoolean(),
+  ]],
   async (req, res) => {
 
-    // Check if provided roles are correct
-    let permissionsData = req.body
+    const errors = validationResult(req);
 
-    // Loop through to make sure it has three keys and validate
-
-    let keysToCheck = ['department', 'document', 'action', 'manager', 'worker']
-
-    console.log('keyToCheck: ', keysToCheck);
-
-    // Data validation
-    for (let role in permissionsData) {
-      
-      // Check if the role object has the 5 required keys
-      keysToCheck.forEach( key => {
-        if (permissionsData[role].hasOwnProperty(key)) {
-          return
-        } else {
-          console.log('problem key');
-        }
-
-      })
-
-      // Check if each department is a string
-      if (typeof permissionsData[role].department !== 'string') {
-        console.log('problem: ', typeof permissionsData[role].department)
-        return res
-        .status(400)
-        .json({ errors: [{ msg: {title: 'Error', description: 'User roles could not be updated with provided data.'} }] });
-
-      }
-
-      // Check if each department is a string
-      if (typeof permissionsData[role].document !== 'string') {
-        console.log('problem: ', typeof permissionsData[role].department)
-        return res
-        .status(400)
-        .json({ errors: [{ msg: {title: 'Error', description: 'User roles could not be updated with provided data.'} }] });
-
-      }
-
-      // Check if each department is a string
-      if (typeof permissionsData[role].action !== 'string') {
-        console.log('problem: ', typeof permissionsData[role].department)
-        return res
-        .status(400)
-        .json({ errors: [{ msg: {title: 'Error', description: 'User roles could not be updated with provided data.'} }] });
-
-      }
-
-      // Check if each manager is boolean
-      if (typeof permissionsData[role].manager !== 'boolean') {
-        console.log('problem: ', typeof permissionsData[role].manager)
-
-        return res
-        .status(400)
-        .json({ errors: [{ msg: {title: 'Error', description: 'User roles could not be updated with provided data.'} }] });
-
-      }
-
-      // Check if each worker is boolean
-      if (typeof permissionsData[role].worker !== 'boolean') {
-        console.log('problem: ', typeof permissionsData[role].worker)
-
-        return res
-        .status(400)
-        .json({ errors: [{ msg: {title: 'Error', description: 'User roles could not be updated with provided data.'} }] });
-    }
-
+    if (!errors.isEmpty()) {
+      return res
+      .status(400)
+      .json({ msg: { title: 'Error', description: 'Role permissions could not be updated with provided data.' }})
     }
 
     try {
@@ -190,12 +135,11 @@ router.put(
 
 
       for (let i in roles.permissions) {
-        for (let j in permissionsData) {
+        for (let j in req.body.permissions) {
           
-          
-          if (roles.permissions[i]._id.toString() === permissionsData[j]._id.toString()) {
+          if (roles.permissions[i]._id.toString() === req.body.permissions[j]._id.toString()) {
             console.log('permissions before: ', roles.permissions[i]);
-            roles.permissions[i] = permissionsData[j];
+            roles.permissions[i] = req.body.permissions[j];
             console.log('permissions after: ', roles.permissions[i]);
           }
         }

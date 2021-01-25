@@ -476,58 +476,20 @@ router.put(
 // @access  Has company and has 'User Roles':'Edit' permission
 
 router.put(
-  '/roles/:userId',[companyAuth, authorize('Admin', 'User Roles', 'Edit')], async (req, res) => {
+  '/roles/:userId',[companyAuth, authorize('Admin', 'User Roles', 'Edit'), [
+    check('roles.*.department').not().isEmpty(),
+    check('roles.*.worker').not().isEmpty().isBoolean(),
+    check('roles.*.manager').not().isEmpty().isBoolean(),
+    check('roles.*.department').custom(value => ['Sales', 'Products', 'Inventory', 'Warehouse', 'Fleet', 'Payments', 'Admin'].includes(value))
 
-    // Check if provided roles are correct
-    let rolesData = req.body
+  ]], async (req, res) => {
+    
+    const errors = validationResult(req);
 
-    // Loop through to make sure it has three keys and validate
-
-    let keysToCheck = ['department', 'manager', 'worker']
-
-    console.log('keyToCheck: ', keysToCheck);
-
-    // Data validation
-    for (let role in rolesData) {
-      
-      // Check if the role object has three keys
-      keysToCheck.forEach( key => {
-        if (rolesData[role].hasOwnProperty(key)) {
-          return
-        } else {
-          console.log('problem key');
-        }
-
-      })
-
-      // Check if each department is a string
-      if (typeof rolesData[role].department !== 'string') {
-        console.log('problem: ', typeof rolesData[role].department)
-        return res
-        .status(400)
-        .json({ errors: [{ msg: {title: 'Error', description: 'User roles could not be updated with provided data.'} }] });
-
-      }
-
-      // Check if each manager is boolean
-      if (typeof rolesData[role].manager !== 'boolean') {
-        console.log('problem: ', typeof rolesData[role].manager)
-
-        return res
-        .status(400)
-        .json({ errors: [{ msg: {title: 'Error', description: 'User roles could not be updated with provided data.'} }] });
-
-      }
-
-      // Check if each worker is boolean
-      if (typeof rolesData[role].worker !== 'boolean') {
-        console.log('problem: ', typeof rolesData[role].worker)
-
-        return res
-        .status(400)
-        .json({ errors: [{ msg: {title: 'Error', description: 'User roles could not be updated with provided data.'} }] });
-    }
-
+    if (!errors.isEmpty()) {
+      return res
+      .status(400)
+      .json({ msg: { title: 'Error', description: 'User roles could not be updated with provided data.' } })
     }
 
     try {
@@ -540,14 +502,14 @@ router.put(
           .json({ errors: [{ msg: {title: 'Error', description: 'Unauthorized user.'} }] });
       }
 
-      user.roles = rolesData
+      user.roles = req.body.roles
 
       user.save();
 
       return res.status(200).json({msg: {title: 'Success!', description: `${user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1)}'s roles has been updated.`}});
 
     } catch (err) {
-
+      console.log('err: ', err);
       return res.status(500).send('Server Error');
     }
   }

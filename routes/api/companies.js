@@ -112,6 +112,16 @@ router.put(
   '/company/:companyId'
   ,
  [ companyAuth,[
+    check('businessAddress.street', {title:'Error', description:'Street is required.'}).not().isEmpty(),
+    check('businessAddress.aptSuite', {title:'Error', description:'Apt/Suite is required.'}).not().isEmpty(),
+    check('businessAddress.city', {title:'Error', description:'City is required.'}).not().isEmpty(),
+    check('businessAddress.state', {title:'Error', description:'State is required.'}).not().isEmpty(),
+    check('businessAddress.zip', {title:'Error', description:'Zip code is required.'}).not().isEmpty(),
+    check('warehouseAddress.street', {title:'Error', description:'Street is required.'}).not().isEmpty().optional({nullable: true}),
+    check('warehouseAddress.aptSuite', {title:'Error', description:'Apt/Suite is required.'}).not().isEmpty().optional({nullable: true}),
+    check('warehouseAddress.city', {title:'Error', description:'City is required.'}).not().isEmpty().optional({nullable: true}),
+    check('warehouseAddress.State', {title:'Error', description:'State is required.'}).not().isEmpty().optional({nullable: true}),
+    check('warehouseAddress.zip', {title:'Error', description:'Zip code is required.'}).not().isEmpty().optional({nullable: true}),
     check('phone', {title:'Error', description:'Valid phone is required.'}).isNumeric(),
     check('email', {title:'Error', description:'Valid email is required.'}).isEmail(),
   ]],

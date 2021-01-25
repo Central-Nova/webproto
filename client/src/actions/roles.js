@@ -69,7 +69,7 @@ export const updateCompanyRoles = (permissionsData, companyId, department) => as
       }
     };
 
-    const res = await axios.put(`/api/roles/department/${department}`, permissionsData, config);
+    const res = await axios.put(`/api/roles/department/${department}`, {permissions: permissionsData}, config);
     
     dispatch(loadRoles(companyId));
 

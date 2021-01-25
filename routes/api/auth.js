@@ -2,11 +2,6 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const sessionStore = require('../../config/db');
-const session = require('express-session');
-const db = require('../../config/db');
-const nodemailer = require('nodemailer');
-
-const User = require('../../models/User');
 
 // @route   GET api/auth
 // @desc    Get user id from req.user

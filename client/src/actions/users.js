@@ -40,15 +40,15 @@ export const updateUserRoles = (roleData, userId) => async (dispatch) => {
       }
     };
   
-    const res = await axios.put(`/api/users/roles/${userId}`, roleData, config);
+    const res = await axios.put(`/api/users/roles/${userId}`, {roles:roleData}, config);
 
     dispatch(loadCompanyUsers());
 
-    setTimeout(dispatch({type: USERS_UPDATED}), 500)
+    setTimeout(()=>dispatch({type: USERS_UPDATED}), 500)
     
     dispatch(setAlert(res.data.msg,'success'))
     
-    setTimeout(() => dispatch({ type: USERS_READY }), 2000);
+    setTimeout(() => dispatch({ type: USERS_READY }), 1000);
 
 
   } catch (err) {
