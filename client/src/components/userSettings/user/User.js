@@ -36,7 +36,7 @@ import RoleCheck from '../../layout/auth/RoleCheck';
     }
   ]
 
-const User = ({ users: { loading, profiles }, loadCompanyUsers, updateUserRoles }) => {
+const User = ({ users: { loading, profiles, updated }, loadCompanyUsers, updateUserRoles }) => {
 
   const [ formState, setFormState ] = useState(initialState)
 
@@ -89,6 +89,10 @@ const User = ({ users: { loading, profiles }, loadCompanyUsers, updateUserRoles 
   const handleOnSubmit = (e) => {
     e.preventDefault();
     updateUserRoles(formState,userId);
+  }
+
+  if (updated) {
+    return <Redirect to='/users'/>
   }
 
   return (

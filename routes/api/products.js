@@ -13,7 +13,7 @@ const Product = require('../../models/Product');
 router.get('/', [companyAuth, authorize('Products', 'Catalog Entry', 'View')], async (req, res) => {
 
   let page = parseInt(req.query.page) || 0;
-  let limit = parseInt(req.query.limit) || 10;
+  let limit = parseInt(req.query.limit) || 0;
   let sort = req.query.sort || '';
   let searchArray = req.query.search !== undefined && req.query.search.split(',') || '';
   let searchRegex = searchArray !== '' && searchArray.join('|') || '';
@@ -76,36 +76,25 @@ router.get('/product/:productId', [companyAuth, authorize('Products', 'Catalog E
 
 router.post('/',
 [companyAuth, authorize('Products', 'Catalog Entry', 'Create'),[
-  check('sku', { title: 'Error', description: 'Please enter a valid SKU.' }).not().isEmpty().isLength({ min:4, max: 20 }),
-  check('name', { title: 'Error', description: 'Please enter a product name.' }).not().isEmpty().isLength({ max: 80 }),
-  check('description', { title: 'Error', description: 'Please enter a product description.' }).not().isEmpty().isLength({ max: 200 }),
-  check('basePrice.unit', { title: 'Error', description: 'Please enter a unit name.' }).not().isEmpty(),
-  check('basePrice.subUnit', { title: 'Error', description: 'Please enter a sub unit name.' }).not().isEmpty(),
-  check('basePrice.contains', { title: 'Error', description: 'Please enter number of sub units.' }).not().isEmpty().isNumeric(),
-  check('basePrice.price', { title: 'Error', description: 'Please enter a price.' }).not().isEmpty().isNumeric(),
-  check('priceRules.*.quantity', { title: 'Error', description: 'Please enter a valid quantity for the price rule.' }).isNumeric(),
-  check('priceRules.*.price', { title: 'Error', description: 'Please enter a valid price for the price rule.' }).isNumeric(),
-  check('weight', { title: 'Error', description: 'Please only use numbers for weight.' }).optional({nullable: true}).isNumeric(),
-  check('dimensions.length', { title: 'Error', description: 'Please only use numbers for product length.' }).optional({nullable: true}).isNumeric(),
-  check('dimensions.width', { title: 'Error', description: 'Please only use numbers for product width.' }).optional({nullable: true}).isNumeric(),
-  check('dimensions.height', { title: 'Error', description: 'Please only use numbers for product height.' }).optional({nullable: true}).isNumeric(),
+  check('products.*.sku', { title: 'Error', description: 'Please enter a valid SKU.' }).not().isEmpty().isLength({ min:4, max: 20 }),
+  check('products.*.name', { title: 'Error', description: 'Please enter a product name.' }).not().isEmpty().isLength({ max: 80 }),
+  check('products.*.description', { title: 'Error', description: 'Please enter a product description.' }).not().isEmpty().isLength({ max: 200 }),
+  check('products.*.basePrice.unit', { title: 'Error', description: 'Please enter a unit name.' }).not().isEmpty(),
+  check('products.*.basePrice.subUnit', { title: 'Error', description: 'Please enter a sub unit name.' }).not().isEmpty(),
+  check('products.*.basePrice.contains', { title: 'Error', description: 'Please enter number of sub units.' }).not().isEmpty().isNumeric(),
+  check('products.*.basePrice.price', { title: 'Error', description: 'Please enter a price.' }).not().isEmpty().isNumeric(),
+  check('products.*.priceRules.*.quantity', { title: 'Error', description: 'Please enter a valid quantity for the price rule.' }).isNumeric(),
+  check('products.*.priceRules.*.price', { title: 'Error', description: 'Please enter a valid price for the price rule.' }).isNumeric(),
+  check('products.*.weight', { title: 'Error', description: 'Please only use numbers for weight.' }).optional({nullable: true}).isNumeric(),
+  check('products.*.dimensions.length', { title: 'Error', description: 'Please only use numbers for product length.' }).optional({nullable: true}).isNumeric(),
+  check('products.*.dimensions.width', { title: 'Error', description: 'Please only use numbers for product width.' }).optional({nullable: true}).isNumeric(),
+  check('products.*.dimensions.height', { title: 'Error', description: 'Please only use numbers for product height.' }).optional({nullable: true}).isNumeric(),
 
 ]], async (req,res) => {
 
   const { 
-    sku, 
-    name, 
-    description,
-    basePrice,
-    priceRules,
-    dimensions,
-    weight,
-    color,
-    primaryMaterial,
-
+    products
   } = req.body;
-
-  console.log('req.body: ', req.body);
 
     const errors = validationResult(req);
 
@@ -118,10 +107,12 @@ router.post('/',
     // Check if units used in priceRules matches basePrice
     let priceRulesError = [];
     
-    priceRules.forEach(rule => { 
-      if (rule.unit !== basePrice.unit) {
-        priceRulesError.push(true)
-      }
+    products.forEach(product => { 
+      product.priceRules.forEach(rule => { 
+        if (rule.unit !== product.basePrice.unit) {
+          priceRulesError.push(true)
+        }}
+        )
     })
 
     if (priceRulesError.includes(true)) {
@@ -130,45 +121,44 @@ router.post('/',
       .json({errors: [{msg: {title: 'Error', description: 'This product does not use that unit.'}}]})
     }
     
-    let productData = {
-      company: req.user.company,
-      sku, 
-      name, 
-      description,
-      basePrice,
-      priceRules,
-      dimensions,
-      weight,
-      color,
-      primaryMaterial,
-      createdBy: req.user._id
+     
+  try {
+    console.log('running trycatch');
+    let updatedRecords = 0;
+    let createdRecords = 0;
+
+    for (let product of products) {
+
+      const {sku, name, description, dimensions, weight, color, primaryMaterial, basePrice, priceRules} = product;
+
+      let productData = {
+        company: req.user.company,
+        createdBy: req.user._id,
+        ...product
       }
-
-    try {
-      
-    // Check if product exists
-    let rawResult = await Product.findOneAndUpdate(
-      {sku}, 
-      {$set: productData},
-      { new: true, 
-      upsert: true,
-      rawResult: true});
-
-    // if (product) {
-    //   return res
-    //   .status(400)
-    //   .json({errors: [{msg: {title: 'Error', description: 'A product with that SKU already exists.'}}]})
-    // }
-
-
-    // product.save();
-
-    console.log('rawResult.value: ', rawResult);
-
-    let updatedMessage = 'Your product has been updated!';
-    let createdMessage = 'Your product has been created!';
-
-    return res.status(200).json({msg: { title: 'Success', description: rawResult.lastErrorObject.updatedExisting ? updatedMessage : createdMessage} })
+      console.log('productData: ', productData)
+  
+      // Find one and update
+      let rawResult = await Product.findOneAndUpdate(
+        {sku: productData.sku}, 
+        {$set: productData},
+        { new: true, 
+        upsert: true,
+        rawResult: true
+      });
+  
+        // console.log('rawResult: ', rawResult)
+  
+      if (rawResult.lastErrorObject.updatedExisting) {
+        console.log('before: ', updatedRecords)
+        updatedRecords = updatedRecords + 1;
+        console.log('after: ', updatedRecords)
+      } else {
+        createdRecords = createdRecords + 1;
+      }
+    }
+    
+    return res.status(200).json({msg: { title: 'Success', description: `${updatedRecords} records updated and ${createdRecords} records created.`} })
     
   } catch (err) {
     console.log(err);

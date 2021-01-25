@@ -1,5 +1,6 @@
 import React from 'react'
 import AsyncSelect from 'react-select/async';
+import CreatableSelect from 'react-select/creatable';
 import makeAnimated from 'react-select/animated';
 
 const animatedComponents = makeAnimated();
@@ -82,11 +83,24 @@ const customStyles = {
 
 
 }
+
 const CustomInput = ({ setFilterState,loadOptions, onChange, ...rest}) => {
+
+  // const handleInputChange = (input, reason) => {
+  //   if (
+  //     reason.action === "set-value" ||
+  //     reason.action === "input-blur" ||
+  //     reason.action === "menu-close"
+  //   ) {
+  //     return;
+  //   }
+  //   onChange(input,reason)
+  // }
 
   return (
     <AsyncSelect {...rest} onChange={(valueType,actionMeta)=>onChange(valueType,actionMeta)} loadOptions={loadOptions} components={animatedComponents} closeMenuOnSelect={false} isMulti styles={customStyles} />
-  )
+
+ )
 }
 
 export default CustomInput

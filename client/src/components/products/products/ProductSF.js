@@ -29,7 +29,7 @@ const optionsSort = [
   {value: 'basePrice.price', name: 'sort', label: 'Lowest Price'},
 ]
 
-const ProductSF = ({ setFilterState, loadAllProducts, onFilterChange, products: { allProducts}}) => {
+const ProductSF = ({ setModalState, modalState, setFilterState, loadAllProducts, onFilterChange, products: { allProducts}}) => {
 
   const [productOptionsState, setProductOptionsState] = useState([])
 
@@ -67,7 +67,8 @@ const ProductSF = ({ setFilterState, loadAllProducts, onFilterChange, products: 
           name='search'
           setFilterState={setFilterState}
           onChange={onFilterChange}
-          isMulti 
+          isMulti
+          blurInputOnSelect={false}
           placeholder="Type name or SKU and press enter" 
           defaultOptions={productOptionsState}
           loadOptions={loadOptions} />
@@ -78,13 +79,14 @@ const ProductSF = ({ setFilterState, loadAllProducts, onFilterChange, products: 
             onChange={onFilterChange}
             placeholder='Promotions'
             name='promotions'
+            isSearcable={false}
             options={optionsCoupon}
             />
         </div>
         <div className="filter-option">
           <CustomSelect
             onChange={onFilterChange}
-            isMulti
+            isSearcable={false}
             placeholder='Inventory'
             options={optionsInventory}
             closeMenuOnSelect={false}
@@ -95,6 +97,7 @@ const ProductSF = ({ setFilterState, loadAllProducts, onFilterChange, products: 
           <div className="filter-option">
           <CustomSelect
             name='sort'
+            isSearchable={false}
             onChange={onFilterChange}
             options={optionsSort}
             />
@@ -105,7 +108,7 @@ const ProductSF = ({ setFilterState, loadAllProducts, onFilterChange, products: 
         </div>
       </div>
     <div className="button-create">
-      <button className="btn btn-success btn-small">Create</button>
+      <button onClick={()=>setModalState(!modalState)} className="btn btn-success btn-small">Create</button>
     </div>
   </div>
   )

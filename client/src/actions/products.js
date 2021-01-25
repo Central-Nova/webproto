@@ -3,9 +3,9 @@ import {
   PRODUCTS_LOADED,
   PRODUCTS_FILTERED_LOADED,
   PRODUCT_BY_ID_LOADED,
-  PRODUCTS_SUCCESS,
   PRODUCTS_ERROR,
-  PRODUCTS_CLEARED
+  PRODUCTS_ACTION_SUCCESS,
+  PRODUCTS_ACTION_CLEARED,
 } from './types';
 import { setAlert } from './alert';
 
@@ -98,10 +98,7 @@ export const createProduct = (formData) => async (dispatch) => {
     const res = await axios.post('/api/products', formData, config);
 
     // Set state.products.
-    dispatch({
-      type: PRODUCTS_SUCCESS,
-    })
-
+    setTimeout(() => dispatch({type: PRODUCTS_ACTION_SUCCESS}), 500)
     dispatch(setAlert(res.data.msg, 'success'))
     
   } catch (err) {
@@ -112,3 +109,8 @@ export const createProduct = (formData) => async (dispatch) => {
     }
   }
 }
+
+export const clearProductSubmission = () => async (dispatch) => {
+
+  setTimeout(() => dispatch({type: PRODUCTS_ACTION_CLEARED}), 100)
+} 

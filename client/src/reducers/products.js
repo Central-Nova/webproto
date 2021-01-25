@@ -2,7 +2,8 @@ import {
   PRODUCTS_LOADED,
   PRODUCTS_FILTERED_LOADED,
   PRODUCT_BY_ID_LOADED,
-  PRODUCTS_SUCCESS,
+  PRODUCTS_ACTION_SUCCESS,
+  PRODUCTS_ACTION_CLEARED,
   PRODUCTS_CLEARED,
   PRODUCTS_ERROR} from '../actions/types';
 
@@ -15,6 +16,7 @@ const initialState = {
     loading: true,
     data: null
   },
+  submitSuccess: false
 };
 
 export default function (state=initialState, action) {
@@ -42,6 +44,18 @@ export default function (state=initialState, action) {
           data: payload
 
         }
+      }
+
+    case PRODUCTS_ACTION_SUCCESS:
+      return {
+        ...state,
+        submitSuccess: true
+      }
+     
+    case PRODUCTS_ACTION_CLEARED: 
+      return {
+        ...state,
+        submitSuccess: false
       }
     
     case PRODUCTS_ERROR:

@@ -7,6 +7,7 @@ import ProductSF from './ProductSF';
 import ProductsCard from './ProductsCard';
 import Spinner from '../../layout/Spinner';
 import Pagination from '../../layout/pagination/Pagination';
+import Upload from './Upload';
 
 const Products = ({ products: {filteredProducts}, loadFilteredProducts }) => {
 
@@ -21,13 +22,19 @@ const Products = ({ products: {filteredProducts}, loadFilteredProducts }) => {
   // pageState holds current page number
   const [pageState, setPageState] = useState(0);
 
+  // Bulk upload modal state
+
+  const [modalState, setModalState] = useState(false)
+
   useEffect(()=> {
     // Load products based on filters
-    loadFilteredProducts(pageState, 5, filterState.sort, filterState.search);
+    loadFilteredProducts(pageState, 10, filterState.sort, filterState.search);
   }, [filteredProducts.loading, loadFilteredProducts, filterState, pageState])
   
   // Selecting filters will update the filterState
   const onFilterChange = (valueType, actionMeta) => {
+    console.log('valueType: ', valueType);
+    console.log('actionMeta: ', actionMeta);
     // If valueType has a value, set the filter value to the valueType
     if (valueType !== null) {
       if (valueType.length > 0) {
@@ -53,12 +60,13 @@ const Products = ({ products: {filteredProducts}, loadFilteredProducts }) => {
         default:
           break;
       }
+      // if (actionMeta.action === 'select-option') 
     }
   }
   
   // Back and Next buttons
   const onPageIncrement = (action) => {
-    if (pageState > 0) {
+    if (pageState >= 0) {
       setPageState(action === 'next' ? pageState + 1 : pageState -1)
     }
   }
@@ -66,7 +74,7 @@ const Products = ({ products: {filteredProducts}, loadFilteredProducts }) => {
   const onPageChange = (number) => {
     setPageState(number)
   }
-  
+
   return (
     <Fragment>
     {filteredProducts.loading ? (
@@ -80,8 +88,9 @@ const Products = ({ products: {filteredProducts}, loadFilteredProducts }) => {
             Manage your product catalog.
           </p>
         </div>
+        <Upload setModalState={setModalState} modalState={modalState}/>
         {/* Products Sort and Filter Options */}
-        <ProductSF setFilterState={setFilterState} onFilterChange={onFilterChange} />
+        <ProductSF setFilterState={setFilterState} onFilterChange={onFilterChange} setModalState={setModalState} modalState={modalState}/>
         <div className="container-products-grid">
         {/* Render filteredProducts */}
         {filteredProducts.data.products.length > 0 && filteredProducts.data.products.map(product => (

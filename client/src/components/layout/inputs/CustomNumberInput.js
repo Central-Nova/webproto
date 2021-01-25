@@ -14,15 +14,15 @@ const CustomNumberInput = ({ control, name, required = false, placeholder }) => 
       required ? ({
       notEmpty: value => value !== '',
       isNumber: value => 
-        value === '' || Number.isInteger(parseInt(value)),
+        Number.isInteger(parseInt(value)),
       notZero: value => 
-        value === '' || parseInt(value) > 0,
+        parseInt(value) > 0,
       }) : (
         {
           isNumber: value => 
-            value === '' || Number.isInteger(parseInt(value)),
+            Number.isInteger(parseInt(value)),
           notZero: value => 
-            value === '' || parseInt(value) > 0,
+            parseInt(value) > 0,
           } 
       )
     },
