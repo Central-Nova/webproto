@@ -41,10 +41,6 @@ const RoleCheck = ({yes, no, department, document, action, companyRoles, auth, l
   
   const { user: { roles: userRoles } } = auth;
 
-  useEffect(() => {
-    loadRoles();
-  }, [])
-  
   return (
     <Fragment>
     {!auth.loading && !companyRoles.loading && check(userRoles, companyRoles, department, document, action) ? yes() : no()}

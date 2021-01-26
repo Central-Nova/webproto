@@ -64,12 +64,9 @@ const EditProduct = ({ createProduct, loadProductById, filteredProducts: { loadi
   }
 
   const onSubmit = data => {
-    // console.log('data: ', data);
-    // let values = getValues();
-    // console.log('values: ', values);
     removeEmptyFields(data);
     removeEmptyObjects(data)
-    createProduct(data);
+    createProduct({products: [data]});
     window.scrollTo(0,0);
 
   };

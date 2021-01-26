@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import CustomTextInput from '../../layout/inputs/CustomTextInput';
-import CustomInputErrorMessage from '../../layout/inputs/CustomInputErrorMessage';
 
 const General = ({ register, errors, control }) => {
 
@@ -20,13 +19,29 @@ const General = ({ register, errors, control }) => {
         <div className="form container-form-general-product-grid">
           {/* SKU Field */}
           <div className="form-item sku">
-            <CustomTextInput name='sku' control={control} required={true} placeholder='SKU' minLength={4} maxLength={20}/>
-            <CustomInputErrorMessage errors={errors} name='sku' label='SKU' minLength={4} maxLength={20}/>
+          <CustomTextInput 
+            name='sku' 
+            control={control} 
+            errors={errors}
+            required={true} 
+            placeholder='SKU'
+            label='SKU'
+            minLength={4} 
+            maxLength={20}
+            />
           </div>
           {/* Name Field */}
-          <div className="form-item name">
-            <CustomTextInput name='name' control={control} required={true} placeholder='Name' minLength={4} maxLength={80}/>
-            <CustomInputErrorMessage errors={errors} name='name' label='Name' minLength={4} maxLength={80}/>
+          <div className="form-item name">  
+            <CustomTextInput 
+              name='name' 
+              control={control} 
+              errors={errors}
+              required={true} 
+              placeholder='Name'
+              label='name'
+              minLength={4} 
+              maxLength={80}
+              />
           </div>
           {/* Description Field */}
           <div className="form-item description">

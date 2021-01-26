@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react'
+
 import CustomTextInput from '../../layout/inputs/CustomTextInput';
-import CustomNumberInput from '../../layout/inputs/CustomNumberInput';
-import CustomInputErrorMessage from '../../layout/inputs/CustomInputErrorMessage';
 
 
 const BasePrice = ({ errors, control }) => {
@@ -14,33 +13,61 @@ const BasePrice = ({ errors, control }) => {
         <div className="form container-form-product-grid">
           {/* Unit Name Field*/}
           <div className="form-item">
-          <CustomTextInput name='basePrice.unit' control={control} required={true} placeholder='Unit Name'/>
+          <CustomTextInput 
+          name='basePrice.unit' 
+          control={control}
+          errors={errors} 
+          required={true} 
+          placeholder='Unit Name'
+          label='unit'
+          />
             <p className="text-hint text-primary-light">
               Smallest sellable unit ex. Pallet
             </p>
-            <CustomInputErrorMessage errors={errors} valueType='object' parent='basePrice' name='unit' label='Unit'/>
           </div>
           {/* Sub Unit Name Field*/}
           <div className="form-item">
-          <CustomTextInput name='basePrice.subUnit' control={control} required={true} placeholder='Sub Unit Name'/>
+          <CustomTextInput 
+          name='basePrice.subUnit' 
+          control={control}
+          errors={errors} 
+          required={true} 
+          placeholder='Sub Unit Name'
+          label='sub unit'
+          />
             <p className="text-hint text-primary-light">
               Sub units contained within a unit ex. Boxes
             </p>
-            <CustomInputErrorMessage errors={errors} valueType='object' parent='basePrice' name='subUnit' label='Sub unit'/>
           </div>
           {/* Contains Field*/}
           <div className="form-item">
-          <CustomNumberInput name='basePrice.contains' placeholder='No. of sub units' control={control} required={true} />
+          <CustomTextInput 
+          name='basePrice.contains' 
+          placeholder='No. of sub units' 
+          control={control}
+          errors={errors} 
+          required={true} 
+          isNumber={true} 
+          notZero={true}
+          label='number'
+          />
             <p className="text-hint text-primary-light">
               # of "Sub Units" contained in a "Unit" ex. "40"
             </p>
-          <CustomInputErrorMessage errors={errors} valueType='object' parent='basePrice' name='contains' label='number'/>
           </div>
           {/* Price Field*/}
           <div className="form-item">
-          <CustomNumberInput name='basePrice.price' placeholder='Price' control={control} required={true} />
+          <CustomTextInput 
+          name='basePrice.price' 
+          placeholder='Price' 
+          control={control}
+          errors={errors} 
+          required={true} 
+          isNumber={true} 
+          notZero={true}
+          label='number'
+          />
             <p className="text-hint text-primary-light">Price of 1 unit.</p>
-            <CustomInputErrorMessage errors={errors} valueType='object' parent='basePrice' name='contains' label='number' required={true}/>
           </div>
         </div>
       </div>

@@ -22,7 +22,6 @@ const CreateProduct = ({ products: {allProducts: {loading, data}}, loadAllProduc
   let sku = watch('sku')
   // Check for existing SKU and give warning.
   if (!loading) {
-    console.log('sku : ', sku)
     data.products.forEach(product => { 
       if (product.sku === sku) {
         console.log(`sku match: ${product.sku}` )
@@ -58,7 +57,7 @@ const CreateProduct = ({ products: {allProducts: {loading, data}}, loadAllProduc
   const onSubmit = data => {
     removeEmptyFields(data);
     removeEmptyObjects(data)
-    createProduct(data);
+    createProduct({products: [data]});
     window.scrollTo(0,0);
 
   };

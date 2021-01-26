@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react'
-import CustomTextInput from '../../layout/inputs/CustomTextInput';
-import CustomNumberInput from '../../layout/inputs/CustomNumberInput';
-import CustomInputErrorMessage from '../../layout/inputs/CustomInputErrorMessage';
+
+import CustomTextInput from '../../layout/inputs/CustomTextInput'
 
 
 const Specifications = ({ errors, control }) => {
@@ -16,36 +15,71 @@ const Specifications = ({ errors, control }) => {
           <div className="container-dimensions-grid">
             {/* Length Field */}
             <div className="form-item">
-              <CustomNumberInput name='dimensions.length' placeholder='L' control={control} />
+            <CustomTextInput 
+              name='dimensions.length' 
+              placeholder='L' 
+              control={control}
+              errors={errors} 
+              isNumber={true} 
+              notZero={true}
+              label='length'
+              />
               <p className="text-primary-light">
                 Dimensions in inches (L" x W" x H")
               </p>
-              <CustomInputErrorMessage errors={errors} parent='dimensions' name='length' label='length' valueType='object'/>
             </div>
             {/* Width Field */}
             <div className="form-item">
-              <CustomNumberInput name='dimensions.width' placeholder='W' control={control} />
-              <CustomInputErrorMessage errors={errors} parent='dimensions' name='width' label='width' valueType='object'/>
+            <CustomTextInput 
+            name='dimensions.width' 
+            placeholder='W' 
+            control={control}
+            errors={errors} 
+            isNumber={true} 
+            notZero={true}
+            label='width'
+            />
             </div>
             {/* Height Field */}
             <div className="form-item">
-              <CustomNumberInput name='dimensions.height' placeholder='H' control={control} />
-              <CustomInputErrorMessage errors={errors} parent='dimensions' name='height' label='height' valueType='object'/>
+            <CustomTextInput
+              name='dimensions.height' 
+              placeholder='H' 
+              control={control}
+              errors={errors} 
+              isNumber={true} 
+              notZero={true}
+              label='height'
+            />
             </div>
           </div>
           {/* Weight Field */}
           <div className="form-item">
-          <CustomNumberInput name='weight' placeholder='Weight' control={control} />
-            <p className="text-primary-light">Weight in pounds</p>
-            <CustomInputErrorMessage errors={errors} name='weight' label='weight'/>
+          <CustomTextInput 
+            name='weight' 
+            placeholder='L' 
+            control={control}
+            errors={errors} 
+            isNumber={true} 
+            notZero={true}
+            label='height'
+          />
           </div>
           {/* Color Field */}
           <div className="form-item">
-          <CustomTextInput name='color' control={control} placeholder='Color'/>
+          <CustomTextInput 
+            name='color' 
+            control={control} 
+            placeholder='Color'
+          />
           </div>
           {/* Material Field */}
           <div className="form-item">
-          <CustomTextInput name='primaryMaterial' control={control} placeholder='Primary Material'/>
+          <CustomTextInput 
+            name='primaryMaterial' 
+            control={control} 
+            placeholder='Primary Material'
+          />
           </div>
         </div>
       </div>

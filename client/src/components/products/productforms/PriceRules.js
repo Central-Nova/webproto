@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import { useFieldArray } from 'react-hook-form';
-import CustomNumberInput from '../../layout/inputs/CustomNumberInput';
-import CustomInputErrorMessage from '../../layout/inputs/CustomInputErrorMessage';
+
+import CustomTextInput from '../../layout/inputs/CustomTextInput';
 
 const PriceRules = ({ errors, control, register }) => {
 
@@ -38,30 +38,28 @@ const PriceRules = ({ errors, control, register }) => {
               </div>
               {/* Quantity Field */}
               <div className="form-item">
-                <input type='text' ref={register({
-                  validate: {
-                    notEmpty: value => value !== '',
-                    isNumber: value => 
-                      value === '' || Number.isInteger(parseInt(value)),
-                    notZero: value => 
-                      value === '' || parseInt(value) > 0
-                  }
-                })} name={`priceRules[${index}].quantity`}  placeholder='Quantity' defaultValue={item.quantity} control={control}/>
-                <CustomInputErrorMessage errors={errors} valueType='array' parent='priceRules' index={index} name='quantity' label='quantity' />
+                <CustomTextInput 
+                control={control} 
+                errors={errors} 
+                name={`priceRules[${index}].quantity`} 
+                required={true} 
+                isNumber={true} 
+                notZero={true} 
+                label='quantity'
+                defaultValue={item.quantity} placeholder='Quantity'/>
               </div>
               {/* Price Field */}
               <div className="form-item">
-              <input type='text' ref={register({
-                  validate: {
-                    notEmpty: value => value !== '',
-                    isNumber: value => 
-                      value === '' || Number.isInteger(parseInt(value)),
-                    notZero: value => 
-                      value === '' || parseInt(value) > 0
-                  }
-                })} name={`priceRules[${index}].price`} placeholder='Price' defaultValue={item.price} control={control}/>
-                <CustomInputErrorMessage errors={errors} valueType='array' parent='priceRules' index={index} name='price' label='price' />
-
+              <CustomTextInput 
+                control={control} 
+                errors={errors} 
+                name={`priceRules[${index}].price`} 
+                required={true} 
+                isNumber={true} 
+                notZero={true} 
+                label='price'
+                defaultValue={item.price} 
+                placeholder='Price'/>
               </div>
               <div className="btn-remove">
                 <button onClick={()=>remove(index)} className="btn btn-minus">
