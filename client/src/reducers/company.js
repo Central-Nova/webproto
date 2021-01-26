@@ -1,5 +1,6 @@
 import { 
   COMPANY_LOADED,
+  COMPANY_SUCCESS,
   COMPANY_ERROR,
   CLEAR_COMPANY
 } from '../actions/types';
@@ -14,6 +15,7 @@ export default function (state = initialState, action) {
 
   switch (type) {
     case COMPANY_LOADED:
+    case COMPANY_SUCCESS: 
       return {
         ...state,
         loading: false,

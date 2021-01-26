@@ -1,9 +1,10 @@
 import React, { Fragment, useState } from 'react'
 import { CSVReader, CSVDownloader } from 'react-papaparse';
-import Modal from '../../layout/modals/Modal';
-import { clearProductSubmission, createProduct } from '../../../actions/products'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { clearProductSubmission, createProduct } from '../../../actions/products'
+
+import Modal from '../../layout/modals/Modal';
 
 const initialState = {
   errors: [],

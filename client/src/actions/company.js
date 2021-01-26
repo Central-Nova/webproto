@@ -5,12 +5,14 @@ import { loadUser } from './auth';
 import { 
   COMPANY_LOADED,
   COMPANY_ERROR,
-  AUTH_ERROR
+  AUTH_ERROR,
+  COMPANY_SUCCESS
 } from './types';
 
 // Create company record
 export const addAccountToCompany = (formData) => async dispatch => {
-
+  console.log('running addAccountToCompany');
+  console.log('formData: ', formData);
   const { account, company } = formData;
 
   try {
@@ -21,11 +23,10 @@ export const addAccountToCompany = (formData) => async dispatch => {
     };
 
     // Creates company record, gets back companyId in res.data
-    await axios.put(`/api/companies/company/${company}`, formData, config);
+    let res = await axios.put(`/api/companies/company/${company}`, formData, config);
 
     // Sets state.company.profile to hold company record
-    dispatch(loadCompany());
-
+    dispatch({type: COMPANY_SUCCESS, payload: res.data})
     // Send success alert to alert box.
     dispatch(setAlert({title: 'Success', description: `${account.charAt(0).toUpperCase() + account.slice(1)} account information added.`}, 'success'));
 

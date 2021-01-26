@@ -1,7 +1,5 @@
 import React, { useEffect, Fragment } from 'react'
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { loadRoles } from '../../../actions/roles';
 import PropTypes from 'prop-types';
 
 const check = (userRoles, companyRoles, department, document, action ) => {
@@ -37,7 +35,7 @@ const check = (userRoles, companyRoles, department, document, action ) => {
   return canPerform.includes(true);
 }
 
-const RoleCheck = ({yes, no, department, document, action, companyRoles, auth, loadRoles}) => {
+const RoleCheck = ({yes, no, department, document, action, companyRoles, auth}) => {
   
   const { user: { roles: userRoles } } = auth;
 
@@ -50,7 +48,6 @@ const RoleCheck = ({yes, no, department, document, action, companyRoles, auth, l
 }
 
 RoleCheck.propTypes = {
-  loadRoles: PropTypes.func.isRequired,
   companyRoles: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
 }
@@ -60,4 +57,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 })
 
-export default connect(mapStateToProps, { loadRoles })(RoleCheck)
+export default connect(mapStateToProps, {})(RoleCheck)

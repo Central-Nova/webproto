@@ -120,7 +120,7 @@ router.put(
     check('warehouseAddress.street', {title:'Error', description:'Street is required.'}).not().isEmpty().optional({nullable: true}),
     check('warehouseAddress.aptSuite', {title:'Error', description:'Apt/Suite is required.'}).not().isEmpty().optional({nullable: true}),
     check('warehouseAddress.city', {title:'Error', description:'City is required.'}).not().isEmpty().optional({nullable: true}),
-    check('warehouseAddress.State', {title:'Error', description:'State is required.'}).not().isEmpty().optional({nullable: true}),
+    check('warehouseAddress.state', {title:'Error', description:'State is required.'}).not().isEmpty().optional({nullable: true}),
     check('warehouseAddress.zip', {title:'Error', description:'Zip code is required.'}).not().isEmpty().optional({nullable: true}),
     check('phone', {title:'Error', description:'Valid phone is required.'}).isNumeric(),
     check('email', {title:'Error', description:'Valid email is required.'}).isEmail(),
@@ -163,7 +163,7 @@ router.put(
       await company.save();
 
       // Send company ID with response object (used for adding company to user record)
-      return res.status(200).json(company._id);
+      return res.send(company);
 
     } catch (err) {
       console.log(err);

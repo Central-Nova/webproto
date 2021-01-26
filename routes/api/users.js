@@ -209,23 +209,24 @@ router.post(
         roles: [
           {
             department: 'Sales',
-            role: 'Worker'
+          },
+          {
+            department: 'Inventory',
           },
           {
             department: 'Products',
-            role: 'Worker'
           },
           {
             department: 'Warehouse',
-            role: 'Worker'
           },
           {
             department: 'Fleet',
-            role: 'Worker'
           },
           {
             department: 'Payments',
-            role: 'Worker'
+          },
+          {
+            department: 'Admin',
           },
         ],
       });

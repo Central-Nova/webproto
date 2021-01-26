@@ -7,9 +7,31 @@ import { Redirect, useParams } from 'react-router-dom';
 
 import AccountStepHandler from './AccountStepHandler';
 
-const AddAccounts = ({ setAlert, addAccountToCompany, user, company }) => {
+const removeEmptyFields = (data) => {
+  Object.keys(data).forEach(key=> {
+    if (typeof data[key] === 'object') {
+      Object.keys(data[key]).forEach(nestkey => {
+        if (data[key][nestkey] === '') {
+          delete data[key][nestkey]
+        }
+      })
+    } else {
+      if (data[key] === '') {
+        delete data[key]
+      }
+    }
+  })
+}
 
-  console.log('company.profile.operation: ',company.profile.operation )
+const removeEmptyObjects = (data) => {
+  Object.keys(data).forEach(key => {
+    if (typeof data[key] === 'object' && Object.keys(data[key]).length === 0) {
+      delete data[key]
+    }
+  })
+}
+
+const AddAccounts = ({ setAlert, addAccountToCompany, user, company: { profile, loading }}) => {
 
   const { account } = useParams();
 
@@ -85,10 +107,12 @@ const AddAccounts = ({ setAlert, addAccountToCompany, user, company }) => {
 
   const onSubmit = e => {
     e.preventDefault();
+    removeEmptyFields(formData);
+    removeEmptyObjects(formData);
     addAccountToCompany(formData);
   }
 
-  if (company.profile.operation !== undefined ) {
+  if (!loading && profile.operation !== undefined ) {
     return <Redirect to='/create-team' />
   }
 
@@ -108,7 +132,7 @@ AddAccounts.propTypes = {
 
 const mapStateToProps = state => ({
   user: state.auth.user,
-  company: state.company
+  company: state.company,
 })
 
 export default connect(mapStateToProps, { setAlert, addAccountToCompany })(AddAccounts);
