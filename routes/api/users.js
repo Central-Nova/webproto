@@ -5,6 +5,10 @@ const { genPassword } = require('../../lib/passwordUtils')
 const companyAuth = require('../../middleware/companyAuth');
 const authorize = require('../../middleware/authorize');
 const invitationCheck = require('../../middleware/invitationCheck');
+const sanitize = require('mongo-sanitize');
+const sanitizeReq = require('../../lib/sanitize');
+
+// Models
 const User = require('../../models/User');
 const Company = require('../../models/Company');
 const Invitation = require('../../models/Invitation');
@@ -169,7 +173,7 @@ router.get('/department/:department/role/:role', [companyAuth], async (req, res)
 // @access  public
 
 router.post(
-  '/',
+  '/',[sanitizeReq,
   [
     check('firstName', {title:'Error', description:'First name is required'}).not().isEmpty(),
     check('lastName', {title:'Error', description:'Last name is required'}).not().isEmpty(),
@@ -178,7 +182,7 @@ router.post(
       'password',
       {title: 'Error', description: 'Please enter a password with 6 or more characters'}
     ).isLength({ min: 6 })
-  ],
+  ]],
   async (req, res) => {
     // Check input fields for errors
     const errors = validationResult(req);
@@ -190,18 +194,23 @@ router.post(
 
     const { firstName, lastName, email, password } = req.body;
 
+    console.log('req.body: ', req.body);
 
     try {
       // Check for existing user
 
       let user = await User.findOne({ email });
+      console.log('existing user?: ', !!user)
 
       if (user) {
+        console.log('existing user: ', user);
+
         return res
           .status(400)
           .json({ errors: [{ msg: {title: 'Error', description: 'User already exists'} }] });
       }
 
+      console.log('creating user')
       user = new User({
         firstName: firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase(),
         lastName: lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase(),

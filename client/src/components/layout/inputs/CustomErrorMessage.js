@@ -29,7 +29,7 @@ const getNameProperties = (inputName) => {
   return nameProperties
 }
 
-const CustomInputErrorMessage = ({errors, label, inputName, minLength, maxLength}) => {
+const CustomInputErrorMessage = ({  errors, label, inputName, minLength, maxLength}) => {
 
   let nameProperties = getNameProperties(inputName);
 

@@ -48,6 +48,8 @@ export const loadFilteredProducts = (page, limit, sort, search) => async (dispat
   try {
     const res = await axios.get(`/api/products?page=${page}&limit=${limit}&sort=${sort}&search=${searchString}`);
 
+    console.log('get products: ', `/api/products?page=${page}&limit=${limit}&sort=${sort}&search=${searchString}`)
+
     // Set state.products.filteredProducts
     dispatch({
       type: PRODUCTS_FILTERED_LOADED,

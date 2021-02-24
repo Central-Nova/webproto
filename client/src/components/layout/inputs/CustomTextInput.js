@@ -31,6 +31,7 @@ const generateRules = (required, minLength, maxLength, isNumber, notZero, ) => {
 
 
 const CustomTextInput = ({ defaultValue, control, errors, name, placeholder, label, required = false, minLength = false, maxLength = false, notZero = false, isNumber = false}) => {
+  
 
   let rules = generateRules(required,minLength,maxLength, isNumber, notZero);
   
@@ -45,10 +46,11 @@ const CustomTextInput = ({ defaultValue, control, errors, name, placeholder, lab
     defaultValue: defaultValue || ''
   })
 
+
   return (
     <Fragment>
       <input type="text" placeholder={placeholder} {...inputProps} ref={ref}/>
-      <CustomErrorMessage errors={errors} inputName={name} label={label} minLength maxLength/>
+      <CustomErrorMessage errors={errors} inputName={name} label={label} minLength={minLength} maxLength={maxLength}/>
     </Fragment>
   )
 }

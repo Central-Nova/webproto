@@ -30,7 +30,6 @@ const optionsSort = [
 ]
 
 const ProductSF = ({ setModalState, modalState, setFilterState, loadAllProducts, onFilterChange, products: { allProducts}}) => {
-
   const [productOptionsState, setProductOptionsState] = useState([])
 
   useEffect(()=> {

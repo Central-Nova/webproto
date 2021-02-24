@@ -3,6 +3,8 @@ const { check, validationResult } = require('express-validator');
 const router = express.Router();
 const companyAuth = require('../../middleware/companyAuth');
 const authorize = require('../../middleware/authorize');
+const sanitizeReq = require('../../lib/sanitize');
+const sanitize = require('mongo-sanitize');
 
 const Product = require('../../models/Product');
 
@@ -20,8 +22,14 @@ router.get('/', [companyAuth, authorize('Products', 'Catalog Entry', 'View')], a
 
   try {
     
-    let products = await Product.find({$and: [{company: req.user.company}, {$and: [{name: {$regex: searchRegex, $options: 'i'}}, {sku: {$regex: searchRegex, $options: 'i'}}]}]}).sort(sort).skip(page * limit).limit(limit);
+    let products = await Product.find({
+      $and: [{company: req.user.company}, {
+        $and: [{
+          name: {$regex: searchRegex, $options: 'i'}}, {
+            sku: {$regex: searchRegex, $options: 'i'}}]}]})
+            .sort(sort).skip(page * limit).limit(limit);
     
+    console.log('products: ', products);
     
     if (!products) {
       return res
@@ -31,10 +39,7 @@ router.get('/', [companyAuth, authorize('Products', 'Catalog Entry', 'View')], a
     
     let total = await Product.countDocuments({$and: [{company: req.user.company}, {$or: [{name: {$regex: searchRegex, $options: 'i'}}, {sku: {$regex: searchRegex, $options: 'i'}}]}]}).sort(sort);    
     
-    console.log('searchRegex: ', searchRegex);
-    console.log('products: ', products);
-    console.log('total: ', total);
-    
+   
     return res.send({
       total,
       page,
@@ -54,6 +59,7 @@ router.get('/', [companyAuth, authorize('Products', 'Catalog Entry', 'View')], a
 router.get('/product/:productId', [companyAuth, authorize('Products', 'Catalog Entry', 'View')], async (req, res) => {
 
   try {
+   
 
     let product = await Product.findById(req.params.productId)
 
@@ -66,6 +72,11 @@ router.get('/product/:productId', [companyAuth, authorize('Products', 'Catalog E
     console.log('product: ', product);
     return res.send(product);
     } catch (error) {
+      if (error.kind === 'ObjectId') {
+        return res
+        .status(400)
+        .json({msg: { title: 'Error', description: 'Product not found.'}})      
+      }
     return res.status(500).send('Server Error');
   }
 })
@@ -75,7 +86,7 @@ router.get('/product/:productId', [companyAuth, authorize('Products', 'Catalog E
 // @access  Has company, has 'Catalog Entry':'Create' permission
 
 router.post('/',
-[companyAuth, authorize('Products', 'Catalog Entry', 'Create'),[
+[companyAuth, authorize('Products', 'Catalog Entry', 'Create'), sanitizeReq,[
   check('products.*.sku', { title: 'Error', description: 'Please enter a valid SKU.' }).not().isEmpty().isLength({ min:4, max: 20 }),
   check('products.*.name', { title: 'Error', description: 'Please enter a product name.' }).not().isEmpty().isLength({ max: 80 }),
   check('products.*.description', { title: 'Error', description: 'Please enter a product description.' }).not().isEmpty().isLength({ max: 200 }),
@@ -174,7 +185,7 @@ router.post('/',
 // @access  Has company, has 'Catalog Entry':'Create' permission
 
 router.put('/product/:productId',
-[companyAuth, authorize('Products', 'Catalog Entry', 'Edit'),[
+[companyAuth, authorize('Products', 'Catalog Entry', 'Edit'), sanitizeReq,[
   check('sku', { title: 'Error', description: 'Please enter a valid SKU.' }).not().isEmpty().isLength({ min:4, max: 20 }),
   check('name', { title: 'Error', description: 'Please enter a product name.' }).not().isEmpty().isLength({ max: 80 }),
   check('description', { title: 'Error', description: 'Please enter a product description.' }).not().isEmpty().isLength({ max: 200 }),
@@ -203,6 +214,8 @@ router.put('/product/:productId',
     primaryMaterial,
 
   } = req.body;
+
+  console.log('req.body: ', req.body);
 
     const errors = validationResult(req);
 
@@ -259,8 +272,13 @@ router.put('/product/:productId',
     .status(200)
     .json({msg: {title: 'Success', description: 'Product details have been updated!'}})
     
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
+    if (error.kind === 'ObjectId') {
+      return res
+      .status(400)
+      .json({msg: { title: 'Error', description: 'Product not found.'}})      
+    }
     return res.status(500).send('Server Error');
    
   }

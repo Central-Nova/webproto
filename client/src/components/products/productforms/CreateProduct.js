@@ -19,6 +19,8 @@ const CreateProduct = ({ products: {allProducts: {loading, data}}, loadAllProduc
     mode: 'onBlur'
   });
 
+  console.log('errors: ', errors);
+
   let sku = watch('sku')
   // Check for existing SKU and give warning.
   if (!loading) {
@@ -61,9 +63,6 @@ const CreateProduct = ({ products: {allProducts: {loading, data}}, loadAllProduc
     window.scrollTo(0,0);
 
   };
-
- 
-  console.log('errors: ', errors)
 
   return (
     <div className="container-dashboard">

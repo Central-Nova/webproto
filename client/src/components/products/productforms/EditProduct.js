@@ -72,8 +72,6 @@ const EditProduct = ({ createProduct, loadProductById, filteredProducts: { loadi
   };
 
  
-  console.log('errors: ', errors)
-
   return (
     <Fragment>
     {loading && data === null ? (

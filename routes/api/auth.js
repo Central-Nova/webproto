@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const sessionStore = require('../../config/db');
+const sanitize = require('mongo-sanitize');
 
 // @route   GET api/auth
 // @desc    Get user id from req.user
@@ -84,8 +85,6 @@ router.get(
   }
 )
 
-// 5fdaa2940392b7490081f9a4
-
 // @route   GET api/auth/google/register-callback
 // @desc    Google OAuth register callback
 // @access  public
@@ -98,6 +97,9 @@ router.get(
 	}))
 
 
+// @route   POST api/auth
+// @desc    Local Authentication callback
+// @access  public
 
 router.post('/', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {

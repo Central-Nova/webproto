@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import CustomTextInput from '../../layout/inputs/CustomTextInput';
 
 const General = ({ register, errors, control }) => {
-
   return (
     <Fragment>
       <div className="container-product-fields">

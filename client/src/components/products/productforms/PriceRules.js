@@ -4,7 +4,6 @@ import { useFieldArray } from 'react-hook-form';
 import CustomTextInput from '../../layout/inputs/CustomTextInput';
 
 const PriceRules = ({ errors, control, register }) => {
-
   const { fields, append, remove } = useFieldArray({
     control, 
     name: 'priceRules'

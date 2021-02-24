@@ -2,6 +2,7 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const validPassword = require('../lib/passwordUtils').validPassword;
+const sanitize = require('mongo-sanitize');
 
 require('dotenv').config();
 
@@ -13,6 +14,7 @@ module.exports = function (passport) {
   passport.use(
     new LocalStrategy({ usernameField: 'email' }, async (username, password, done) => {
       console.log('PASSPORT VERIFY CALLBACK CALLED');
+
       User.findOne({ email: username })
         .then((user) => {
           // Wrong Email
