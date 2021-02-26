@@ -3,6 +3,7 @@ const sessionStore = require('./config/db');
 const path = require('path');
 const passport = require('passport');
 const session = require('express-session');
+const helmet = require('helmet');
 
 require('dotenv').config();
 
@@ -13,6 +14,9 @@ app.use(express.json({ extended: false }));
 
 // Express body parser
 app.use(express.urlencoded({ extended: true }))
+
+// Helmet
+app.use(helmet());
 
 // // Passport Session
 // const sessionStore = new MongoStore({ mongooseConnection: mongoConection, collection: 'sessions' });

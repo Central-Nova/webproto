@@ -115,22 +115,27 @@ router.post('/',
       .json({ errors: errors.array() })
     }
 
+    // Price rules are optional. Check if exists
     // Check if units used in priceRules matches basePrice
-    let priceRulesError = [];
     
-    products.forEach(product => { 
-      product.priceRules.forEach(rule => { 
-        if (rule.unit !== product.basePrice.unit) {
-          priceRulesError.push(true)
-        }}
-        )
-    })
+    if (products.priceRules) {
+      let priceRulesError = [];
+      
+      products.forEach(product => { 
+        product.priceRules.forEach(rule => { 
+          if (rule.unit !== product.basePrice.unit) {
+            priceRulesError.push(true)
+          }}
+          )
+      })
 
-    if (priceRulesError.includes(true)) {
-      return res
-      .status(400)
-      .json({errors: [{msg: {title: 'Error', description: 'This product does not use that unit.'}}]})
+      if (priceRulesError.includes(true)) {
+        return res
+        .status(400)
+        .json({errors: [{msg: {title: 'Error', description: 'This product does not use that unit.'}}]})
+      }
     }
+
     
      
   try {
@@ -172,6 +177,7 @@ router.post('/',
     return res.status(200).json({msg: { title: 'Success', description: `${updatedRecords} records updated and ${createdRecords} records created.`} })
     
   } catch (err) {
+    console.log('products post req error')
     console.log(err);
     return res.status(500).send('Server Error');
    

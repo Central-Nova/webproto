@@ -113,8 +113,14 @@ export const loginUser = (formData) => async (dispatch) => {
 // Load User
 export const loadUser = () => async (dispatch) => {
 
+  const config = {
+    headers: {
+      'Cache-Control': 'no-cache'
+    }
+  }
+
   try {
-    const res = await axios.get('/api/auth');
+    const res = await axios.get('/api/auth', config);
 
       dispatch({
         type: USER_LOADED,

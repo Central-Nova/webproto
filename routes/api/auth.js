@@ -10,6 +10,7 @@ const sanitize = require('mongo-sanitize');
 router.get('/', (req, res) => {
 
   console.log('//* GET: API/AUTH *// get user', req.user);
+  console.log('req headers: ', req.headers);
 
   if(!req.user) {
     return res.status(401).send('No User');

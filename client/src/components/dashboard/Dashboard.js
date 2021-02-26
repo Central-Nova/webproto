@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logoutUser } from '../../actions/auth';
 import { loadRoles } from '../../actions/roles';
+import { Helmet } from 'react-helmet';
 
 import Spinner from '../layout/Spinner';
 
@@ -22,6 +23,10 @@ const Dashboard = ( { company, logoutUser, auth: {user, loading} } ) => {
 
 return (
 <Fragment>
+  <Helmet>
+  <title>Helmet Test</title>
+  <meta name="description" content="lots of helmet information"/>
+  </Helmet>
     {loading && user === null ? (
     <Spinner/>
     ) : (
@@ -41,7 +46,6 @@ return (
         </Link>
       </section>
       )}
-
 </Fragment>)
 
 }
