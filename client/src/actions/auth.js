@@ -74,7 +74,6 @@ export const register = (formData) => async (dispatch) => {
 //Login User
 export const loginUser = (formData) => async (dispatch) => {
 
-  console.log('calling loginUser', formData);
   const { email, password } = formData;
   const config = {
                   headers: {
@@ -83,12 +82,15 @@ export const loginUser = (formData) => async (dispatch) => {
                 };
 
   try {
-   await axios.post('/api/auth', {email, password}, config);
+   let res = await axios.post('/api/auth', {email, password}, config);
 
   //  Set state.auth.isAuthenticated to true
     dispatch({
       type: LOGIN_SUCCESS,
     });
+   
+  //  Call setAlert to display success message in alert box.
+  dispatch(setAlert(res.data.msg,'success'))
 
   //  Load user to state.auth.user 
     dispatch(loadUser());
@@ -131,7 +133,6 @@ export const loadUser = () => async (dispatch) => {
   } catch (err) {
 
     const errors = err.response.data.errors;
-    console.log('err.response: ',err.response);
 
     if (errors) {
       errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));

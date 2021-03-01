@@ -27,11 +27,11 @@ module.exports = function (passport) {
             const isValid = validPassword(password, user.local.hash, user.local.salt);
 
             if (isValid) {
-              apiLogger.info(`User successfully validated!`)
+              apiLogger.info(`User successfully validated`)
               return done(null, user);
             } else {
             // Wrong Password
-            apiLogger.error(`User credentials invalid.`)
+            apiLogger.error(`User credentials invalid`)
                 return done(null, false);
             }
         })
@@ -50,15 +50,13 @@ module.exports = function (passport) {
     callbackURL: 'http://localhost:5000/api/auth/google/register-callback'
   },
   (accessToken, refreshToken, profile, done) => {
-    console.log('===== GOOGLE PROFILE =======')
-    console.log(profile)
-    console.log('======== END ===========')
-    
+    apiLogger.info('Google authentication returned Google profile')
     const {id, name, emails} = profile;
-    
+
+    apiLogger.info('Querying database...')
     User.findOne({email: emails[0].value}).then((user) => {
       if (!user) {
-        
+        apiLogger.info('No matching user found, initializing user...')
         const newUser = new User({
           firstName: name.givenName,
           lastName: name.familyName,
@@ -91,7 +89,8 @@ module.exports = function (passport) {
           ]
         });
         newUser.save();
-        // res.json({msg: {title: 'Success', description: 'User created! You may log in.'}})
+        apiLogger.info(`User ${newUser._id} created`)
+
         return done(null);
       } else {
         return done(null)
@@ -111,35 +110,29 @@ module.exports = function (passport) {
     callbackURL: 'http://localhost:5000/api/auth/google/login-callback'
   },
   async (accessToken, refreshToken, profile, done) => {
-    console.log('===== GOOGLE PROFILE =======')
-    console.log(profile)
-    console.log('======== END ===========')
-    
+    apiLogger.info('Google authentication returned Google profile')
+
     const { id, emails } = profile;
     
   try {
-
+    apiLogger.info('Querying database...')
     const userById = await User.findOne({'google.googleId':id}).select('-local.hash -local.salt')
     const userByEmail = await User.findOne({email:emails[0].value}).select('-local.hash -local.salt')
 
-    console.log('User By Id: ', userById)
-    console.log('User By Email: ', userByEmail)
-
     if(userById) {
-      console.log('Found User by ID, Loggin In...:', userById)
+      apiLogger.info('Found Google ID in database, logging in')
       return done(null, userById);
     }
 
     if(!userById && userByEmail) {
       const user = await User.findOneAndUpdate({email:emails[0].value},
         {$set: {'google.googleId':id, isVerified: true}})
-
-      console.log('Found User by Email, Adding Google ID:', user)
+      apiLogger.info('Found existing local user, added google email')
 
       return done(null, user)
     }
     if (!userById) {
-      console.log('There is no account associated with this email, please create an account.');
+      apiLogger.error('Google account not found in database')
       return done(null, false, {message: 'There is no account associated with that email.'})
     }
     
@@ -150,7 +143,7 @@ module.exports = function (passport) {
   )
   
   passport.serializeUser((user, done) => {
-    apiLogger.info('Seralizing user ID')
+    apiLogger.info('Serializing user ID')
     done(null, user.id);
   });
 

@@ -57,8 +57,7 @@ router.get('/google/register', passport.authenticate('google-register', { scope:
 router.get(
 	'/google/login-callback',
 	passport.authenticate('google-login'), (req, res) => {
-
-    const sessionsCollection = sessionStore.db.collection('sessions');
+  const sessionsCollection = sessionStore.db.collection('sessions');
 
   // Returns cursor for sessions containing user id
   sessionsCollection.find({session: new RegExp(req.user._id)}, (err, sessions) => {
@@ -66,23 +65,24 @@ router.get(
 
       // Form an array from cursor
       sessions.toArray((a, sessionsData) => {
+        apiLogger.debug(`Found ${sessionsData.length} session(s) belonging to user ${req.user._id}.`)
 
         // Loop through each item in sessions array. If it doesn't have the same session ID as the current session ID, then destroy the session
         sessionsData.forEach((element, index) => {
-          const data = JSON.parse(element.session);
           if (element._id !== req.session.id) {
             sessionStore.destroy(element._id, (err, data) => {
-              if (err) 
-                return res.status(400).send({
-                  message: errorHandler.getErrorMessage(err)
-                });
-                res.jasonp({status: 'Previous Session Deleted'})
+              if (err) {
+                apiLogger.warn(`Session ${element._id} could not be destroyed.`)
+              }
+              apiLogger.debug(`Destroyed session ${element._id}.`)
             })
           }
         })
       })
     } else {
-      res.jsonp({ status: 'No Session Found'});
+      return res
+      .status(400)
+      .json({ errors: [{ msg: {title:'Error', description:'Server Error' }}] })
     }
   })
 
@@ -112,7 +112,6 @@ router.post('/', (req, res, next) => {
     // Handle server error
     if (err) { 
       apiLogger.error('Server Error Encountered')
-      apiLogger.info(`***** End of ${req.method} Request *****`)
 
       res
       .status(400)
@@ -142,31 +141,32 @@ router.post('/', (req, res, next) => {
       
       return;
     });
-      const sessionsCollection = sessionStore.db.collection('sessions');
 
+  const sessionsCollection = sessionStore.db.collection('sessions');
   // Returns cursor for sessions containing user id
   sessionsCollection.find({session: new RegExp(req.user._id)}, (err, sessions) => {
     if(sessions !== null) {
 
       // Form an array from cursor
       sessions.toArray((a, sessionsData) => {
-
+        apiLogger.debug(`Found ${sessionsData.length} session(s) belonging to user ${req.user._id}.`)
+        
         // Loop through each item in sessions array. If it doesn't have the same session ID as the current session ID, then destroy the session
         sessionsData.forEach((element, index) => {
-          const data = JSON.parse(element.session);
           if (element._id !== req.session.id) {
             sessionStore.destroy(element._id, (err, data) => {
-              if (err) 
-                return res.status(400).send({
-                  message: errorHandler.getErrorMessage(err)
-                });
-                res.jasonp({status: 'Previous Session Deleted'})
+              if (err) {
+                apiLogger.warn(`Session ${element._id} could not be destroyed.`)
+              } 
+              apiLogger.debug(`Destroyed session ${element._id}.`)
             })
           }
         })
       })
     } else {
-      res.jsonp({ status: 'No Session Found'});
+      return res
+      .status(400)
+      .json({ errors: [{ msg: {title:'Error', description:'Server Error' }}] })
     }
   })
   
@@ -174,11 +174,14 @@ router.post('/', (req, res, next) => {
   const reqUser = JSON.parse(JSON.stringify(req.user)) // hack
   const cleanUser = Object.assign({}, reqUser)
   if (cleanUser.local) {
+    apiLogger.debug('Local credentials found, deleting local credentials from req.user...')
     delete cleanUser.local.hash;
     delete cleanUser.local.salt;
   }
-  res.json(cleanUser)
-  })(req,res,next)  
+  return res
+  .status(200)
+  .json({msg: {title: 'Success', description: 'Logged in!'}})
+  })(req,res,next)
 });
 
 module.exports = router;
