@@ -1,0 +1,271 @@
+2021-03-01T16:36:09.998Z [[32minfo[39m] API: Logging Works
+2021-03-01T16:37:33.017Z [[32minfo[39m] API: Logging Works
+2021-03-01T16:37:35.938Z [[32minfo[39m] API: Logging Works
+2021-03-01T16:37:38.080Z [[32minfo[39m] API: Logging Works
+2021-03-01T16:37:43.950Z [[32minfo[39m] API: Logging Works
+2021-03-01T16:37:46.577Z [[32minfo[39m] API: Logging Works
+2021-03-01T16:45:58.811Z [[32minfo[39m] API: ***** Incoming GET Request *****
+2021-03-01T16:45:58.814Z [[34mdebug[39m] API: User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36
+2021-03-01T16:46:27.812Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T16:46:27.813Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T16:46:28.968Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T16:46:28.970Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T16:47:05.293Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T16:47:05.300Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T16:47:06.346Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T16:47:06.348Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T16:47:55.230Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T16:47:55.235Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T16:47:56.302Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T16:47:56.308Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T16:48:31.798Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T16:48:31.806Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T16:48:32.328Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T16:48:32.330Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T16:50:44.479Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T16:50:44.484Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T16:50:44.673Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T16:50:44.678Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T16:50:59.472Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T16:50:59.475Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T16:50:59.660Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T16:50:59.662Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T16:52:03.976Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T16:52:03.978Z [[32minfo[39m] API: ***** Requesting Route /api/auth *****
+2021-03-01T16:52:03.979Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T16:52:04.171Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T16:52:04.171Z [[32minfo[39m] API: ***** Requesting Route /api/auth *****
+2021-03-01T16:52:04.172Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T16:52:17.439Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T16:52:17.441Z [[32minfo[39m] API: Requesting Route /api/auth
+2021-03-01T16:52:17.442Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T16:52:17.634Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T16:52:17.635Z [[32minfo[39m] API: Requesting Route /api/auth
+2021-03-01T16:52:17.635Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T17:29:22.502Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T17:29:22.504Z [[32minfo[39m] API: Requesting Route /api/auth
+2021-03-01T17:29:22.504Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T17:29:22.512Z [[32minfo[39m] API: Querying database for user
+2021-03-01T17:29:22.533Z [[32minfo[39m] API: User 5fecbe8b983ade22d093cea1 found
+2021-03-01T17:29:22.541Z [[32minfo[39m] API: User credentials are valid.
+2021-03-01T17:29:22.543Z [[32minfo[39m] API: Logging in user with passport.
+2021-03-01T17:29:22.680Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T17:29:22.681Z [[32minfo[39m] API: Requesting Route /api/auth
+2021-03-01T17:29:22.681Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T17:29:22.682Z [[32minfo[39m] API: Querying database for user
+2021-03-01T17:29:22.704Z [[32minfo[39m] API: User 5fecbe8b983ade22d093cea1 found
+2021-03-01T17:29:22.713Z [[32minfo[39m] API: User credentials are valid.
+2021-03-01T17:29:22.714Z [[32minfo[39m] API: Logging in user with passport.
+2021-03-01T17:29:48.976Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T17:29:48.976Z [[32minfo[39m] API: Requesting Route /api/auth
+2021-03-01T17:29:48.977Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T17:29:48.977Z [[31merror[39m] API: Invalid Credentials
+2021-03-01T17:29:49.094Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T17:29:49.095Z [[32minfo[39m] API: Requesting Route /api/auth
+2021-03-01T17:29:49.095Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T17:29:49.095Z [[31merror[39m] API: Invalid Credentials
+2021-03-01T17:30:06.590Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T17:30:06.591Z [[32minfo[39m] API: Requesting Route /api/auth
+2021-03-01T17:30:06.592Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T17:30:06.592Z [[32minfo[39m] API: Querying database for user
+2021-03-01T17:30:06.615Z [[32minfo[39m] API: User 5fecbe8b983ade22d093cea1 found
+2021-03-01T17:30:06.623Z [[32minfo[39m] API: User credentials are valid.
+2021-03-01T17:30:06.625Z [[32minfo[39m] API: Logging in user with passport.
+2021-03-01T17:30:06.747Z [[32minfo[39m] API: ***** Incoming POST Request *****
+2021-03-01T17:30:06.748Z [[32minfo[39m] API: Requesting Route /api/auth
+2021-03-01T17:30:06.748Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T17:30:06.749Z [[32minfo[39m] API: Querying database for user
+2021-03-01T17:30:06.771Z [[32minfo[39m] API: User 5fecbe8b983ade22d093cea1 found
+2021-03-01T17:30:06.782Z [[32minfo[39m] API: User credentials are valid.
+2021-03-01T17:30:06.789Z [[32minfo[39m] API: Logging in user with passport.
+2021-03-01T17:30:17.932Z [[32minfo[39m] API: ***** Incoming GET Request *****
+2021-03-01T17:30:17.933Z [[32minfo[39m] API: Requesting Route /api/auth
+2021-03-01T17:30:17.933Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T17:30:18.041Z [[32minfo[39m] API: ***** Incoming GET Request *****
+2021-03-01T17:30:18.041Z [[32minfo[39m] API: Requesting Route /api/auth
+2021-03-01T17:30:18.042Z [[34mdebug[39m] API: User agent: PostmanRuntime/7.26.8
+2021-03-01T18:02:12.635Z [[32minfo[39m] API reqId: undefined: ***** Incoming POST Request *****
+2021-03-01T18:02:12.639Z [[32minfo[39m] API reqId: undefined: Requesting Route /api/auth
+2021-03-01T18:02:12.640Z [[34mdebug[39m] API reqId: undefined: User agent: PostmanRuntime/7.26.8
+2021-03-01T18:02:12.642Z [[32minfo[39m] API reqId: undefined: Querying database for user
+2021-03-01T18:02:12.666Z [[32minfo[39m] API reqId: undefined: User 5fecbe8b983ade22d093cea1 found
+2021-03-01T18:02:12.676Z [[32minfo[39m] API reqId: undefined: User credentials are valid.
+2021-03-01T18:02:12.694Z [[32minfo[39m] API reqId: undefined: Logging in user with passport.
+2021-03-01T18:02:12.862Z [[32minfo[39m] API reqId: undefined: ***** Incoming POST Request *****
+2021-03-01T18:02:12.863Z [[32minfo[39m] API reqId: undefined: Requesting Route /api/auth
+2021-03-01T18:02:12.863Z [[34mdebug[39m] API reqId: undefined: User agent: PostmanRuntime/7.26.8
+2021-03-01T18:02:12.864Z [[32minfo[39m] API reqId: undefined: Querying database for user
+2021-03-01T18:02:12.882Z [[32minfo[39m] API reqId: undefined: User 5fecbe8b983ade22d093cea1 found
+2021-03-01T18:02:12.889Z [[32minfo[39m] API reqId: undefined: User credentials are valid.
+2021-03-01T18:02:12.893Z [[32minfo[39m] API reqId: undefined: Logging in user with passport.
+2021-03-01T18:03:07.621Z [[32minfo[39m] API reqId: undefined: ***** Incoming POST Request *****
+2021-03-01T18:03:07.623Z [[32minfo[39m] API reqId: undefined: Requesting Route /api/auth
+2021-03-01T18:03:07.624Z [[34mdebug[39m] API reqId: undefined: User agent: PostmanRuntime/7.26.8
+2021-03-01T18:03:07.631Z [[32minfo[39m] API reqId: undefined: Querying database for user
+2021-03-01T18:03:07.647Z [[32minfo[39m] API reqId: undefined: User 5fecbe8b983ade22d093cea1 found
+2021-03-01T18:03:07.655Z [[32minfo[39m] API reqId: undefined: User credentials are valid.
+2021-03-01T18:03:07.659Z [[32minfo[39m] API reqId: undefined: Logging in user with passport.
+2021-03-01T18:03:07.812Z [[32minfo[39m] API reqId: undefined: ***** Incoming POST Request *****
+2021-03-01T18:03:07.813Z [[32minfo[39m] API reqId: undefined: Requesting Route /api/auth
+2021-03-01T18:03:07.814Z [[34mdebug[39m] API reqId: undefined: User agent: PostmanRuntime/7.26.8
+2021-03-01T18:03:07.814Z [[32minfo[39m] API reqId: undefined: Querying database for user
+2021-03-01T18:03:07.838Z [[32minfo[39m] API reqId: undefined: User 5fecbe8b983ade22d093cea1 found
+2021-03-01T18:03:07.866Z [[32minfo[39m] API reqId: undefined: User credentials are valid.
+2021-03-01T18:03:07.873Z [[32minfo[39m] API reqId: undefined: Logging in user with passport.
+2021-03-01T18:08:01.609Z [[32minfo[39m] API reqId: fa9a6ccb-f793-4d84-87b1-08afa39e6506: ***** Incoming POST Request *****
+2021-03-01T18:08:01.612Z [[32minfo[39m] API reqId: fa9a6ccb-f793-4d84-87b1-08afa39e6506: Requesting Route /api/auth
+2021-03-01T18:08:01.621Z [[34mdebug[39m] API reqId: fa9a6ccb-f793-4d84-87b1-08afa39e6506: User agent: PostmanRuntime/7.26.8
+2021-03-01T18:08:01.624Z [[32minfo[39m] API reqId: fa9a6ccb-f793-4d84-87b1-08afa39e6506: Querying database for user
+2021-03-01T18:08:01.662Z [[32minfo[39m] API reqId: fa9a6ccb-f793-4d84-87b1-08afa39e6506: User 5fecbe8b983ade22d093cea1 found
+2021-03-01T18:08:01.670Z [[32minfo[39m] API reqId: fa9a6ccb-f793-4d84-87b1-08afa39e6506: User credentials are valid.
+2021-03-01T18:08:01.674Z [[32minfo[39m] API reqId: fa9a6ccb-f793-4d84-87b1-08afa39e6506: Logging in user with passport.
+2021-03-01T18:08:01.809Z [[32minfo[39m] API reqId: 963d98a6-895c-4786-b5ef-45e382a12701: ***** Incoming POST Request *****
+2021-03-01T18:08:01.810Z [[32minfo[39m] API reqId: 963d98a6-895c-4786-b5ef-45e382a12701: Requesting Route /api/auth
+2021-03-01T18:08:01.811Z [[34mdebug[39m] API reqId: 963d98a6-895c-4786-b5ef-45e382a12701: User agent: PostmanRuntime/7.26.8
+2021-03-01T18:08:01.821Z [[32minfo[39m] API reqId: 963d98a6-895c-4786-b5ef-45e382a12701: Querying database for user
+2021-03-01T18:08:01.839Z [[32minfo[39m] API reqId: 963d98a6-895c-4786-b5ef-45e382a12701: User 5fecbe8b983ade22d093cea1 found
+2021-03-01T18:08:01.847Z [[32minfo[39m] API reqId: 963d98a6-895c-4786-b5ef-45e382a12701: User credentials are valid.
+2021-03-01T18:08:01.853Z [[32minfo[39m] API reqId: 963d98a6-895c-4786-b5ef-45e382a12701: Logging in user with passport.
+2021-03-01T18:08:18.712Z [[32minfo[39m] API reqId: 122baea4-4b32-47f9-8559-779a026111a6: ***** Incoming POST Request *****
+2021-03-01T18:08:18.714Z [[32minfo[39m] API reqId: 122baea4-4b32-47f9-8559-779a026111a6: Requesting Route /api/auth
+2021-03-01T18:08:18.724Z [[34mdebug[39m] API reqId: 122baea4-4b32-47f9-8559-779a026111a6: User agent: PostmanRuntime/7.26.8
+2021-03-01T18:08:18.725Z [[32minfo[39m] API reqId: 122baea4-4b32-47f9-8559-779a026111a6: Querying database for user
+2021-03-01T18:08:18.750Z [[32minfo[39m] API reqId: 122baea4-4b32-47f9-8559-779a026111a6: User 5fecbe8b983ade22d093cea1 found
+2021-03-01T18:08:18.759Z [[32minfo[39m] API reqId: 122baea4-4b32-47f9-8559-779a026111a6: User credentials are valid.
+2021-03-01T18:08:18.763Z [[32minfo[39m] API reqId: 122baea4-4b32-47f9-8559-779a026111a6: Logging in user with passport.
+2021-03-01T18:08:18.898Z [[32minfo[39m] API reqId: b342a23b-63fd-4158-b42e-d2869c2a68e3: ***** Incoming POST Request *****
+2021-03-01T18:08:18.898Z [[32minfo[39m] API reqId: b342a23b-63fd-4158-b42e-d2869c2a68e3: Requesting Route /api/auth
+2021-03-01T18:08:18.899Z [[34mdebug[39m] API reqId: b342a23b-63fd-4158-b42e-d2869c2a68e3: User agent: PostmanRuntime/7.26.8
+2021-03-01T18:08:18.908Z [[32minfo[39m] API reqId: b342a23b-63fd-4158-b42e-d2869c2a68e3: Querying database for user
+2021-03-01T18:08:18.922Z [[32minfo[39m] API reqId: b342a23b-63fd-4158-b42e-d2869c2a68e3: User 5fecbe8b983ade22d093cea1 found
+2021-03-01T18:08:18.933Z [[32minfo[39m] API reqId: b342a23b-63fd-4158-b42e-d2869c2a68e3: User credentials are valid.
+2021-03-01T18:08:18.935Z [[32minfo[39m] API reqId: b342a23b-63fd-4158-b42e-d2869c2a68e3: Logging in user with passport.
+2021-03-01T18:09:28.832Z [[32minfo[39m] API reqId: 5b039954-44ec-44d6-97b6-f47b867f5fb9: ***** Incoming POST Request *****
+2021-03-01T18:09:28.834Z [[32minfo[39m] API reqId: 5b039954-44ec-44d6-97b6-f47b867f5fb9: Requesting Route /api/auth
+2021-03-01T18:09:28.844Z [[34mdebug[39m] API reqId: 5b039954-44ec-44d6-97b6-f47b867f5fb9: User agent: PostmanRuntime/7.26.8
+2021-03-01T18:09:28.847Z [[32minfo[39m] API reqId: 5b039954-44ec-44d6-97b6-f47b867f5fb9: Querying database for user
+2021-03-01T18:09:28.873Z [[32minfo[39m] API reqId: 5b039954-44ec-44d6-97b6-f47b867f5fb9: User 5fecbe8b983ade22d093cea1 found
+2021-03-01T18:09:28.881Z [[32minfo[39m] API reqId: 5b039954-44ec-44d6-97b6-f47b867f5fb9: User credentials are valid.
+2021-03-01T18:09:28.886Z [[32minfo[39m] API reqId: 5b039954-44ec-44d6-97b6-f47b867f5fb9: Logging in user with passport.
+2021-03-01T18:09:29.051Z [[32minfo[39m] API reqId: 6ea1de1f-5ccd-44db-b7c7-a533c2a323c9: ***** Incoming POST Request *****
+2021-03-01T18:09:29.051Z [[32minfo[39m] API reqId: 6ea1de1f-5ccd-44db-b7c7-a533c2a323c9: Requesting Route /api/auth
+2021-03-01T18:09:29.052Z [[34mdebug[39m] API reqId: 6ea1de1f-5ccd-44db-b7c7-a533c2a323c9: User agent: PostmanRuntime/7.26.8
+2021-03-01T18:09:29.062Z [[32minfo[39m] API reqId: 6ea1de1f-5ccd-44db-b7c7-a533c2a323c9: Querying database for user
+2021-03-01T18:09:29.079Z [[32minfo[39m] API reqId: 6ea1de1f-5ccd-44db-b7c7-a533c2a323c9: User 5fecbe8b983ade22d093cea1 found
+2021-03-01T18:09:29.087Z [[32minfo[39m] API reqId: 6ea1de1f-5ccd-44db-b7c7-a533c2a323c9: User credentials are valid.
+2021-03-01T18:09:29.102Z [[32minfo[39m] API reqId: 6ea1de1f-5ccd-44db-b7c7-a533c2a323c9: Logging in user with passport.
+2021-03-01T19:40:39.761Z [[32minfo[39m] API reqId: 9928a942-d3fe-4622-84e5-8887d712ddd2: Deseralizing user ID
+2021-03-01T19:40:39.794Z [[32minfo[39m] API reqId: 9928a942-d3fe-4622-84e5-8887d712ddd2: ***** Incoming POST Request *****
+2021-03-01T19:40:39.794Z [[32minfo[39m] API reqId: 9928a942-d3fe-4622-84e5-8887d712ddd2: Requesting Route /api/auth
+2021-03-01T19:40:39.795Z [[34mdebug[39m] API reqId: 9928a942-d3fe-4622-84e5-8887d712ddd2: User agent: PostmanRuntime/7.26.8
+2021-03-01T19:40:39.796Z [[32minfo[39m] API reqId: 9928a942-d3fe-4622-84e5-8887d712ddd2: Querying database...
+2021-03-01T19:40:39.814Z [[32minfo[39m] API reqId: 9928a942-d3fe-4622-84e5-8887d712ddd2: User 5fecbe8b983ade22d093cea1 found
+2021-03-01T19:40:39.819Z [[32minfo[39m] API reqId: 9928a942-d3fe-4622-84e5-8887d712ddd2: Validating user credentials...
+2021-03-01T19:40:39.828Z [[32minfo[39m] API reqId: 9928a942-d3fe-4622-84e5-8887d712ddd2: User successfully validated!
+2021-03-01T19:40:39.844Z [[32minfo[39m] API reqId: 9928a942-d3fe-4622-84e5-8887d712ddd2: Logging in user with passport.
+2021-03-01T19:40:39.846Z [[32minfo[39m] API reqId: 9928a942-d3fe-4622-84e5-8887d712ddd2: Seralizing user ID
+2021-03-01T19:40:39.995Z [[32minfo[39m] API reqId: 52e75924-1a82-4d64-b3c3-1b976d64f76a: Deseralizing user ID
+2021-03-01T19:40:40.011Z [[32minfo[39m] API reqId: 52e75924-1a82-4d64-b3c3-1b976d64f76a: ***** Incoming POST Request *****
+2021-03-01T19:40:40.011Z [[32minfo[39m] API reqId: 52e75924-1a82-4d64-b3c3-1b976d64f76a: Requesting Route /api/auth
+2021-03-01T19:40:40.012Z [[34mdebug[39m] API reqId: 52e75924-1a82-4d64-b3c3-1b976d64f76a: User agent: PostmanRuntime/7.26.8
+2021-03-01T19:40:40.012Z [[32minfo[39m] API reqId: 52e75924-1a82-4d64-b3c3-1b976d64f76a: Querying database...
+2021-03-01T19:40:40.027Z [[32minfo[39m] API reqId: 52e75924-1a82-4d64-b3c3-1b976d64f76a: User 5fecbe8b983ade22d093cea1 found
+2021-03-01T19:40:40.030Z [[32minfo[39m] API reqId: 52e75924-1a82-4d64-b3c3-1b976d64f76a: Validating user credentials...
+2021-03-01T19:40:40.037Z [[32minfo[39m] API reqId: 52e75924-1a82-4d64-b3c3-1b976d64f76a: User successfully validated!
+2021-03-01T19:40:40.045Z [[32minfo[39m] API reqId: 52e75924-1a82-4d64-b3c3-1b976d64f76a: Logging in user with passport.
+2021-03-01T19:40:40.045Z [[32minfo[39m] API reqId: 52e75924-1a82-4d64-b3c3-1b976d64f76a: Seralizing user ID
+2021-03-01T19:41:34.466Z [[32minfo[39m] API reqId: 99bb48e0-ab3e-455c-8266-b87c1c343ae6: Deseralizing user ID
+2021-03-01T19:41:34.495Z [[32minfo[39m] API reqId: 99bb48e0-ab3e-455c-8266-b87c1c343ae6: ***** Incoming GET Request *****
+2021-03-01T19:41:34.496Z [[32minfo[39m] API reqId: 99bb48e0-ab3e-455c-8266-b87c1c343ae6: Requesting Route /api/auth
+2021-03-01T19:41:34.496Z [[34mdebug[39m] API reqId: 99bb48e0-ab3e-455c-8266-b87c1c343ae6: User agent: PostmanRuntime/7.26.8
+2021-03-01T19:41:34.630Z [[32minfo[39m] API reqId: a3793a70-f93d-4ec3-9232-bcb2da494b48: Deseralizing user ID
+2021-03-01T19:41:34.646Z [[32minfo[39m] API reqId: a3793a70-f93d-4ec3-9232-bcb2da494b48: ***** Incoming GET Request *****
+2021-03-01T19:41:34.647Z [[32minfo[39m] API reqId: a3793a70-f93d-4ec3-9232-bcb2da494b48: Requesting Route /api/auth
+2021-03-01T19:41:34.647Z [[34mdebug[39m] API reqId: a3793a70-f93d-4ec3-9232-bcb2da494b48: User agent: PostmanRuntime/7.26.8
+2021-03-01T19:42:18.129Z [[32minfo[39m] API reqId: e1acd25d-c3c5-4a8c-9b6a-36200b1e6c62: ***** Incoming GET Request *****
+2021-03-01T19:42:18.134Z [[32minfo[39m] API reqId: e1acd25d-c3c5-4a8c-9b6a-36200b1e6c62: Requesting Route /api/auth
+2021-03-01T19:42:18.134Z [[34mdebug[39m] API reqId: e1acd25d-c3c5-4a8c-9b6a-36200b1e6c62: User agent: PostmanRuntime/7.26.8
+2021-03-01T19:42:18.135Z [[32minfo[39m] API reqId: e1acd25d-c3c5-4a8c-9b6a-36200b1e6c62: Deserializing user ID
+2021-03-01T19:42:18.270Z [[32minfo[39m] API reqId: bd519f78-f0b2-40f2-8fe3-bbff36e1e9ad: ***** Incoming GET Request *****
+2021-03-01T19:42:18.271Z [[32minfo[39m] API reqId: bd519f78-f0b2-40f2-8fe3-bbff36e1e9ad: Requesting Route /api/auth
+2021-03-01T19:42:18.271Z [[34mdebug[39m] API reqId: bd519f78-f0b2-40f2-8fe3-bbff36e1e9ad: User agent: PostmanRuntime/7.26.8
+2021-03-01T19:42:18.272Z [[32minfo[39m] API reqId: bd519f78-f0b2-40f2-8fe3-bbff36e1e9ad: Deserializing user ID
+2021-03-01T19:43:19.871Z [[32minfo[39m] API reqId: ee04fa6e-4338-4bed-92c3-534389b1fac1: ***** Incoming POST Request *****
+2021-03-01T19:43:19.873Z [[32minfo[39m] API reqId: ee04fa6e-4338-4bed-92c3-534389b1fac1: Requesting Route /api/auth
+2021-03-01T19:43:19.874Z [[34mdebug[39m] API reqId: ee04fa6e-4338-4bed-92c3-534389b1fac1: User agent: PostmanRuntime/7.26.8
+2021-03-01T19:43:19.881Z [[32minfo[39m] API reqId: ee04fa6e-4338-4bed-92c3-534389b1fac1: Deserializing user ID
+2021-03-01T19:43:19.914Z [[32minfo[39m] API reqId: ee04fa6e-4338-4bed-92c3-534389b1fac1: Querying database...
+2021-03-01T19:43:19.931Z [[32minfo[39m] API reqId: ee04fa6e-4338-4bed-92c3-534389b1fac1: User 5fecbe8b983ade22d093cea1 found
+2021-03-01T19:43:19.932Z [[32minfo[39m] API reqId: ee04fa6e-4338-4bed-92c3-534389b1fac1: Validating user credentials...
+2021-03-01T19:43:19.940Z [[32minfo[39m] API reqId: ee04fa6e-4338-4bed-92c3-534389b1fac1: User successfully validated!
+2021-03-01T19:43:19.943Z [[32minfo[39m] API reqId: ee04fa6e-4338-4bed-92c3-534389b1fac1: Logging in user with passport.
+2021-03-01T19:43:19.943Z [[32minfo[39m] API reqId: ee04fa6e-4338-4bed-92c3-534389b1fac1: Seralizing user ID
+2021-03-01T19:43:20.067Z [[32minfo[39m] API reqId: b5d1e070-85ef-4030-89c8-c9399a49a2ed: ***** Incoming POST Request *****
+2021-03-01T19:43:20.067Z [[32minfo[39m] API reqId: b5d1e070-85ef-4030-89c8-c9399a49a2ed: Requesting Route /api/auth
+2021-03-01T19:43:20.068Z [[34mdebug[39m] API reqId: b5d1e070-85ef-4030-89c8-c9399a49a2ed: User agent: PostmanRuntime/7.26.8
+2021-03-01T19:43:20.068Z [[32minfo[39m] API reqId: b5d1e070-85ef-4030-89c8-c9399a49a2ed: Deserializing user ID
+2021-03-01T19:43:20.092Z [[32minfo[39m] API reqId: b5d1e070-85ef-4030-89c8-c9399a49a2ed: Querying database...
+2021-03-01T19:43:20.107Z [[32minfo[39m] API reqId: b5d1e070-85ef-4030-89c8-c9399a49a2ed: User 5fecbe8b983ade22d093cea1 found
+2021-03-01T19:43:20.112Z [[32minfo[39m] API reqId: b5d1e070-85ef-4030-89c8-c9399a49a2ed: Validating user credentials...
+2021-03-01T19:43:20.119Z [[32minfo[39m] API reqId: b5d1e070-85ef-4030-89c8-c9399a49a2ed: User successfully validated!
+2021-03-01T19:43:20.126Z [[32minfo[39m] API reqId: b5d1e070-85ef-4030-89c8-c9399a49a2ed: Logging in user with passport.
+2021-03-01T19:43:20.127Z [[32minfo[39m] API reqId: b5d1e070-85ef-4030-89c8-c9399a49a2ed: Seralizing user ID
+2021-03-01T19:43:22.878Z [[32minfo[39m] API reqId: 20d0769a-f58d-45af-a1d7-9dc318c2b59f: ***** Incoming GET Request *****
+2021-03-01T19:43:22.878Z [[32minfo[39m] API reqId: 20d0769a-f58d-45af-a1d7-9dc318c2b59f: Requesting Route /api/auth
+2021-03-01T19:43:22.879Z [[34mdebug[39m] API reqId: 20d0769a-f58d-45af-a1d7-9dc318c2b59f: User agent: PostmanRuntime/7.26.8
+2021-03-01T19:43:22.879Z [[32minfo[39m] API reqId: 20d0769a-f58d-45af-a1d7-9dc318c2b59f: Deserializing user ID
+2021-03-01T19:43:22.904Z [[32minfo[39m] API reqId: 20d0769a-f58d-45af-a1d7-9dc318c2b59f: Sending user ID to User Agent.
+2021-03-01T19:43:23.030Z [[32minfo[39m] API reqId: 0dc24219-1368-4022-8024-36bf3d74c951: ***** Incoming GET Request *****
+2021-03-01T19:43:23.031Z [[32minfo[39m] API reqId: 0dc24219-1368-4022-8024-36bf3d74c951: Requesting Route /api/auth
+2021-03-01T19:43:23.032Z [[34mdebug[39m] API reqId: 0dc24219-1368-4022-8024-36bf3d74c951: User agent: PostmanRuntime/7.26.8
+2021-03-01T19:43:23.032Z [[32minfo[39m] API reqId: 0dc24219-1368-4022-8024-36bf3d74c951: Deserializing user ID
+2021-03-01T19:43:23.056Z [[32minfo[39m] API reqId: 0dc24219-1368-4022-8024-36bf3d74c951: Sending user ID to User Agent.
+2021-03-01T19:48:03.472Z [[32minfo[39m] API reqId: 78cccd86-6b4b-4768-bd19-c616c241410b: ***** Incoming GET Request *****
+2021-03-01T19:48:03.474Z [[32minfo[39m] API reqId: 78cccd86-6b4b-4768-bd19-c616c241410b: Requesting Route /api/roles
+2021-03-01T19:48:03.474Z [[34mdebug[39m] API reqId: 78cccd86-6b4b-4768-bd19-c616c241410b: User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36
+2021-03-01T19:48:03.484Z [[32minfo[39m] API reqId: 23ae6bbf-b57c-4502-a286-37b64dc801f2: ***** Incoming GET Request *****
+2021-03-01T19:48:03.486Z [[32minfo[39m] API reqId: 23ae6bbf-b57c-4502-a286-37b64dc801f2: Requesting Route /api/auth
+2021-03-01T19:48:03.486Z [[34mdebug[39m] API reqId: 23ae6bbf-b57c-4502-a286-37b64dc801f2: User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36
+2021-03-01T19:48:03.486Z [[31merror[39m] API reqId: 23ae6bbf-b57c-4502-a286-37b64dc801f2: User has not been authenticated.
+2021-03-01T19:48:19.093Z [[32minfo[39m] API reqId: 49e9f29e-7f98-41a6-929c-759f68dbc59e: ***** Incoming GET Request *****
+2021-03-01T19:48:19.093Z [[32minfo[39m] API reqId: 49e9f29e-7f98-41a6-929c-759f68dbc59e: Requesting Route /api/auth/logout
+2021-03-01T19:48:19.093Z [[34mdebug[39m] API reqId: 49e9f29e-7f98-41a6-929c-759f68dbc59e: User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36
+2021-03-01T19:48:19.094Z [[32minfo[39m] API reqId: 49e9f29e-7f98-41a6-929c-759f68dbc59e: Logging out user...
+2021-03-01T19:48:19.094Z [[32minfo[39m] API reqId: 49e9f29e-7f98-41a6-929c-759f68dbc59e: User successfully logged out!
+2021-03-01T19:49:49.924Z [[32minfo[39m] API reqId: 8298304a-83f9-4705-b34a-4250ddc449a7: ***** Incoming GET Request *****
+2021-03-01T19:49:49.926Z [[32minfo[39m] API reqId: 8298304a-83f9-4705-b34a-4250ddc449a7: Requesting Route /api/auth/logout
+2021-03-01T19:49:49.926Z [[34mdebug[39m] API reqId: 8298304a-83f9-4705-b34a-4250ddc449a7: User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36
+2021-03-01T19:49:49.927Z [[32minfo[39m] API reqId: 8298304a-83f9-4705-b34a-4250ddc449a7: Logging out user...
+2021-03-01T19:49:49.927Z [[32minfo[39m] API reqId: 8298304a-83f9-4705-b34a-4250ddc449a7: User successfully logged out!
+2021-03-01T19:49:54.217Z [[32minfo[39m] API reqId: d0f2fa23-39c0-4d26-af90-0be5dd54eab7: ***** Incoming GET Request *****
+2021-03-01T19:49:54.217Z [[32minfo[39m] API reqId: d0f2fa23-39c0-4d26-af90-0be5dd54eab7: Requesting Route /api/auth/
+2021-03-01T19:49:54.217Z [[34mdebug[39m] API reqId: d0f2fa23-39c0-4d26-af90-0be5dd54eab7: User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36
+2021-03-01T19:49:54.218Z [[31merror[39m] API reqId: d0f2fa23-39c0-4d26-af90-0be5dd54eab7: User has not been authenticated.
+2021-03-01T19:50:38.089Z [[32minfo[39m] API reqId: 7e45ba26-d163-4673-b6a3-cc8428d5ff4b: ***** Incoming GET Request *****
+2021-03-01T19:50:38.090Z [[32minfo[39m] API reqId: 7e45ba26-d163-4673-b6a3-cc8428d5ff4b: Requesting Route /api/auth/
+2021-03-01T19:50:38.091Z [[34mdebug[39m] API reqId: 7e45ba26-d163-4673-b6a3-cc8428d5ff4b: User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36
+2021-03-01T19:50:38.091Z [[31merror[39m] API reqId: 7e45ba26-d163-4673-b6a3-cc8428d5ff4b: Request Failed: User has not been authenticated.
+2021-03-01T19:51:23.647Z [[32minfo[39m] API reqId: cf2391a5-4aab-47f4-b03d-d1ec466b731b: ***** Incoming POST Request *****
+2021-03-01T19:51:23.648Z [[32minfo[39m] API reqId: cf2391a5-4aab-47f4-b03d-d1ec466b731b: Requesting Route /api/auth
+2021-03-01T19:51:23.648Z [[34mdebug[39m] API reqId: cf2391a5-4aab-47f4-b03d-d1ec466b731b: User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36
+2021-03-01T19:51:23.649Z [[32minfo[39m] API reqId: cf2391a5-4aab-47f4-b03d-d1ec466b731b: Querying database...
+2021-03-01T19:51:23.679Z [[32minfo[39m] API reqId: cf2391a5-4aab-47f4-b03d-d1ec466b731b: User 5fecbe8b983ade22d093cea1 found
+2021-03-01T19:51:23.679Z [[32minfo[39m] API reqId: cf2391a5-4aab-47f4-b03d-d1ec466b731b: Validating user credentials...
+2021-03-01T19:51:23.686Z [[32minfo[39m] API reqId: cf2391a5-4aab-47f4-b03d-d1ec466b731b: User successfully validated!
+2021-03-01T19:51:23.687Z [[32minfo[39m] API reqId: cf2391a5-4aab-47f4-b03d-d1ec466b731b: Logging in user with passport.
+2021-03-01T19:51:23.687Z [[32minfo[39m] API reqId: cf2391a5-4aab-47f4-b03d-d1ec466b731b: Seralizing user ID
+2021-03-01T19:51:23.895Z [[32minfo[39m] API reqId: 46f90eab-c0a9-4ec4-8280-42f304cbcff1: ***** Incoming GET Request *****
+2021-03-01T19:51:23.895Z [[32minfo[39m] API reqId: 46f90eab-c0a9-4ec4-8280-42f304cbcff1: Requesting Route /api/auth
+2021-03-01T19:51:23.895Z [[34mdebug[39m] API reqId: 46f90eab-c0a9-4ec4-8280-42f304cbcff1: User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36
+2021-03-01T19:51:23.895Z [[32minfo[39m] API reqId: 46f90eab-c0a9-4ec4-8280-42f304cbcff1: Deserializing user ID
+2021-03-01T19:51:23.912Z [[32minfo[39m] API reqId: 46f90eab-c0a9-4ec4-8280-42f304cbcff1: Sending user ID to User Agent.
+2021-03-01T19:51:24.053Z [[32minfo[39m] API reqId: 775fb980-4964-4e2d-984d-fab427f2e9ea: ***** Incoming GET Request *****
+2021-03-01T19:51:24.053Z [[32minfo[39m] API reqId: 775fb980-4964-4e2d-984d-fab427f2e9ea: Requesting Route /api/companies
+2021-03-01T19:51:24.053Z [[34mdebug[39m] API reqId: 775fb980-4964-4e2d-984d-fab427f2e9ea: User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36
+2021-03-01T19:51:24.053Z [[32minfo[39m] API reqId: 775fb980-4964-4e2d-984d-fab427f2e9ea: Deserializing user ID
+2021-03-01T19:52:12.230Z [[32minfo[39m] API reqId: b7c59a97-d5c4-4ffc-ab1c-8da030dd8715: ***** Incoming GET Request *****
+2021-03-01T19:52:12.230Z [[32minfo[39m] API reqId: b7c59a97-d5c4-4ffc-ab1c-8da030dd8715: Requesting Route /api/auth/logout
+2021-03-01T19:52:12.230Z [[34mdebug[39m] API reqId: b7c59a97-d5c4-4ffc-ab1c-8da030dd8715: User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36
+2021-03-01T19:52:12.230Z [[32minfo[39m] API reqId: b7c59a97-d5c4-4ffc-ab1c-8da030dd8715: Deserializing user ID
+2021-03-01T19:52:12.248Z [[32minfo[39m] API reqId: b7c59a97-d5c4-4ffc-ab1c-8da030dd8715: Logging out user...
+2021-03-01T19:52:12.248Z [[32minfo[39m] API reqId: b7c59a97-d5c4-4ffc-ab1c-8da030dd8715: User successfully logged out!

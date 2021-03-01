@@ -3,24 +3,24 @@ const router = express.Router();
 const passport = require('passport');
 const sessionStore = require('../../config/db');
 const sanitize = require('mongo-sanitize');
+const apiLogger = require('../../config/loggers');
 
 // @route   GET api/auth
 // @desc    Get user id from req.user
 // @access  public
 router.get('/', (req, res) => {
 
-  console.log('//* GET: API/AUTH *// get user', req.user);
-  console.log('req headers: ', req.headers);
-
   if(!req.user) {
+    apiLogger.error('Request Failed: User has not been authenticated.')
     return res.status(401).send('No User');
   }
 
   try {
+    apiLogger.info('Sending user ID to User Agent.')
     return res.send(req.user);
     } catch (error) {
-      
-    return res.status(500).send('Server Error');
+      apiLogger.error('Server Error.')
+      return res.status(500).send('Server Error');
   }
 })
 
@@ -29,8 +29,13 @@ router.get('/', (req, res) => {
 // @access  public
 
 router.get('/logout', (req,res) => {
-  console.log('//* GET/AUTH *// logging out')
-  req.session.destroy();
+  apiLogger.info('Logging out user...')
+  try {
+    req.session.destroy();
+    apiLogger.info('User successfully logged out!')
+  } catch (error) {
+    apiLogger.error('User log out failed.')
+  }
 })
 
 // @route   GET api/auth/google
@@ -79,7 +84,6 @@ router.get(
     } else {
       res.jsonp({ status: 'No Session Found'});
     }
-    console.log("found sessions: ", sessions);
   })
 
     res.redirect('http://localhost:3000/dashboard');
@@ -107,26 +111,30 @@ router.post('/', (req, res, next) => {
 
     // Handle server error
     if (err) { 
+      apiLogger.error('Server Error Encountered')
+      apiLogger.info(`***** End of ${req.method} Request *****`)
+
       res
       .status(400)
       .json({ errors: [{ msg: {title:'Error', description:'Server Error' }}] });
 
-      console.log('err');
       return next(err); }
 
     // Handle "no user found" error
     if (!user) { 
-      console.log('no user');
+      apiLogger.error('Invalid Credentials')
       return res
       .status(400)
       .json({ errors: [{ msg: {title:'Error', description:'Invalid Credentials' }}] })
     };
 
       // Call passport login
+      apiLogger.info('Logging in user with passport.')
       req.logIn(user, (err) => {
-      console.log('reached req.login');
       
       if (err) { 
+        apiLogger.error('Passport log in failed.')
+
       res
       .status(400)
       .json({ errors: [{ msg: {title:'Error', description:'Server Error' }}] });
@@ -160,19 +168,15 @@ router.post('/', (req, res, next) => {
     } else {
       res.jsonp({ status: 'No Session Found'});
     }
-    console.log("found sessions: ", sessions);
   })
   
   // Remove local credentials of user from memory before returning
-  console.log('//* POST/AUTH *// loggin in')
   const reqUser = JSON.parse(JSON.stringify(req.user)) // hack
   const cleanUser = Object.assign({}, reqUser)
   if (cleanUser.local) {
-    console.log('LOGIN POST ROUTE DELETING SALT AND HASH')
     delete cleanUser.local.hash;
     delete cleanUser.local.salt;
   }
-  console.log("cleanUser:", cleanUser)
   res.json(cleanUser)
   })(req,res,next)  
 });

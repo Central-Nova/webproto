@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const validPassword = require('../lib/passwordUtils').validPassword;
 const sanitize = require('mongo-sanitize');
+const apiLogger = require('../config/loggers')
 
 require('dotenv').config();
 
@@ -13,21 +14,24 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 module.exports = function (passport) {
   passport.use(
     new LocalStrategy({ usernameField: 'email' }, async (username, password, done) => {
-      console.log('PASSPORT VERIFY CALLBACK CALLED');
 
+      apiLogger.info('Querying database...')
       User.findOne({ email: username })
         .then((user) => {
+          apiLogger.info(`User ${user._id} found`)
+
           // Wrong Email
           if (!user) { return done(null, false) }
           
-            console.log('Found User:', user.local);
-
+          apiLogger.info(`Validating user credentials...`)
             const isValid = validPassword(password, user.local.hash, user.local.salt);
 
             if (isValid) {
-                return done(null, user);
+              apiLogger.info(`User successfully validated!`)
+              return done(null, user);
             } else {
             // Wrong Password
+            apiLogger.error(`User credentials invalid.`)
                 return done(null, false);
             }
         })
@@ -86,9 +90,7 @@ module.exports = function (passport) {
             },
           ]
         });
-        console.log('Generated new user to be saved: ', newUser);
         newUser.save();
-        console.log('New user saved.');
         // res.json({msg: {title: 'Success', description: 'User created! You may log in.'}})
         return done(null);
       } else {
@@ -148,14 +150,12 @@ module.exports = function (passport) {
   )
   
   passport.serializeUser((user, done) => {
-    console.log('Serialize user:', user);
+    apiLogger.info('Seralizing user ID')
     done(null, user.id);
   });
 
   passport.deserializeUser((id, done) => {
-    console.log('PASSPORT DESERIALIZE CALLED');
-    console.log('Deserialize user:', id);
-
+    apiLogger.info('Deserializing user ID')
     User.findById(id).select('-local.hash -local.salt')
     .then(user => {done(null, user);}
     ).catch(err => done(err))

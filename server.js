@@ -4,6 +4,11 @@ const path = require('path');
 const passport = require('passport');
 const session = require('express-session');
 const helmet = require('helmet');
+const apiLoggerMiddleware = require('./middleware/apiLogger');
+const httpContext = require('express-http-context');
+const reqId = require('./middleware/reqId');
+
+
 
 require('dotenv').config();
 
@@ -15,11 +20,14 @@ app.use(express.json({ extended: false }));
 // Express body parser
 app.use(express.urlencoded({ extended: true }))
 
+// Http Context
+app.use(httpContext.middleware);
+
+// Set Request Id
+app.use(reqId);
+
 // Helmet
 app.use(helmet());
-
-// // Passport Session
-// const sessionStore = new MongoStore({ mongooseConnection: mongoConection, collection: 'sessions' });
 
 app.use(session({
     secret: process.env.SECRET,
@@ -31,6 +39,7 @@ app.use(session({
     }
 }));
 
+app.use(apiLoggerMiddleware);
 
 // Passport Config
 require('./config/passport')(passport);
@@ -39,11 +48,7 @@ require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use((req, res, next) => {
-  console.log('//* SERVER.JS MIDDLEWARE *// req.session:',req.session);
-  console.log('//* SERVER.JS MIDDLEWARE *// req.user:',req.user);
-  next();
-});
+
 
 
 // Define Routes
@@ -53,8 +58,6 @@ app.use('/api/companies', require('./routes/api/companies'));
 app.use('/api/roles', require('./routes/api/roles'));
 app.use('/api/invitation', require('./routes/api/invitation'));
 app.use('/api/products', require('./routes/api/products'));
-
-
 
 const PORT = process.env.PORT || 5000;
 
