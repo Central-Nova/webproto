@@ -4,22 +4,28 @@ const passport = require('passport');
 const sessionStore = require('../../config/db');
 const sanitize = require('mongo-sanitize');
 const apiLogger = require('../../config/loggers');
+const httpContext = require('express-http-context');
 
 // @route   GET api/auth
 // @desc    Get user id from req.user
 // @access  public
 router.get('/', (req, res) => {
+  apiLogger.debug('Requesting user data', {
+    body: req.body,
+    params: req.params,
+    query: req.query
+  })
 
   if(!req.user) {
-    apiLogger.error('Request Failed: User has not been authenticated.')
     return res.status(401).send('No User');
   }
 
   try {
-    apiLogger.info('Sending user ID to User Agent.')
+    httpContext.set('resDocs', 1);
+    apiLogger.debug('Sending user data')
     return res.send(req.user);
     } catch (error) {
-      apiLogger.error('Server Error.')
+      apiLogger.error('Caught error')
       return res.status(500).send('Server Error');
   }
 })
@@ -29,12 +35,9 @@ router.get('/', (req, res) => {
 // @access  public
 
 router.get('/logout', (req,res) => {
-  apiLogger.info('Logging out user...')
   try {
     req.session.destroy();
-    apiLogger.info('User successfully logged out!')
   } catch (error) {
-    apiLogger.error('User log out failed.')
   }
 })
 
@@ -65,16 +68,13 @@ router.get(
 
       // Form an array from cursor
       sessions.toArray((a, sessionsData) => {
-        apiLogger.debug(`Found ${sessionsData.length} session(s) belonging to user ${req.user._id}.`)
 
         // Loop through each item in sessions array. If it doesn't have the same session ID as the current session ID, then destroy the session
         sessionsData.forEach((element, index) => {
           if (element._id !== req.session.id) {
             sessionStore.destroy(element._id, (err, data) => {
               if (err) {
-                apiLogger.warn(`Session ${element._id} could not be destroyed.`)
               }
-              apiLogger.debug(`Destroyed session ${element._id}.`)
             })
           }
         })
@@ -107,33 +107,36 @@ router.get(
 // @access  public
 
 router.post('/', (req, res, next) => {
+  apiLogger.debug('User requesting authentication', {
+    params: req.params || '',
+    query: req.query || '',
+    body: req.body || ''
+  })
   passport.authenticate('local', (err, user, info) => {
 
     // Handle server error
     if (err) { 
-      apiLogger.error('Server Error Encountered')
-
+      apiLogger.error('Server Error', {
+        event: 'passportjs error'
+      })
       res
       .status(400)
       .json({ errors: [{ msg: {title:'Error', description:'Server Error' }}] });
 
       return next(err); }
 
-    // Handle "no user found" error
+    // Handle "no user" from passport
     if (!user) { 
-      apiLogger.error('Invalid Credentials')
+      apiLogger.warn('Authentication failed.')
       return res
       .status(400)
       .json({ errors: [{ msg: {title:'Error', description:'Invalid Credentials' }}] })
     };
 
       // Call passport login
-      apiLogger.info('Logging in user with passport.')
       req.logIn(user, (err) => {
-      
       if (err) { 
-        apiLogger.error('Passport log in failed.')
-
+        apiLogger.error('Passport login failed')
       res
       .status(400)
       .json({ errors: [{ msg: {title:'Error', description:'Server Error' }}] });
@@ -149,16 +152,13 @@ router.post('/', (req, res, next) => {
 
       // Form an array from cursor
       sessions.toArray((a, sessionsData) => {
-        apiLogger.debug(`Found ${sessionsData.length} session(s) belonging to user ${req.user._id}.`)
         
         // Loop through each item in sessions array. If it doesn't have the same session ID as the current session ID, then destroy the session
         sessionsData.forEach((element, index) => {
           if (element._id !== req.session.id) {
             sessionStore.destroy(element._id, (err, data) => {
               if (err) {
-                apiLogger.warn(`Session ${element._id} could not be destroyed.`)
               } 
-              apiLogger.debug(`Destroyed session ${element._id}.`)
             })
           }
         })
@@ -174,10 +174,11 @@ router.post('/', (req, res, next) => {
   const reqUser = JSON.parse(JSON.stringify(req.user)) // hack
   const cleanUser = Object.assign({}, reqUser)
   if (cleanUser.local) {
-    apiLogger.debug('Local credentials found, deleting local credentials from req.user...')
     delete cleanUser.local.hash;
     delete cleanUser.local.salt;
   }
+  apiLogger.debug('User successfully authenticated')
+
   return res
   .status(200)
   .json({msg: {title: 'Success', description: 'Logged in!'}})

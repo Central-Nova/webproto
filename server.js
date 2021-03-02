@@ -4,9 +4,10 @@ const path = require('path');
 const passport = require('passport');
 const session = require('express-session');
 const helmet = require('helmet');
-const apiLoggerMiddleware = require('./middleware/apiLogger');
+const apiStartLog = require('./middleware/apiStartLog');
 const httpContext = require('express-http-context');
-const reqId = require('./middleware/reqId');
+const setHttpContext = require('./middleware/setHttpContext');
+const apiEndLog = require('./middleware/apiEndLog');
 
 
 
@@ -24,7 +25,10 @@ app.use(express.urlencoded({ extended: true }))
 app.use(httpContext.middleware);
 
 // Set Request Id
-app.use(reqId);
+app.use(setHttpContext);
+
+// Afterware
+app.use(apiEndLog)
 
 // Helmet
 app.use(helmet());
@@ -39,7 +43,6 @@ app.use(session({
     }
 }));
 
-app.use(apiLoggerMiddleware);
 
 // Passport Config
 require('./config/passport')(passport);
@@ -48,8 +51,7 @@ require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-
+app.use(apiStartLog);
 
 // Define Routes
 app.use('/api/users', require('./routes/api/users'));
