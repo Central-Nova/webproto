@@ -2,6 +2,7 @@ const express = require('express');
 const { check, validationResult } = require('express-validator');
 const router = express.Router();
 const companyAuth = require('../../middleware/companyAuth');
+const userAuth = require('../../middleware/userAuth');
 const authorize = require('../../middleware/authorize');
 const sanitizeReq = require('../../lib/sanitize');
 const sanitize = require('mongo-sanitize');
@@ -12,7 +13,13 @@ const Product = require('../../models/Product');
 // @route   GET api/products
 // @desc    Get all products by company id with paginate query
 // @access  Has company, has 'Catalog Entry':'View' permission
-router.get('/', [companyAuth, authorize('Products', 'Catalog Entry', 'View')], async (req, res) => {
+router.get('/', [userAuth,companyAuth, authorize('Products', 'Catalog Entry', 'View')], async (req, res) => {
+  apiLogger.debug('User requesting all product records by company', {
+    params: req.params || '',
+    query: req.query || '',
+    body: req.body || ''
+  })
+
 
   let page = parseInt(req.query.page) || 0;
   let limit = parseInt(req.query.limit) || 0;
@@ -22,6 +29,9 @@ router.get('/', [companyAuth, authorize('Products', 'Catalog Entry', 'View')], a
 
   try {
     
+    let queryStartTime = new Date();
+    apiLogger.info('Searching db for products by company', {collection: 'products',operation: 'read'})
+
     let products = await Product.find({
       $and: [{company: req.user.company}, {
         $and: [{
@@ -29,17 +39,23 @@ router.get('/', [companyAuth, authorize('Products', 'Catalog Entry', 'View')], a
             sku: {$regex: searchRegex, $options: 'i'}}]}]})
             .sort(sort).skip(page * limit).limit(limit);
     
-    console.log('products: ', products);
-    
+   
     if (!products) {
+      apiLogger.debug('No product records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
+
       return res
       .status(400)
       .json({msg: { title: 'Error', description: 'No products found.'}})
     }
-    
-    let total = await Product.countDocuments({$and: [{company: req.user.company}, {$or: [{name: {$regex: searchRegex, $options: 'i'}}, {sku: {$regex: searchRegex, $options: 'i'}}]}]}).sort(sort);    
-    
+    apiLogger.debug('Product records found', {documents: products.length, responseTime: `${new Date() - queryStartTime}ms`})
+
+    queryStartTime = new Date();
+    apiLogger.info('Searching db for count of products by company', {collection: 'products',operation: 'read'})
+    let total = await Product.countDocuments({$and: [{company: req.user.company}, {$or: [{name: {$regex: searchRegex, $options: 'i'}}, {sku: {$regex: searchRegex, $options: 'i'}}]}]}).sort(sort);
+    apiLogger.debug('Product records counted', {documents: total, responseTime: `${new Date() - queryStartTime}ms`})
    
+    apiLogger.debug('Sending product records by company', {documents: products.length})
+
     return res.send({
       total,
       page,
@@ -56,27 +72,40 @@ router.get('/', [companyAuth, authorize('Products', 'Catalog Entry', 'View')], a
 // @route   GET api/products/product/:productId
 // @desc    Get by product ID
 // @access  Has company, has 'Catalog Entry':'View' permission
-router.get('/product/:productId', [companyAuth, authorize('Products', 'Catalog Entry', 'View')], async (req, res) => {
+router.get('/product/:productId', [userAuth,companyAuth, authorize('Products', 'Catalog Entry', 'View')], async (req, res) => {
+  apiLogger.debug('User requesting product record by product id', {
+    params: req.params || '',
+    query: req.query || '',
+    body: req.body || ''
+  })
+
 
   try {
    
+    let queryStartTime = new Date();
+    apiLogger.info('Searching db for product by product id', {collection: 'products',operation: 'read'})
 
     let product = await Product.findById(req.params.productId)
 
     if (!product) {
+      apiLogger.debug('No product record found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
+
       return res
       .status(400)
       .json({msg: { title: 'Error', description: 'Product not found.'}})
     }
+    apiLogger.debug('Product record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
 
-    console.log('product: ', product);
+    apiLogger.info('Sending product record by id', {documents: 1})
     return res.send(product);
     } catch (error) {
       if (error.kind === 'ObjectId') {
+        apiLogger.warn('Invalid product id requested by user')
         return res
         .status(400)
         .json({msg: { title: 'Error', description: 'Product not found.'}})      
       }
+      apiLogger.error('Caught error');
     return res.status(500).send('Server Error');
   }
 })
@@ -86,7 +115,7 @@ router.get('/product/:productId', [companyAuth, authorize('Products', 'Catalog E
 // @access  Has company, has 'Catalog Entry':'Create' permission
 
 router.post('/',
-[companyAuth, authorize('Products', 'Catalog Entry', 'Create'), sanitizeReq,[
+[userAuth,companyAuth, authorize('Products', 'Catalog Entry', 'Create'), sanitizeReq,[
   check('products.*.sku', { title: 'Error', description: 'Please enter a valid SKU.' }).not().isEmpty().isLength({ min:4, max: 20 }),
   check('products.*.name', { title: 'Error', description: 'Please enter a product name.' }).not().isEmpty().isLength({ max: 80 }),
   check('products.*.description', { title: 'Error', description: 'Please enter a product description.' }).not().isEmpty().isLength({ max: 200 }),
@@ -114,6 +143,12 @@ router.post('/',
       .status(400)
       .json({ errors: errors.array() })
     }
+    apiLogger.debug('User requesting to create new product record', {
+      params: req.params || '',
+      query: req.query || '',
+      body: req.body || ''
+    })
+  
 
     // Price rules are optional. Check if exists
     // Check if units used in priceRules matches basePrice
@@ -130,6 +165,7 @@ router.post('/',
       })
 
       if (priceRulesError.includes(true)) {
+        apiLogger.warn('Price rules unit name does not match')
         return res
         .status(400)
         .json({errors: [{msg: {title: 'Error', description: 'This product does not use that unit.'}}]})
@@ -139,22 +175,22 @@ router.post('/',
     
      
   try {
-    console.log('running trycatch');
     let updatedRecords = 0;
     let createdRecords = 0;
 
     for (let product of products) {
 
-      const {sku, name, description, dimensions, weight, color, primaryMaterial, basePrice, priceRules} = product;
 
       let productData = {
         company: req.user.company,
         createdBy: req.user._id,
         ...product
       }
-      console.log('productData: ', productData)
   
       // Find one and update
+      let queryStartTime = new Date();
+      apiLogger.info('Creating new product record in db', {collection: 'products',operation: 'create'})
+  
       let rawResult = await Product.findOneAndUpdate(
         {sku: productData.sku}, 
         {$set: productData},
@@ -162,13 +198,13 @@ router.post('/',
         upsert: true,
         rawResult: true
       });
+      apiLogger.info('Product record created', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+
   
         // console.log('rawResult: ', rawResult)
   
       if (rawResult.lastErrorObject.updatedExisting) {
-        console.log('before: ', updatedRecords)
         updatedRecords = updatedRecords + 1;
-        console.log('after: ', updatedRecords)
       } else {
         createdRecords = createdRecords + 1;
       }
@@ -177,7 +213,7 @@ router.post('/',
     return res.status(200).json({msg: { title: 'Success', description: `${updatedRecords} records updated and ${createdRecords} records created.`} })
     
   } catch (err) {
-    console.log('products post req error')
+    apiLogger.error('Caught error');
     console.log(err);
     return res.status(500).send('Server Error');
    
@@ -186,12 +222,12 @@ router.post('/',
 })
 
 
-// @route   POST api/products/product/:productId
+// @route   PUT api/products/product/:productId
 // @desc    Create product
 // @access  Has company, has 'Catalog Entry':'Create' permission
 
 router.put('/product/:productId',
-[companyAuth, authorize('Products', 'Catalog Entry', 'Edit'), sanitizeReq,[
+[userAuth,companyAuth, authorize('Products', 'Catalog Entry', 'Edit'), sanitizeReq,[
   check('sku', { title: 'Error', description: 'Please enter a valid SKU.' }).not().isEmpty().isLength({ min:4, max: 20 }),
   check('name', { title: 'Error', description: 'Please enter a product name.' }).not().isEmpty().isLength({ max: 80 }),
   check('description', { title: 'Error', description: 'Please enter a product description.' }).not().isEmpty().isLength({ max: 200 }),
@@ -221,8 +257,6 @@ router.put('/product/:productId',
 
   } = req.body;
 
-  console.log('req.body: ', req.body);
-
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -230,6 +264,13 @@ router.put('/product/:productId',
       .status(400)
       .json({ errors: errors.array() })
     }
+
+    apiLogger.debug('User requesting to update product record', {
+      params: req.params || '',
+      query: req.query || '',
+      body: req.body || ''
+    })
+
 
     let priceRulesError = [];
 
@@ -240,6 +281,8 @@ router.put('/product/:productId',
     })
 
     if (priceRulesError.includes(true)) {
+      apiLogger.warn('Price rules unit name does not match')
+
       return res
       .status(400)
       .json({ msg: {title: 'Error', description: 'This product does not use that unit.'}})
@@ -248,11 +291,25 @@ router.put('/product/:productId',
     try {
       
     // Check if product exists
-    let product = await Product.findOneAndUpdate({
+    let queryStartTime = new Date();
+    apiLogger.debug('Searching for product record in db', {collection: 'products',operation: 'update'})
+
+    let product = await Product.findOne({
       company: req.user.company,
       _id: req.params.productId
-    }, {
-      sku, 
+    });
+
+    if (!product) {
+      apiLogger.warn('No product record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+      return res
+      .status(400)
+      .json({errors: [{msg: {title: 'Error', description: 'Product does not exist.'}}]})
+    }
+    apiLogger.debug('Product record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+    
+    queryStartTime = new Date();
+    apiLogger.info('Updating product record in db', {collection: 'products',operation: 'update'})
+    await Product.findOneAndUpdate({sku, 
       name, 
       description,
       basePrice,
@@ -262,17 +319,9 @@ router.put('/product/:productId',
       color,
       primaryMaterial,
       lastEdited: Date.now(),
-      lastEditedBy: req.user._id,
-    });
+      lastEditedBy: req.user._id,})
 
-    if (!product) {
-      return res
-      .status(400)
-      .json({msg: {title: 'Error', description: 'Product does not exist.'}})
-    }
-
-
-    product.save();
+      apiLogger.info('Product record updated', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
 
     return res
     .status(200)
