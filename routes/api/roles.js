@@ -27,16 +27,7 @@ router.get(
       query: req.query
     })
 
-    
-    // Check if company ID is valid
-    
-    let company = await Company.findById(req.user.company);
-    
-    if (!company) {
-      
-      return res.status(400).json({msg: { title: 'Error', description: 'Can\'t find role for company.'}})
-    }
-    
+   
     try {
       
       // Check for existing role by company
@@ -58,7 +49,7 @@ router.get(
         });
   
         await companyRoles.save();
-        apiLogger.info('Default company roles created', {operation: 'create', documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+        apiLogger.info('Default company roles created', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
         return res.status(200).json(companyRoles); 
       }
       httpContext.set('resDocs', 1);
@@ -84,33 +75,35 @@ router.get(
   , [userAuth, companyAuth],
   async (req, res) => {
 
-    console.log('req.params: ', req.params.document)
+    apiLogger.debug('Requesting company roles data by document type', {
+      body: req.body,
+      params: req.params,
+      query: req.query
+    })
+
     
-    // Check if company ID is valid
-    let company = await Company.findById(req.user.company);
-
-    if (!company) {
-      return res.status(400).json({msg: { title: 'Error', description: 'Can\'t find role for company.'}})
-    }
-
     try {
-
+      
       // Check for existing role by company
-
+      
+      // Check if company ID is valid
+      let queryStartTime = new Date();
+      apiLogger.info('Searching db for company roles', {collection: 'roles',operation: 'read'})
       let companyRoles = await Role.findOne({company: req.user.company})
+      apiLogger.info('Company roles found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+
       
       // Filter only roles that match the document param
       filteredPermissions = companyRoles.permissions.filter(role => role.document.replace(' ','').toLowerCase() === req.params.document)
 
       companyRoles.permissions = filteredPermissions
 
-      console.log('companyRoles: ', companyRoles);
-
+      httpContext.set('resDocs', 1);
+      apiLogger.debug('Sending company roles by document type')
       return res.send(companyRoles);
-
-
     } catch (err) {
       console.log(err);
+      apiLogger.error('Caught error');
       return res.status(500).json({msg: {title: 'Error', description: 'Server error.'}});
     }
   }
@@ -138,14 +131,23 @@ router.put(
       .status(400)
       .json({ msg: { title: 'Error', description: 'Role permissions could not be updated with provided data.' }})
     }
+    apiLogger.debug('Requesting to update company roles data by department type', {
+      body: req.body,
+      params: req.params,
+      query: req.query
+    })
+
 
     try {
 
+      let queryStartTime = new Date();
+      apiLogger.debug('Searching db for company roles', {collection: 'roles',operation: 'read'})
       let roles = await Role.findOne({company: req.user.company});
-      
-      console.log('permissions before: ', permissionsData.length);
+      apiLogger.debug('Company roles found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
 
+      
       if (!roles) {
+        apiLogger.warn('Roles could not be found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
         return res
           .status(400)
           .json({ errors: [{ msg: {title: 'Error', description: 'Unauthorized user.'} }] });
@@ -156,20 +158,21 @@ router.put(
         for (let j in req.body.permissions) {
           
           if (roles.permissions[i]._id.toString() === req.body.permissions[j]._id.toString()) {
-            console.log('permissions before: ', roles.permissions[i]);
             roles.permissions[i] = req.body.permissions[j];
-            console.log('permissions after: ', roles.permissions[i]);
           }
         }
       }
 
+      queryStartTime = new Date();
+      apiLogger.debug('Updating company roles in DB', {collection: 'roles',operation: 'read'})
       roles.save();
+      apiLogger.debug('Company roles updated', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
 
       return res.status(200).json({msg: {title: 'Success!', description: 'Roles have been updated.'}});
 
     } catch (err) {
       console.log(err);
-
+      apiLogger.error('Caught error');
       return res.status(500).send('Server Error');
       
     }

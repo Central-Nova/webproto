@@ -24,8 +24,6 @@ router.get('/', [companyAuth], async (req, res) => {
 
     let users = await User.find({company: req.user.company}).select('-local.hash -local.salt')
 
-    console.log(users);
-
     return res.send(users);
     } catch (error) {
     return res.status(500).send('Server Error');
@@ -194,23 +192,18 @@ router.post(
 
     const { firstName, lastName, email, password } = req.body;
 
-    console.log('req.body: ', req.body);
-
     try {
       // Check for existing user
 
       let user = await User.findOne({ email });
-      console.log('existing user?: ', !!user)
 
       if (user) {
-        console.log('existing user: ', user);
 
         return res
           .status(400)
           .json({ errors: [{ msg: {title: 'Error', description: 'User already exists'} }] });
       }
 
-      console.log('creating user')
       user = new User({
         firstName: firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase(),
         lastName: lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase(),
