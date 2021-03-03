@@ -24,7 +24,7 @@ module.exports = function (passport) {
             return done(null, false) 
           }
 
-          apiLogger.info('User record found', {operation: 'read', documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+          apiLogger.info('User record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
 
           const isValid = validPassword(password, user.local.hash, user.local.salt);
 

@@ -114,6 +114,7 @@ export const loginUser = (formData) => async (dispatch) => {
 
 // Load User
 export const loadUser = () => async (dispatch) => {
+  console.log('load user');
 
   const config = {
     headers: {

@@ -3,8 +3,11 @@ const router = express.Router();
 const actionsBuyer = require('../../lib/actionsBuyer.json');
 const actionsSupplier = require('../../lib/actionsSupplier.json');
 const companyAuth = require('../../middleware/companyAuth');
+const userAuth = require('../../middleware/userAuth');
 const authorize = require('../../middleware/authorize');
 const { check, validationResult } = require('express-validator')
+const apiLogger = require('../../config/loggers');
+const httpContext = require('express-http-context');
 
 const Role = require('../../models/Role');
 const Company = require('../../models/Company');
@@ -16,41 +19,56 @@ const { compare } = require('bcryptjs');
 
 router.get(
   '/'
-  , [companyAuth], 
+  , [userAuth, companyAuth], 
   async (req, res) => {
+    apiLogger.debug('Requesting company roles data', {
+      body: req.body,
+      params: req.params,
+      query: req.query
+    })
+
     
     // Check if company ID is valid
+    
     let company = await Company.findById(req.user.company);
-
+    
     if (!company) {
+      
       return res.status(400).json({msg: { title: 'Error', description: 'Can\'t find role for company.'}})
     }
-
+    
     try {
-
+      
       // Check for existing role by company
-
+      
+      let queryStartTime = new Date();
+      apiLogger.info('Searching db for company roles', {collection: 'roles',operation: 'read'})
+      
       let companyRoles = await Role.findOne({company: req.user.company})
       
       if (!companyRoles) {
+        apiLogger.warn('No company roles found')
         // Build roles
         let newRoles = company.operation === 'buyer' ? actionsBuyer : actionsSupplier;
 
+        apiLogger.info('Generating default company roles...')
         companyRoles = new Role({
           company: req.user.company,
           permissions: [...newRoles]
         });
   
-        console.log('companyRoles: ', companyRoles);
         await companyRoles.save();
-  
+        apiLogger.info('Default company roles created', {operation: 'create', documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
         return res.status(200).json(companyRoles); 
       }
+      httpContext.set('resDocs', 1);
+      apiLogger.debug('Sending company roles')
 
       return res.send(companyRoles);
 
 
     } catch (err) {
+      apiLogger.error('Caught error')
       console.log(err);
       return res.status(500).json({msg: {title: 'Error', description: 'Server error.'}});
     }
@@ -63,7 +81,7 @@ router.get(
 
 router.get(
   '/document/:document'
-  , [companyAuth],
+  , [userAuth, companyAuth],
   async (req, res) => {
 
     console.log('req.params: ', req.params.document)
@@ -104,7 +122,7 @@ router.get(
 // @access  Has company and has 'Role Permissions':'Edit' permission
 
 router.put(
-  '/department/:department', [companyAuth, authorize('Admin', 'Role Permissions', 'Edit'),[
+  '/department/:department', [userAuth, companyAuth, authorize('Admin', 'Role Permissions', 'Edit'),[
     check('permissions.*.department').not().isEmpty(),
     check('permissions.*.document').not().isEmpty(),
     check('permissions.*.action').not().isEmpty(),

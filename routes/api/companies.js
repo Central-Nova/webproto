@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const companyAuth = require('../../middleware/companyAuth');
+const userAuth = require('../../middleware/userAuth');
+const apiLogger = require('../../config/loggers');
+const httpContext = require('express-http-context');
+
 
 const Company = require('../../models/Company');
 const User = require('../../models/User');
@@ -11,24 +15,38 @@ const User = require('../../models/User');
 // @access  public
 
 router.get(
-  '/',[companyAuth], async (req, res) => {
+  '/',[userAuth,companyAuth], async (req, res) => {
+    apiLogger.debug('Requesting company data', {
+      body: req.body,
+      params: req.params,
+      query: req.query
+    })
+  
 
     try {
 
       // Check for existing company
+      let queryStartTime = new Date();
+      apiLogger.info('Searching DB for company', {collection: 'companies',operation: 'read'})
 
       let company = await Company.findById(req.user.company);
-
+      
       if (!company) {
+        apiLogger.warn('Company record not found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
+        
         return res
-          .status(401)
-          .json({ errors: [{ msg: {title: 'Error', description: 'Company not found.'}  }] });
+        .status(401)
+        .json({ errors: [{ msg: {title: 'Error', description: 'Company not found.'}  }] });
       }
+      apiLogger.info('Company record found', {responseTime: `${new Date() - queryStartTime}ms`})
 
+      httpContext.set('resDocs', 1);
+      apiLogger.debug('Sending company data')
       return res.send(company)
 
 
     } catch (err) {
+      apiLogger.error('Caught error')
       return res.status(500).json({msg: {title: 'Error', description: 'Server error.'}});
     }
   }
@@ -42,9 +60,9 @@ router.get(
 router.post(
   '/'
   ,
-    [check('businessName', {title:'Error', description:'Please enter your business Name.'}).not().isEmpty(),
+    [userAuth,[check('businessName', {title:'Error', description:'Please enter your business Name.'}).not().isEmpty(),
     check('ein', {title:'Error', description:'Please enter a valid EIN.'}).isNumeric().isLength({min: 8}),
-  ],
+  ]],
   async (req, res) => {
 
     // Handle validation errors
@@ -53,6 +71,12 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({errors: errors.array() })
     }
+    apiLogger.debug('User requesting to create company', {
+      params: req.params || '',
+      query: req.query || '',
+      body: req.body || ''
+    })
+  
 
     const {
       businessName,
@@ -62,27 +86,34 @@ router.post(
     try {
 
       // Check for existing company by owner
+      let queryStartTime = new Date();
+      apiLogger.debug('Searching DB for existing company owner', {collection: 'companies',operation: 'read'})
 
       let companyOwner = await Company.findOne({owner: req.user._id})
       
       if (companyOwner) {
+        apiLogger.debug('Existing company record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+
         return res
         .status(400)
         .json({errors: [{ msg: {title: 'Error', description: 'You already have a company.'}}]})
       }
 
       // Check for existing company by EIN
+      queryStartTime = new Date();
+      apiLogger.debug('Searching DB for existing company ein', {collection: 'companies',operation: 'read'})
 
       let companyEin = await Company.findOne({ ein });
 
       if (companyEin) {
+        apiLogger.debug('Existing company record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+
         return res
           .status(400)
           .json({ errors: [{ msg: {title: 'Error', description: 'Company already exists.'}  }] });
       }
 
-      console.log('req.body: ', req.body);
-
+      
       company = new Company({
         name: businessName,
         owner: req.user.id,
@@ -92,13 +123,19 @@ router.post(
         }]
       });
 
-      console.log('company: ', company);
+      queryStartTime = new Date();
+      apiLogger.info('Creating new company record in DB', {collection: 'companies',operation: 'create'})
       await company.save();
+      apiLogger.info('New company created', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
 
       // Send company ID with response object (ised for adding company to user record)
+      httpContext.set('resDocs', 1);
+      apiLogger.debug('Sending company id')
       return res.status(200).json(company._id);
 
     } catch (err) {
+      apiLogger.error('Caught error')
+
       return res.status(500).json({msg: {title: 'Error', description: 'Server error.'}});
     }
   }
@@ -111,7 +148,7 @@ router.post(
 router.put(
   '/company/:companyId'
   ,
- [ companyAuth,[
+ [ userAuth,companyAuth,[
     check('businessAddress.street', {title:'Error', description:'Street is required.'}).not().isEmpty(),
     check('businessAddress.aptSuite', {title:'Error', description:'Apt/Suite is required.'}).not().isEmpty(),
     check('businessAddress.city', {title:'Error', description:'City is required.'}).not().isEmpty(),
@@ -133,6 +170,12 @@ router.put(
     if (!errors.isEmpty()) {
       return res.status(400).json({errors: errors.array() })
     }
+    apiLogger.debug('User requesting to update company with account information', {
+      params: req.params || '',
+      query: req.query || '',
+      body: req.body || ''
+    })
+
 
     const {
       email,
@@ -141,11 +184,12 @@ router.put(
       warehouseAddress,
       account,
     } = req.body;
-    console.log('req.body: ', req.body);
 
     // Check if company already has account setup
-
+    let queryStartTime = new Date()
+    apiLogger.debug('Searching DB for company data', {collection: 'companies', operation: 'read'})
     let company = await Company.findById(req.params.companyId)
+    apiLogger.debug('Found company record', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
 
     if (company.operation !== null && company.operation!== undefined) {
       return res.status(400).json({ errors: [{ msg: {title: 'Error', description: 'Account already exists.'} }] })
@@ -159,14 +203,21 @@ router.put(
       company.email = email;
       company.phoneWork = phone;
 
-      console.log('company: ', company);
+      queryStartTime = new Date()
+      apiLogger.info('Updating company record in DB with account data', {collection: 'companies', operation: 'read'})
       await company.save();
+      apiLogger.info('Company record updated', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+
 
       // Send company ID with response object (used for adding company to user record)
+      httpContext.set('resDocs', 1);
+      apiLogger.debug('Sending company id')
       return res.send(company);
 
     } catch (err) {
       console.log(err);
+      apiLogger.error('Caught error')
+
       return res.status(500).json({msg: {title: 'Error', description: 'Server error.'}});
     }
   }
@@ -177,14 +228,23 @@ router.put(
 // @access  Has company
 
 router.put(
-  '/adduser', [companyAuth]
+  '/adduser', [userAuth,companyAuth]
   ,
   async (req, res) => {
+    apiLogger.debug('User requesting to update company with user data', {
+      params: req.params || '',
+      query: req.query || '',
+      body: req.body || ''
+    })
 
 
     // Check if user is already added to company
+    let queryStartTime = new Date()
+    apiLogger.debug('Searching DB for company data', {collection: 'companies', operation: 'read'})
+
     let company = await Company.findById(req.user.company);
-    
+    apiLogger.debug('Company record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+
     let foundUser = [];
 
     company.users.forEach((record) => {
@@ -194,6 +254,7 @@ router.put(
     });
 
     if (foundUser.length >0) {
+      apiLogger.warn('User already exists in company record')
       return res
       .status(400)
       .json({ errors: [{ msg: {title: 'Error', description: 'User is already part of company.'} }] });
@@ -206,7 +267,14 @@ router.put(
       }
 
       company.users.push(newUser);
+
+      queryStartTime = new Date()
+      apiLogger.debug('Updating company record with user data in DB', {collection: 'companies', operation: 'update'})
+
       await company.save();
+
+      apiLogger.debug('Company record updated', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+
 
       // Send company ID with response object (used for adding company to user record)
       return res.status(200).json({ msg: {title: 'Success', description: 'User added to company!'} })
@@ -214,6 +282,7 @@ router.put(
 
     } catch (err) {
       console.log(err);
+      apiLogger.error('Caught error');
       return res.status(500).json({msg: {title: 'Error', description: 'Server error.'}});
     }
   }

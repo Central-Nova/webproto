@@ -97,7 +97,7 @@ export const createCompany = (formData) => async dispatch => {
 
 // Load company record by
 export const loadCompany = () => async (dispatch) => {
-
+console.log('load company');
   try {
     // Get company record
     const res = await axios.get('/api/companies');

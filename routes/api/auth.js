@@ -5,20 +5,17 @@ const sessionStore = require('../../config/db');
 const sanitize = require('mongo-sanitize');
 const apiLogger = require('../../config/loggers');
 const httpContext = require('express-http-context');
+const userAuth = require('../../middleware/userAuth');
 
 // @route   GET api/auth
 // @desc    Get user id from req.user
 // @access  public
-router.get('/', (req, res) => {
+router.get('/',[userAuth], (req, res) => {
   apiLogger.debug('Requesting user data', {
     body: req.body,
     params: req.params,
     query: req.query
   })
-
-  if(!req.user) {
-    return res.status(401).send('No User');
-  }
 
   try {
     httpContext.set('resDocs', 1);
