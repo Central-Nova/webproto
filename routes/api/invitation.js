@@ -3,6 +3,7 @@ const { check, validationResult } = require('express-validator');
 const router = express.Router();
 const { genLink } = require('../../lib/invitationUtils');
 const companyAuth = require('../../middleware/companyAuth');
+const userAuth = require('../../middleware/userAuth');
 const authorize = require('../../middleware/authorize');
 
 const Company = require('../../models/Company');
@@ -24,7 +25,7 @@ function makeid(length) {
 // @access  Has company
 
 router.post('/',
-[companyAuth, authorize('Admin', 'Invitations', 'Create'),[
+[userAuth, companyAuth, authorize('Admin', 'Invitations', 'Create'),[
   check('emails.*', { title: 'Error', description: 'Please enter a valid email address' }).isEmail()
 ]], async (req,res) => {
 
@@ -37,6 +38,12 @@ router.post('/',
       .status(400)
       .json({ errors: errors.array() })
     }
+
+    apiLogger.debug('User requesting create new invitation record', {
+      params: req.params || '',
+      query: req.query || '',
+      body: req.body || ''
+    })
 
   
   try {
@@ -63,13 +70,18 @@ router.post('/',
         
         invitation.url = link;
 
+        let queryStartTime = new Date();
+        apiLogger.info('Creating new invitation record in db', {collection: 'products',operation: 'update'})
         await invitation.save();
+        apiLogger.info('Invitation record created', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+
     })
 
     return res.status(200).json({msg: { title: 'Success', description: 'Invitation email sent to users.'} })
     
   } catch (err) {
     console.log(err);
+    apiLogger.error('Caught error');
     return res.status(500).send('Server Error');
    
   }

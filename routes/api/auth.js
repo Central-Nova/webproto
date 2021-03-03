@@ -3,7 +3,6 @@ const router = express.Router();
 const passport = require('passport');
 const sessionStore = require('../../config/db');
 const sanitize = require('mongo-sanitize');
-const apiLogger = require('../../config/loggers');
 const httpContext = require('express-http-context');
 const userAuth = require('../../middleware/userAuth');
 

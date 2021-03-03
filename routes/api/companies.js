@@ -3,7 +3,6 @@ const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const companyAuth = require('../../middleware/companyAuth');
 const userAuth = require('../../middleware/userAuth');
-const apiLogger = require('../../config/loggers');
 const httpContext = require('express-http-context');
 
 
@@ -275,8 +274,6 @@ router.put(
 
       apiLogger.debug('Company record updated', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
 
-
-      // Send company ID with response object (used for adding company to user record)
       return res.status(200).json({ msg: {title: 'Success', description: 'User added to company!'} })
       ;
 

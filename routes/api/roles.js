@@ -6,7 +6,6 @@ const companyAuth = require('../../middleware/companyAuth');
 const userAuth = require('../../middleware/userAuth');
 const authorize = require('../../middleware/authorize');
 const { check, validationResult } = require('express-validator')
-const apiLogger = require('../../config/loggers');
 const httpContext = require('express-http-context');
 
 const Role = require('../../models/Role');

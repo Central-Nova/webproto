@@ -8,6 +8,7 @@ const authorize = require('../../middleware/authorize');
 const invitationCheck = require('../../middleware/invitationCheck');
 const sanitize = require('mongo-sanitize');
 const sanitizeReq = require('../../lib/sanitize');
+const httpContext = require('express-http-context');
 
 // Models
 const User = require('../../models/User');
@@ -40,6 +41,7 @@ router.get('/', [userAuth, companyAuth], async (req, res) => {
     }
     apiLogger.info('User records found', {documents: users.length, responseTime: `${new Date() - queryStartTime}ms`})
 
+    httpContext.set('resDocs', 1);
     apiLogger.debug('Sending user records by company', {documents: users.length})
     return res.send(users);
     } catch (error) {

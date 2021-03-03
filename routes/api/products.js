@@ -6,6 +6,7 @@ const userAuth = require('../../middleware/userAuth');
 const authorize = require('../../middleware/authorize');
 const sanitizeReq = require('../../lib/sanitize');
 const sanitize = require('mongo-sanitize');
+const httpContext = require('express-http-context');
 
 const Product = require('../../models/Product');
 
@@ -53,7 +54,8 @@ router.get('/', [userAuth,companyAuth, authorize('Products', 'Catalog Entry', 'V
     apiLogger.info('Searching db for count of products by company', {collection: 'products',operation: 'read'})
     let total = await Product.countDocuments({$and: [{company: req.user.company}, {$or: [{name: {$regex: searchRegex, $options: 'i'}}, {sku: {$regex: searchRegex, $options: 'i'}}]}]}).sort(sort);
     apiLogger.debug('Product records counted', {documents: total, responseTime: `${new Date() - queryStartTime}ms`})
-   
+    
+    httpContext.set('resDocs', products.length);
     apiLogger.debug('Sending product records by company', {documents: products.length})
 
     return res.send({
@@ -96,6 +98,7 @@ router.get('/product/:productId', [userAuth,companyAuth, authorize('Products', '
     }
     apiLogger.debug('Product record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
 
+    httpContext.set('resDocs', 1);
     apiLogger.info('Sending product record by id', {documents: 1})
     return res.send(product);
     } catch (error) {
