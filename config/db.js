@@ -9,29 +9,20 @@ const MongoStore = require('connect-mongo')(session);
 
 require('dotenv').config();
 
+const {
+  MONGO_USERNAME,
+  MONGO_PASSWORD,
+  MONGO_HOSTNAME,
+  MONGO_PORT,
+  MONGO_DB
+} = process.env;
 
-// Establish mongo connection and handle errors at initialization
-// const connectDB = async () => {
-//   try {
-//     await mongoose.connect(db, {
-//       useNewUrlParser: true,
-//       useUnifiedTopology: true,
-//       useCreateIndex: true
-//     });
+const url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`;
 
-//     console.log('MongoDB Connected...');
-//   } catch (err) {
-//     console.log(err.message);
-//     // Exit process with failure
-//     process.exit(1);
-//   }
-// };
-
-// connectDB();
-
+// Connect to mongodb and catch initialization errors
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
+    await mongoose.connect(url, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,
@@ -54,18 +45,10 @@ mongoConnection.on('error', err => {
   console.log(`There was an error connecting to the database: ${err}`);
 })
 mongoConnection.once('open', ()=> {
-  console.log(`You have successfully connected to your mongodatabase: ${process.env.MONGO_URI}`);
+  console.log(`You have successfully connected to your mongodatabase: ${url}`);
 })
 
 const sessionStore = new MongoStore({ mongooseConnection: mongoConnection, collection: 'sessions' });
 
 
 module.exports = sessionStore;
-
-// const connection = mongoose.createConnection(db, {
-//       useNewUrlParser: true,
-//       useUnifiedTopology: true,
-//       useCreateIndex: true
-// });
-
-// module.exports = connection;

@@ -8,12 +8,16 @@ const apiStartLog = require('./middleware/apiStartLog');
 const httpContext = require('express-http-context');
 const setHttpContext = require('./middleware/setHttpContext');
 const apiEndLog = require('./middleware/apiEndLog');
+const cors = require('cors');
 
 
 
 require('dotenv').config();
 
 const app = express();
+
+// Cors
+app.use(cors());
 
 // Init Middleware
 app.use(express.json({ extended: false }));
@@ -43,7 +47,6 @@ app.use(session({
     }
 }));
 
-
 // Passport Config
 require('./config/passport')(passport);
 
@@ -51,6 +54,7 @@ require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Logger for request starts middleware
 app.use(apiStartLog);
 
 // Define Routes
@@ -61,6 +65,6 @@ app.use('/api/roles', require('./routes/api/roles'));
 app.use('/api/invitation', require('./routes/api/invitation'));
 app.use('/api/products', require('./routes/api/products'));
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.BACKEND_PORT || 5000;
 
-app.listen(PORT, () => console.log(`Server started on ${PORT}`));
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

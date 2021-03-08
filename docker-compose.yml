@@ -1,0 +1,71 @@
+version: '3'
+
+services:
+  backend-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend
+    command: ./wait-for.sh mongodb:27017 -- npm run server
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - MONGO_USERNAME=$MONGO_USERNAME
+      - MONGO_PASSWORD=$MONGO_PASSWORD
+      - MONGO_HOSTNAME=db
+      - MONGO_PORT=$MONGO_PORT
+      - MONGO_DB=$MONGO_DB
+    ports:
+      - '5000:5000'
+    volumes:
+      - .:/usr/src/bizware
+      - node_modules_backend:/usr/src/bizware/node_modules
+    # depends_on:
+    #   - db
+    networks:
+      - app-network
+  db:
+    image: mongo:4.1.8-xenial
+    container_name: mongodb
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$MONGO_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD=$MONGO_PASSWORD
+    volumes:
+      - dbdata:/data/db
+    networks:
+      - app-network
+    ports:
+      - '27017:27017'
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: client
+    restart: unless-stopped
+    command: ./wait-for.sh mongodb:27017 -- npm start
+    ports:
+      - '3000:3000'
+    volumes:
+      - node_modules_client:/user/src/bizware/client/node_modules
+    networks:
+      - app-network
+    tty: true
+  # mongo-seed:
+  #   container_name: mongo-seed
+  #   build: ./mongo-seed
+  #   restart: on-failure
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+  node_modules_backend:
+  node_modules_client:
