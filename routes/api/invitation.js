@@ -1,11 +1,14 @@
 const express = require('express');
-const { check, validationResult } = require('express-validator');
 const router = express.Router();
-const { genLink } = require('../../lib/invitationUtils');
+
+// Middleware
+const { check } = require('express-validator');
 const companyAuth = require('../../middleware/companyAuth');
 const userAuth = require('../../middleware/userAuth');
 const authorize = require('../../middleware/authorize');
+const validationHandler = require('../../middleware/validationHandler')
 
+// Models
 const Company = require('../../models/Company');
 const Invitation = require('../../models/Invitation');
 
@@ -27,7 +30,7 @@ function makeid(length) {
 router.post('/',
 [userAuth, companyAuth, authorize('Admin', 'Invitations', 'Create'),[
   check('emails.*', { title: 'Error', description: 'Please enter a valid email address' }).isEmail()
-]], async (req,res) => {
+], validationHandler], async (req,res) => {
 
   const { emails } = req.body;
 

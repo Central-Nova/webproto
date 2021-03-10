@@ -1,14 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const { check, validationResult } = require('express-validator');
 const { genPassword } = require('../../lib/passwordUtils')
+
+// Middleware
+const { check } = require('express-validator');
 const companyAuth = require('../../middleware/companyAuth');
 const userAuth = require('../../middleware/userAuth');
 const authorize = require('../../middleware/authorize');
 const invitationCheck = require('../../middleware/invitationCheck');
-const sanitize = require('mongo-sanitize');
 const sanitizeReq = require('../../lib/sanitize');
 const httpContext = require('express-http-context');
+const validationHandler = require('../../middleware/validationHandler');
 
 // Models
 const User = require('../../models/User');
@@ -200,15 +202,9 @@ router.post(
       'password',
       {title: 'Error', description: 'Please enter a password with 6 or more characters'}
     ).isLength({ min: 6 })
-  ]],
+  ], validationHandler],
   async (req, res) => {
-    // Check input fields for errors
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res
-      .status(400)
-      .json({ errors: errors.array() });
-    }
+
     apiLogger.debug('User requesting to create new user record', {
       params: req.params || '',
       query: req.query || '',
@@ -304,15 +300,9 @@ router.post(
       'password',
       {title: 'Error', description: 'Please enter a password with 6 or more characters'}
     ).isLength({ min: 6 })
-  ]],
+  ], validationHandler],
   async (req, res) => {
-    // Check input fields for errors
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res
-      .status(400)
-      .json({ errors: errors.array() });
-    }
+
     apiLogger.debug('User requesting to create new user with invitation link', {
       params: req.params || '',
       query: req.query || '',
@@ -580,16 +570,8 @@ router.put(
     check('roles.*.manager').not().isEmpty().isBoolean(),
     check('roles.*.department').custom(value => ['Sales', 'Products', 'Inventory', 'Warehouse', 'Fleet', 'Payments', 'Admin'].includes(value))
 
-  ]], async (req, res) => {
+  ], validationHandler], async (req, res) => {
     
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res
-      .status(400)
-      .json({ msg: { title: 'Error', description: 'User roles could not be updated with provided data.' } })
-    }
-
     apiLogger.debug('Requesting to update user roles', {
       body: req.body,
       params: req.params,

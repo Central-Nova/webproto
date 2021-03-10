@@ -5,8 +5,9 @@ const actionsSupplier = require('../../lib/actionsSupplier.json');
 const companyAuth = require('../../middleware/companyAuth');
 const userAuth = require('../../middleware/userAuth');
 const authorize = require('../../middleware/authorize');
-const { check, validationResult } = require('express-validator')
+const { check} = require('express-validator')
 const httpContext = require('express-http-context');
+const validationHandler = require('../../middleware/validationHandler');
 
 const Role = require('../../models/Role');
 const Company = require('../../models/Company');
@@ -120,16 +121,9 @@ router.put(
     check('permissions.*.action').not().isEmpty(),
     check('permissions.*.manager').not().isEmpty().isBoolean(),    
     check('permissions.*.worker').not().isEmpty().isBoolean(),
-  ]],
+  ], validationHandler],
   async (req, res) => {
 
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res
-      .status(400)
-      .json({ msg: { title: 'Error', description: 'Role permissions could not be updated with provided data.' }})
-    }
     apiLogger.debug('Requesting to update company roles data by department type', {
       body: req.body,
       params: req.params,

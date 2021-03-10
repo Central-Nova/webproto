@@ -1,11 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { check, validationResult } = require('express-validator');
+
+// Middleware
+const { check } = require('express-validator');
 const companyAuth = require('../../middleware/companyAuth');
 const userAuth = require('../../middleware/userAuth');
 const httpContext = require('express-http-context');
+const validationHandler = require('../../middleware/validationHandler');
 
-
+// Models
 const Company = require('../../models/Company');
 const User = require('../../models/User');
 
@@ -160,21 +163,13 @@ router.put(
     check('warehouseAddress.zip', {title:'Error', description:'Zip code is required.'}).not().isEmpty().optional({nullable: true}),
     check('phone', {title:'Error', description:'Valid phone is required.'}).isNumeric(),
     check('email', {title:'Error', description:'Valid email is required.'}).isEmail(),
-  ]],
+  ], validationHandler],
   async (req, res) => {
-
-    // Handle validation errors
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({errors: errors.array() })
-    }
     apiLogger.debug('User requesting to update company with account information', {
       params: req.params || '',
       query: req.query || '',
       body: req.body || ''
     })
-
 
     const {
       email,
@@ -186,8 +181,11 @@ router.put(
 
     // Check if company already has account setup
     let queryStartTime = new Date()
+
     apiLogger.debug('Searching DB for company data', {collection: 'companies', operation: 'read'})
+
     let company = await Company.findById(req.params.companyId)
+
     apiLogger.debug('Found company record', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
 
     if (company.operation !== null && company.operation!== undefined) {

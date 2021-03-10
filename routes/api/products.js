@@ -1,12 +1,12 @@
 const express = require('express');
-const { check, validationResult } = require('express-validator');
+const { check } = require('express-validator');
 const router = express.Router();
 const companyAuth = require('../../middleware/companyAuth');
 const userAuth = require('../../middleware/userAuth');
 const authorize = require('../../middleware/authorize');
 const sanitizeReq = require('../../lib/sanitize');
-const sanitize = require('mongo-sanitize');
 const httpContext = require('express-http-context');
+const validationHandler = require('../../middleware/validationHandler');
 
 const Product = require('../../models/Product');
 
@@ -133,25 +133,17 @@ router.post('/',
   check('products.*.dimensions.width', { title: 'Error', description: 'Please only use numbers for product width.' }).optional({nullable: true}).isNumeric(),
   check('products.*.dimensions.height', { title: 'Error', description: 'Please only use numbers for product height.' }).optional({nullable: true}).isNumeric(),
 
-]], async (req,res) => {
-
+], validationHandler], async (req,res) => {
+  
+  apiLogger.debug('User requesting to create new product record', {
+    params: req.params || '',
+    query: req.query || '',
+    body: req.body || ''
+  })
+  
   const { 
     products
   } = req.body;
-
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res
-      .status(400)
-      .json({ errors: errors.array() })
-    }
-    apiLogger.debug('User requesting to create new product record', {
-      params: req.params || '',
-      query: req.query || '',
-      body: req.body || ''
-    })
-  
 
     // Price rules are optional. Check if exists
     // Check if units used in priceRules matches basePrice
@@ -245,8 +237,14 @@ router.put('/product/:productId',
   check('dimensions.width', { title: 'Error', description: 'Please only use numbers for product width.' }).isNumeric(),
   check('dimensions.height', { title: 'Error', description: 'Please only use numbers for product height.' }).isNumeric(),
 
-]], async (req,res) => {
-
+], validationHandler], async (req,res) => {
+  
+  apiLogger.debug('User requesting to update product record', {
+    params: req.params || '',
+    query: req.query || '',
+    body: req.body || ''
+  })
+  
   const { 
     sku, 
     name, 
@@ -259,21 +257,6 @@ router.put('/product/:productId',
     primaryMaterial,
 
   } = req.body;
-
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res
-      .status(400)
-      .json({ errors: errors.array() })
-    }
-
-    apiLogger.debug('User requesting to update product record', {
-      params: req.params || '',
-      query: req.query || '',
-      body: req.body || ''
-    })
-
 
     let priceRulesError = [];
 
