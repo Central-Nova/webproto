@@ -66,5 +66,6 @@ app.use('/api/invitation', require('./routes/api/invitation'));
 app.use('/api/products', require('./routes/api/products'));
 
 const PORT = process.env.BACKEND_PORT || 5000;
+const HOST = '0.0.0.0';
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+app.listen(PORT, HOST, () => console.log(`Server started on port ${PORT}`));
