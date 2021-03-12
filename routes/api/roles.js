@@ -2,16 +2,19 @@ const express = require('express');
 const router = express.Router();
 const actionsBuyer = require('../../lib/actionsBuyer.json');
 const actionsSupplier = require('../../lib/actionsSupplier.json');
+
+// Middleware
 const companyAuth = require('../../middleware/companyAuth');
 const userAuth = require('../../middleware/userAuth');
 const authorize = require('../../middleware/authorize');
 const { check} = require('express-validator')
 const httpContext = require('express-http-context');
 const validationHandler = require('../../middleware/validationHandler');
+const sanitizeBody = require('../../middleware/sanitizeBody');
+
 
 const Role = require('../../models/Role');
 const Company = require('../../models/Company');
-const { compare } = require('bcryptjs');
 
 // @route   GET api/roles
 // @desc    Get roles
@@ -35,16 +38,17 @@ router.get(
       let queryStartTime = new Date();
       apiLogger.info('Searching db for company roles', {collection: 'roles',operation: 'read'})
       
-      let companyRoles = await Role.findOne({company: req.user.company})
+      let userCompany = req.user.company;
+      let companyRoles = await Role.findOne({company: userCompany})
       
       if (!companyRoles) {
         apiLogger.warn('No company roles found')
         // Build roles
-        let newRoles = company.operation === 'buyer' ? actionsBuyer : actionsSupplier;
+        let newRoles = userCompany.operation === 'buyer' ? actionsBuyer : actionsSupplier;
 
         apiLogger.info('Generating default company roles...')
         companyRoles = new Role({
-          company: req.user.company,
+          company: userCompany,
           permissions: [...newRoles]
         });
   
@@ -81,6 +85,8 @@ router.get(
       query: req.query
     })
 
+    console.log(req.params.document)
+
     
     try {
       
@@ -92,7 +98,7 @@ router.get(
       let companyRoles = await Role.findOne({company: req.user.company})
       apiLogger.info('Company roles found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
 
-      
+     
       // Filter only roles that match the document param
       filteredPermissions = companyRoles.permissions.filter(role => role.document.replace(' ','').toLowerCase() === req.params.document)
 
@@ -115,7 +121,7 @@ router.get(
 // @access  Has company and has 'Role Permissions':'Edit' permission
 
 router.put(
-  '/department/:department', [userAuth, companyAuth, authorize('Admin', 'Role Permissions', 'Edit'),[
+  '/department/:department', [userAuth, companyAuth, authorize('Admin', 'Role Permissions', 'Edit'), sanitizeBody, [
     check('permissions.*.department').not().isEmpty(),
     check('permissions.*.document').not().isEmpty(),
     check('permissions.*.action').not().isEmpty(),
@@ -146,10 +152,11 @@ router.put(
           .json({ errors: [{ msg: {title: 'Error', description: 'Unauthorized user.'} }] });
       }
 
-
+      //  Loop through role permissions
       for (let i in roles.permissions) {
+        // Loop through permissions sent by application in request
         for (let j in req.body.permissions) {
-          
+          // If matched by id, then set permission to new value sent from application
           if (roles.permissions[i]._id.toString() === req.body.permissions[j]._id.toString()) {
             roles.permissions[i] = req.body.permissions[j];
           }

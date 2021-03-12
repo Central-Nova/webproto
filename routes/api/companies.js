@@ -7,6 +7,8 @@ const companyAuth = require('../../middleware/companyAuth');
 const userAuth = require('../../middleware/userAuth');
 const httpContext = require('express-http-context');
 const validationHandler = require('../../middleware/validationHandler');
+const sanitizeBody = require('../../middleware/sanitizeBody');
+
 
 // Models
 const Company = require('../../models/Company');
@@ -64,15 +66,9 @@ router.post(
   ,
     [userAuth,[check('businessName', {title:'Error', description:'Please enter your business Name.'}).not().isEmpty(),
     check('ein', {title:'Error', description:'Please enter a valid EIN.'}).isNumeric().isLength({min: 8}),
-  ]],
+  ], validationHandler],
   async (req, res) => {
 
-    // Handle validation errors
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({errors: errors.array() })
-    }
     apiLogger.debug('User requesting to create company', {
       params: req.params || '',
       query: req.query || '',

@@ -1,15 +1,17 @@
 const express = require('express');
 const { check } = require('express-validator');
 const router = express.Router();
+
+// Middleware
 const companyAuth = require('../../middleware/companyAuth');
 const userAuth = require('../../middleware/userAuth');
 const authorize = require('../../middleware/authorize');
-const sanitizeReq = require('../../lib/sanitize');
+const sanitizeBody = require('../../middleware/sanitizeBody');
 const httpContext = require('express-http-context');
 const validationHandler = require('../../middleware/validationHandler');
 
 const Product = require('../../models/Product');
-
+const uniqueKeyHasValue = require('../../lib/uniqueKeyHasValue');
 
 // @route   GET api/products
 // @desc    Get all products by company id with paginate query
@@ -52,7 +54,9 @@ router.get('/', [userAuth,companyAuth, authorize('Products', 'Catalog Entry', 'V
 
     queryStartTime = new Date();
     apiLogger.info('Searching db for count of products by company', {collection: 'products',operation: 'read'})
+
     let total = await Product.countDocuments({$and: [{company: req.user.company}, {$or: [{name: {$regex: searchRegex, $options: 'i'}}, {sku: {$regex: searchRegex, $options: 'i'}}]}]}).sort(sort);
+
     apiLogger.debug('Product records counted', {documents: total, responseTime: `${new Date() - queryStartTime}ms`})
     
     httpContext.set('resDocs', products.length);
@@ -102,12 +106,14 @@ router.get('/product/:productId', [userAuth,companyAuth, authorize('Products', '
     apiLogger.info('Sending product record by id', {documents: 1})
     return res.send(product);
     } catch (error) {
+
       if (error.kind === 'ObjectId') {
         apiLogger.warn('Invalid product id requested by user')
         return res
         .status(400)
         .json({msg: { title: 'Error', description: 'Product not found.'}})      
       }
+
       apiLogger.error('Caught error');
     return res.status(500).send('Server Error');
   }
@@ -118,7 +124,7 @@ router.get('/product/:productId', [userAuth,companyAuth, authorize('Products', '
 // @access  Has company, has 'Catalog Entry':'Create' permission
 
 router.post('/',
-[userAuth,companyAuth, authorize('Products', 'Catalog Entry', 'Create'), sanitizeReq,[
+[userAuth,companyAuth, authorize('Products', 'Catalog Entry', 'Create'), sanitizeBody,[
   check('products.*.sku', { title: 'Error', description: 'Please enter a valid SKU.' }).not().isEmpty().isLength({ min:4, max: 20 }),
   check('products.*.name', { title: 'Error', description: 'Please enter a product name.' }).not().isEmpty().isLength({ max: 80 }),
   check('products.*.description', { title: 'Error', description: 'Please enter a product description.' }).not().isEmpty().isLength({ max: 200 }),
@@ -147,34 +153,30 @@ router.post('/',
 
     // Price rules are optional. Check if exists
     // Check if units used in priceRules matches basePrice
-    
-    if (products.priceRules) {
-      let priceRulesError = [];
-      
-      products.forEach(product => { 
-        product.priceRules.forEach(rule => { 
-          if (rule.unit !== product.basePrice.unit) {
-            priceRulesError.push(true)
-          }}
-          )
-      })
 
-      if (priceRulesError.includes(true)) {
-        apiLogger.warn('Price rules unit name does not match')
-        return res
-        .status(400)
-        .json({errors: [{msg: {title: 'Error', description: 'This product does not use that unit.'}}]})
+      product:
+      for (let product of products) {
+        if (product.priceRules) {
+          rule:
+          for(let i in product.priceRules) {
+            let result = uniqueKeyHasValue(product.priceRules[i], 'unit', product.basePrice.unit)
+
+            if (result) {
+              apiLogger.warn('Price rules unit name does not match base unit name')
+              return res
+              .status(400)
+              .json({errors: [{msg: {title: 'Error', description: 'This product does not use that unit.'}}]})              
+            }
+            
+          }
+        }
       }
-    }
-
-    
      
   try {
     let updatedRecords = 0;
     let createdRecords = 0;
 
     for (let product of products) {
-
 
       let productData = {
         company: req.user.company,
@@ -222,7 +224,7 @@ router.post('/',
 // @access  Has company, has 'Catalog Entry':'Create' permission
 
 router.put('/product/:productId',
-[userAuth,companyAuth, authorize('Products', 'Catalog Entry', 'Edit'), sanitizeReq,[
+[userAuth,companyAuth, authorize('Products', 'Catalog Entry', 'Edit'), sanitizeBody,[
   check('sku', { title: 'Error', description: 'Please enter a valid SKU.' }).not().isEmpty().isLength({ min:4, max: 20 }),
   check('name', { title: 'Error', description: 'Please enter a product name.' }).not().isEmpty().isLength({ max: 80 }),
   check('description', { title: 'Error', description: 'Please enter a product description.' }).not().isEmpty().isLength({ max: 200 }),

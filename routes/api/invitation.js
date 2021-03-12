@@ -7,6 +7,7 @@ const companyAuth = require('../../middleware/companyAuth');
 const userAuth = require('../../middleware/userAuth');
 const authorize = require('../../middleware/authorize');
 const validationHandler = require('../../middleware/validationHandler')
+const sanitizeBody = require('../../middleware/sanitizeBody');
 
 // Models
 const Company = require('../../models/Company');
@@ -28,7 +29,7 @@ function makeid(length) {
 // @access  Has company
 
 router.post('/',
-[userAuth, companyAuth, authorize('Admin', 'Invitations', 'Create'),[
+[userAuth, companyAuth, authorize('Admin', 'Invitations', 'Create'), sanitizeBody, [
   check('emails.*', { title: 'Error', description: 'Please enter a valid email address' }).isEmail()
 ], validationHandler], async (req,res) => {
 

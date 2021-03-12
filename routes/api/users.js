@@ -8,7 +8,7 @@ const companyAuth = require('../../middleware/companyAuth');
 const userAuth = require('../../middleware/userAuth');
 const authorize = require('../../middleware/authorize');
 const invitationCheck = require('../../middleware/invitationCheck');
-const sanitizeReq = require('../../lib/sanitize');
+const sanitizeBody = require('../../middleware/sanitizeBody');
 const httpContext = require('express-http-context');
 const validationHandler = require('../../middleware/validationHandler');
 
@@ -193,7 +193,7 @@ router.get('/department/:department/role/:role', [userAuth, companyAuth], async 
 // @access  public
 
 router.post(
-  '/',[sanitizeReq,
+  '/',[sanitizeBody,
   [
     check('firstName', {title:'Error', description:'First name is required'}).not().isEmpty(),
     check('lastName', {title:'Error', description:'Last name is required'}).not().isEmpty(),
@@ -291,7 +291,8 @@ router.post(
 router.post(
   '/:companyId/:docId',
   [
-    invitationCheck,
+    invitationCheck, 
+    sanitizeBody,
     [
     check('firstName', {title:'Error', description:'First name is required'}).not().isEmpty(),
     check('lastName', {title:'Error', description:'Last name is required'}).not().isEmpty(),
@@ -300,7 +301,8 @@ router.post(
       'password',
       {title: 'Error', description: 'Please enter a password with 6 or more characters'}
     ).isLength({ min: 6 })
-  ], validationHandler],
+  ], 
+    validationHandler],
   async (req, res) => {
 
     apiLogger.debug('User requesting to create new user with invitation link', {
@@ -564,7 +566,7 @@ router.put(
 // @access  Has company and has 'User Roles':'Edit' permission
 
 router.put(
-  '/roles/:userId',[userAuth, companyAuth, authorize('Admin', 'User Roles', 'Edit'), [
+  '/roles/:userId',[userAuth, companyAuth, authorize('Admin', 'User Roles', 'Edit'), sanitizeBody, [
     check('roles.*.department').not().isEmpty(),
     check('roles.*.worker').not().isEmpty().isBoolean(),
     check('roles.*.manager').not().isEmpty().isBoolean(),
