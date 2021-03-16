@@ -25,8 +25,8 @@ function makeid(length) {
 
 
 // @route   POST api/invitation
-// @desc    Create invitation
-// @access  Has company
+// @desc    Create invitations
+// @access  Has company, has 'Invitations':'Create' permission
 
 router.post('/',
 [userAuth, companyAuth, authorize('Admin', 'Invitations', 'Create'), sanitizeBody, [
