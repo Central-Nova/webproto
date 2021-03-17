@@ -154,10 +154,10 @@ const registerUserWithLink = async (req, res) => {
           worker: true 
           },
           {
-            department: "Admin",
-            manager: false,
-            worker: true 
-            },
+          department: "Admin",
+          manager: false,
+          worker: true 
+          },
         ],
     });
 
@@ -228,32 +228,26 @@ const getUsersByDepartment = async (req, res) => {
 
    }
 
-
   try {
 
     let users = await User.find({company: req.user.company}).select('-local.hash -local.salt')
 
- 
-    let usersByDepartment = [];
-
-    // Loop each user
-    for (let i in users) {
-      let user = users[i];
-
-      // Loop each role
-      for (let e in user.roles) {
-        let role = user.roles[e];
-
-        if (role.department.toLowerCase() === req.params.department.toLowerCase()) {
-          usersByDepartment.push(user);
-        } 
-      }
+    if (!users) {
+      console.log('no users found')
+      return res
+      .status(400)
+      .json({ errors: [{ msg: {title: 'Error', description: 'No users found'} }] });
     }
+ 
+    
+    users = users.filter(user => {
+      let departmentCheck = user.roles.map(role => role.department.toLowerCase() === req.params.department.toLowerCase())
+      return departmentCheck.includes(true);
+    })
 
-    return res.send(usersByDepartment);
+    return res.send(users);
     } catch (error) {
-      console.log(error);
-    return res.status(500).send('Server Error');
+      return res.status(500).send('Server Error');
   }
 }
 
@@ -263,6 +257,7 @@ const getUsersByRole = async (req, res) => {
   const validroles = ['manager', 'worker'];
 
    if (!validroles.includes(req.params.role.toLowerCase())) {
+    console.log('invalid role')
     return res
     .status(400)
     .json({ errors: [{ msg: {title: 'Error', description: 'Invalid role entered.'} }] });
@@ -273,26 +268,19 @@ const getUsersByRole = async (req, res) => {
 
     let users = await User.find({company: req.user.company}).select('-local.hash -local.salt')
 
- 
-    let usersByRole = [];
-
-    // Loop each user
-    for (let i in users) {
-      let user = users[i];
-
-      // Loop each role
-      for (let e in user.roles) {
-        let role = user.roles[e];
-
-        if (role.role.toLowerCase() === req.params.role.toLowerCase()) {
-          usersByRole.push(user);
-        } 
-      }
+    if (!users) {
+      return res
+      .status(400)
+      .json({ errors: [{ msg: {title: 'Error', description: 'No users found'} }] });
     }
+ 
+    users = users.filter(user => {
+      let roleCheck = user.roles.map(role => role[req.params.role])
+      return roleCheck.includes(true);
+    })
 
-    return res.send(usersByRole);
+    return res.send(users);
     } catch (error) {
-      console.log(error);
     return res.status(500).send('Server Error');
   }
 }
@@ -319,6 +307,12 @@ const getUsersByDepartmentandRole = async (req, res) => {
 
     let users = await User.find({company: req.user.company}).select('-local.hash -local.salt')
 
+    if (!users) {
+      console.log('no users found')
+      return res
+      .status(400)
+      .json({ errors: [{ msg: {title: 'Error', description: 'No users found'} }] });
+    }
  
     let usersByDepartmentAndRole = [];
 
