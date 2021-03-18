@@ -5,7 +5,7 @@ const { registerUser,
   getUsersByCompany,
   getUsersByRole,
   getUsersByDepartment,
-  getUsersByDepartmentandRole,
+  getUsersByDepartmentAndRole,
   addCompanyToUser,
   addCompanyToUserWithCode,
   editUserRoles } = require('./controllers/users');
@@ -44,7 +44,7 @@ router.get('/role/:role', [userAuth, companyAuth], getUsersByRole)
 // @route   GET api/users/department/:department
 // @desc    Get all users by company, department, and role
 // @access  Has company
-router.get('/department/:department/role/:role', [userAuth, companyAuth], getUsersByDepartmentandRole)
+router.get('/department/:department/role/:role', [userAuth, companyAuth], getUsersByDepartmentAndRole)
 
 
 // @route   POST api/users

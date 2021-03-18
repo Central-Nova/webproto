@@ -8,8 +8,6 @@ module.exports = async (req, res, next) => {
   try {
     let invitation = await Invitation.findById(docId);
 
-    console.log('invitation: ',invitation);
-
     if (invitation !== null) {
 
       // Check if invitation link is expired

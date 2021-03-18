@@ -5,7 +5,6 @@ const User = require('../../../models/User');
 const Company = require('../../../models/Company');
 const Invitation = require('../../../models/Invitation');
 
-
 // Register User
 const registerUser = async (req, res) => {
 
@@ -26,6 +25,7 @@ const registerUser = async (req, res) => {
     let user = await User.findOne({ email });
 
     if (user) {
+      console.log('existing user found')
       apiLogger.debug('Existing user record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
 
       return res
@@ -33,7 +33,6 @@ const registerUser = async (req, res) => {
         .json({ errors: [{ msg: {title: 'Error', description: 'User already exists'} }] });
     }
     apiLogger.debug('No existing user record found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
-
 
     user = new User({
       firstName: firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase(),
@@ -62,7 +61,7 @@ const registerUser = async (req, res) => {
           department: 'Admin',
         },
       ],
-    });
+    })
 
     // Create password hash
 
@@ -95,7 +94,6 @@ const registerUserWithLink = async (req, res) => {
     query: req.query || '',
     body: req.body || ''
   })
-
 
   const { firstName, lastName, email, password } = req.body;
   const { companyId } = req.params;
@@ -179,7 +177,6 @@ const registerUserWithLink = async (req, res) => {
 
   } catch (err) {
     apiLogger.error('Caught error');
-    console.log(err);
     return res.status(500).send('Server Error');
   }
 }
@@ -233,15 +230,14 @@ const getUsersByDepartment = async (req, res) => {
     let users = await User.find({company: req.user.company}).select('-local.hash -local.salt')
 
     if (!users) {
-      console.log('no users found')
       return res
       .status(400)
       .json({ errors: [{ msg: {title: 'Error', description: 'No users found'} }] });
     }
  
-    
+
     users = users.filter(user => {
-      let departmentCheck = user.roles.map(role => role.department.toLowerCase() === req.params.department.toLowerCase())
+      let departmentCheck = user.roles.map(role => role.department.toLowerCase() === req.params.department.toLowerCase() && role.manager === true || role.department.toLowerCase() === req.params.department.toLowerCase() && role.worker === true)
       return departmentCheck.includes(true);
     })
 
@@ -257,7 +253,6 @@ const getUsersByRole = async (req, res) => {
   const validroles = ['manager', 'worker'];
 
    if (!validroles.includes(req.params.role.toLowerCase())) {
-    console.log('invalid role')
     return res
     .status(400)
     .json({ errors: [{ msg: {title: 'Error', description: 'Invalid role entered.'} }] });
@@ -286,7 +281,7 @@ const getUsersByRole = async (req, res) => {
 }
 
 // Get users by department and role
-const getUsersByDepartmentandRole = async (req, res) => {
+const getUsersByDepartmentAndRole = async (req, res) => {
 
   const validDepartments = ['sales', 'products', 'warehouse', 'fleet', 'payments'];
   const validroles = ['manager', 'worker'];
@@ -306,35 +301,19 @@ const getUsersByDepartmentandRole = async (req, res) => {
   try {
 
     let users = await User.find({company: req.user.company}).select('-local.hash -local.salt')
-
     if (!users) {
-      console.log('no users found')
       return res
       .status(400)
       .json({ errors: [{ msg: {title: 'Error', description: 'No users found'} }] });
     }
  
-    let usersByDepartmentAndRole = [];
+    users = users.filter(user => {
+      let departmentCheck = user.roles.map(role => role.department.toLowerCase() === req.params.department.toLowerCase() && role[req.params.role] === true)
+      return departmentCheck.includes(true);
+    })
 
-    // Loop each user
-    for (let i in users) {
-      let user = users[i];
-
-      // Loop each role
-      for (let e in user.roles) {
-        let role = user.roles[e];
-
-        if (
-          role.role.toLowerCase() === req.params.role.toLowerCase() && 
-          role.department.toLowerCase() === req.params.department.toLowerCase()) {
-          usersByDepartmentAndRole.push(user);
-        } 
-      }
-    }
-
-    return res.send(usersByDepartmentAndRole);
+    return res.send(users);
     } catch (error) {
-      console.log(error);
     return res.status(500).send('Server Error');
   }
 }
@@ -346,28 +325,25 @@ const addCompanyToUser = async (req, res) => {
     params: req.params,
     query: req.query
   })
-
   
-  // Check if company exists
-  let queryStartTime = new Date();
-  apiLogger.debug('Searching db for company record', {collection: 'companies',operation: 'read'})
-  let company = Company.findById(req.params.companyId);
-  
-  if(!company) {
-    apiLogger.debug('No company record found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
-    return res
-    .status(400)
-    .json({ errors: [{msg: {title: 'Error', description: 'Company not added to user.' } }] })
-  }
-
-  apiLogger.debug('Company record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
-
   try {
+    // Check if company exists
+    let queryStartTime = new Date();
+    apiLogger.debug('Searching db for company record', {collection: 'companies',operation: 'read'})
+    let company = Company.findById(req.params.companyId);
+    
+    if(!company) {
+      apiLogger.debug('No company record found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
+      return res
+      .status(400)
+      .json({ errors: [{msg: {title: 'Error', description: 'Company not added to user.' } }] })
+    }
+  
+    apiLogger.debug('Company record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
     // Check if user exists
     queryStartTime = new Date();
     apiLogger.debug('Searching db for user record', {collection: 'user',operation: 'read'})
     let user = await User.findById(req.user._id);
-
     if (!user) {
       apiLogger.debug('No user record found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
       return res
@@ -404,7 +380,7 @@ const addCompanyToUser = async (req, res) => {
   //     .json({ errors: [{ msg: {title: 'Error', description: 'Company not found.'} }] });
   // }
     apiLogger.error('Caught error');
-     res.status(500).send('Server Error');
+    res.status(500).send('Server Error');
   }
 }
 
@@ -418,34 +394,23 @@ const addCompanyToUserWithCode = async (req, res) => {
 
   const { code } = req.body;
   
-  // Check if invitation exists
-  let queryStartTime = new Date();
-  apiLogger.debug('Searching db for invitation record', {collection: 'invitations',operation: 'read'})
-
-  let invitation = await Invitation.findOne({code});
-
-  if(!invitation) {
-    apiLogger.debug('No invitation record found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
-
-    return res
-      .status(400)
-      .json({ errors: [{msg: {title: 'Error', description: 'Invalid code submitted.' } }] })
-  }
-  apiLogger.debug('Invitation record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
-
-
-  // Check if code is expired
-  let now = new Date();
-  let isValid = invitation.expires.getTime() > now.getTime();
-
-  if (!isValid) {
-    apiLogge.warn('Invitation code is invalid');
-    return res
-    .status(400)
-    .json({ errors: [{ msg: {title: 'Error', description: 'Invitation link is expired.'} }] });
-  }
-
   try {
+    // Check if invitation exists
+    let queryStartTime = new Date();
+    apiLogger.debug('Searching db for invitation record', {collection: 'invitations',operation: 'read'})
+  
+    let invitation = await Invitation.findOne({code});
+  
+    if(!invitation) {
+      apiLogger.debug('No invitation record found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
+  
+      return res
+        .status(400)
+        .json({ errors: [{msg: {title: 'Error', description: 'Invalid code submitted.' } }] })
+    }
+  
+    apiLogger.debug('Invitation record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+
     // Check if user exists
     queryStartTime = new Date();
     apiLogger.debug('Searching db for user record', {collection: 'users',operation: 'read'})
@@ -524,7 +489,6 @@ const editUserRoles = async (req, res) => {
 
   } catch (err) {
     apiLogger.error('Caught error');
-    console.log('err: ', err);
     return res.status(500).send('Server Error');
   }
 }
@@ -535,8 +499,8 @@ module.exports = {
   getUsersByCompany,
   getUsersByRole,
   getUsersByDepartment,
-  getUsersByDepartmentandRole,
+  getUsersByDepartmentAndRole,
   addCompanyToUser,
   addCompanyToUserWithCode,
-  editUserRoles
+  editUserRoles,
 }

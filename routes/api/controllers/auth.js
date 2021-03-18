@@ -2,11 +2,12 @@ const httpContext = require('express-http-context');
 const apiLogger = require('../../../config/loggers');
 const passport = require('passport');
 const sessionStore = require('../../../config/db');
+const mongoose = require('mongoose');
 
 
 // Login user
 const loginUser = (req, res, next) => {
-  console.log('res: ', res.statusCode);
+  console.log('mongoose: ', mongoose.Model.prototype);
   apiLogger.debug('User requesting authentication', {
     params: req.params || '',
     query: req.query || '',
