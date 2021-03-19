@@ -7,6 +7,22 @@ const Invitation = require('../models/Invitation');
 
 
 describe('API: User Route', () => {
+  const mockResponse = () => {
+    const res = {};
+    res.statusCode = '';
+    res.data = {}
+    res.status = ()=> {
+      return res
+    };
+    res.send = () => {
+      return res
+    };
+    res.json = () => {
+      return res
+    };
+    return res
+  }
+
   describe('Get request to /', () => {
     const mockRequestWithCompany = () => {
       const req = {};
@@ -23,22 +39,6 @@ describe('API: User Route', () => {
          _id: '604f7c8d31c4ab00aaca213d',
        }
        return req;
-    }
-
-    const mockResponse = () => {
-      const res = {};
-      res.statusCode = '';
-      res.data = {}
-      res.status = ()=> {
-        return res
-      };
-      res.send = () => {
-        return res
-      };
-      res.json = () => {
-        return res
-      };
-      return res
     }
 
     const mockUsers = () => {
@@ -137,22 +137,6 @@ describe('API: User Route', () => {
          _id: '604f7c8d31c4ab00aaca213d',
        }
        return req;
-    }
-
-    const mockResponse = () => {
-      const res = {};
-      res.statusCode = '';
-      res.data = {}
-      res.status = ()=> {
-        return res
-      };
-      res.send = () => {
-        return res
-      };
-      res.json = () => {
-        return res
-      };
-      return res
     }
 
     const mockUsers = () => {
@@ -304,22 +288,6 @@ describe('API: User Route', () => {
          _id: '604f7c8d31c4ab00aaca213d',
        }
        return req;
-    }
-
-    const mockResponse = () => {
-      const res = {};
-      res.statusCode = '';
-      res.data = {}
-      res.status = ()=> {
-        return res
-      };
-      res.send = () => {
-        return res
-      };
-      res.json = () => {
-        return res
-      };
-      return res
     }
 
     const mockUsers = () => {
@@ -489,22 +457,6 @@ describe('API: User Route', () => {
        return req;
     }
 
-    const mockResponse = () => {
-      const res = {};
-      res.statusCode = '';
-      res.data = {}
-      res.status = ()=> {
-        return res
-      };
-      res.send = () => {
-        return res
-      };
-      res.json = () => {
-        return res
-      };
-      return res
-    }
-
     const mockUsers = () => {
       return [
         {
@@ -641,22 +593,6 @@ describe('API: User Route', () => {
        return req;
     }
 
-    const mockResponse = () => {
-      const res = {};
-      res.statusCode = '';
-      res.data = {}
-      res.status = ()=> {
-        return res
-      };
-      res.send = () => {
-        return res
-      };
-      res.json = () => {
-        return res
-      };
-      return res
-    }
-
     const mockUser = () => {
       return {        
         firstName: 'fake',
@@ -731,22 +667,6 @@ describe('API: User Route', () => {
         password: '123456'
       }
        return req;
-    }
-
-    const mockResponse = () => {
-      const res = {};
-      res.statusCode = '';
-      res.data = {}
-      res.status = ()=> {
-        return res
-      };
-      res.send = () => {
-        return res
-      };
-      res.json = () => {
-        return res
-      };
-      return res
     }
 
     const mockUser = () => {
@@ -824,22 +744,6 @@ describe('API: User Route', () => {
         _id: 'fakeid29018302314'
       }
        return req;
-    }
-
-    const mockResponse = () => {
-      const res = {};
-      res.statusCode = '';
-      res.data = {}
-      res.status = ()=> {
-        return res
-      };
-      res.send = () => {
-        return res
-      };
-      res.json = () => {
-        return res
-      };
-      return res
     }
 
     let mockCompany = () => {
@@ -1140,34 +1044,8 @@ describe('API: User Route', () => {
       return req;
     }
 
-    const mockResponse = () => {
-      const res = {};
-      res.statusCode = '';
-      res.data = {}
-      res.status = ()=> {
-        return res
-      };
-      res.send = () => {
-        return res
-      };
-      res.json = () => {
-        return res
-      };
-      return res
-    }
-
-    let mockInvitation = () => {
-      return {
-        company: 'fake',
-    }
-    }
-
     let mockUser = () => {
       return new User({firstName: 'fake', lastName: 'name', email: 'faketest@mail.com', role: [{department: 'fake', worker: true, manager: true},{department: 'fake', worker: true, manager: true}]})
-    }
-
-    let mockUserWithCompany = () => {
-      return new User({firstName: 'fake', lastName: 'name', email: 'faketest@mail.com', company: '5fecbe9e983ade22d093cea7', role: [{department: 'fake', worker: true, manager: true}]})
     }
 
     const sandbox = sinon.createSandbox();
