@@ -12,7 +12,6 @@ const sanitizeBody = require('../../middleware/sanitizeBody');
 
 // Models
 const Company = require('../../models/Company');
-const User = require('../../models/User');
 
 // @route   GET api/companies
 // @desc    get Company
@@ -146,7 +145,7 @@ router.post(
 router.put(
   '/company/:companyId'
   ,
- [ userAuth,companyAuth,[
+ [ userAuth, companyAuth, sanitizeBody,[
     check('businessAddress.street', {title:'Error', description:'Street is required.'}).not().isEmpty(),
     check('businessAddress.aptSuite', {title:'Error', description:'Apt/Suite is required.'}).not().isEmpty(),
     check('businessAddress.city', {title:'Error', description:'City is required.'}).not().isEmpty(),

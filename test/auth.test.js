@@ -1,4 +1,4 @@
-const { getAuthUser, loginUser } = require('../routes/api/controllers/auth');
+const { getAuthUser, loginUser, passportUtils } = require('../routes/api/controllers/auth');
 const expect = require('chai').expect;
 const sinon = require('sinon');
 const passport = require('passport');
@@ -86,37 +86,55 @@ describe('API: Auth Route', () => {
     })
   })
 
-  // describe('Post request to /', () => {
-  //   const mockRequest = () => {
-  //     const req = {};
-  //     req.body = {
-  //       email: 'john@mail.com',
-  //       password: '123456'
-  //     }
-  //      return req;
-  //   }
+  describe('Post request to /', () => {
+    const mockRequest = () => {
+      const req = {};
+      req.body = {
+        email: 'john@mail.com',
+        password: '123456'
+      }
+       return req;
+    }
     
-  //   const mockResponse = () => {
-  //     const res = {};
-  //     res.statusCode = '';
-  //     res.data = {}
-  //     res.status = sinon.stub();
-  //     res.send = sinon.spy();
-  //     res.json = sinon.spy();
-  //     return res
-  //   }
+    const mockResponse = () => {
+      const res = {};
+      res.statusCode = '';
+      res.data = {}
+      res.status = sinon.stub();
+      res.send = sinon.spy();
+      res.json = sinon.spy();
+      return res
+    }
 
     
-  //   it('should login user', async () => {
-  //     let passportStub = sinon.stub(passport, 'authenticate').returns();
+    let sandbox = sinon.createSandbox();
+    let res = mockResponse();
+    const goodCode = 200
+    const badCode = 400
+    const errorCode = 500
 
-  //     let req = mockRequest();
-  //     let res = mockResponse();
-  //     let next = sinon.stub();
+    beforeEach =(function(){
+      sandbox.spy(res);
+    })
 
-  //     await loginUser(req,res,next)
-  //     expect(res.status.calledOnce).to.be.true;
-  //     passportS.restore();
-  //   }).timeout(10000)
-  // })
+    afterEach(function(){
+      sandbox.restore();
+    })
+
+    // stub passport callback
+    // stub passport authenticate to return callback
+    // stub session util to return true (deleted session)
+    
+    it('should login user', async () => {
+      let sessionUtilStub = sandbox.stub(passportUtils, 'deleteExistingSessions').returns(true);
+      let callbackStub = sandbox.stub(passportUtils, 'passportCallback').returns(this);
+      let passportStub = sandbox.stub(passport, 'authenticate').returns(callbackStub);
+
+      let req = mockRequest();
+      let next = sandbox.stub();
+
+      await loginUser(req,res,next)
+      expect(passportStub.calledOnce).to.be.true;
+    })
+  })
 })

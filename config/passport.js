@@ -14,6 +14,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 module.exports = function (passport) {
   passport.use(
     new LocalStrategy({ usernameField: 'email' }, async (username, password, done) => {
+      apiLogger.debug('applying local strategy (passport)')
       let queryStartTime = new Date();
       apiLogger.info('Searching DB for user', {collection: 'users',operation: 'read'})
       User.findOne({ email: username })
@@ -135,10 +136,12 @@ module.exports = function (passport) {
   )
   
   passport.serializeUser((user, done) => {
+    apiLogger.debug('serializing user (passport)');
     done(null, user.id);
   });
 
   passport.deserializeUser((id, done) => {
+    apiLogger.debug('deserializing user (passport)');
     User.findById(id).select('-local.hash -local.salt')
     .then(user => {done(null, user);}
     ).catch(err => done(err))

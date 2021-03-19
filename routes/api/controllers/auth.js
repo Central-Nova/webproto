@@ -2,19 +2,38 @@ const httpContext = require('express-http-context');
 const apiLogger = require('../../../config/loggers');
 const passport = require('passport');
 const sessionStore = require('../../../config/db');
-const mongoose = require('mongoose');
 
+const passportUtils = {
+  deleteExistingSessions: async (userId, sessionId) => {
+    apiLogger.debug('deleting existing sessions');;
+    const sessionsCollection = sessionStore.db.collection('sessions');
+    // Returns cursor for sessions containing user id
+    try {
+      let sessions = await sessionsCollection.find({session: new RegExp(userId)})
+  
+      if (sessions) {
+        sessions.toArray((a, sessionsData) => {
+          
+          // Loop through each item in sessions array. If it doesn't have the same session ID as the current session ID, then destroy the session
+          sessionsData.forEach((element, index) => {
+            if (element._id !== sessionId) {
+              sessionStore.destroy(element._id, (err, data) => {
+                if (err) {
+                } 
+              })
+            }
+          })
+        })
+      }
+  
+      return true
+    } catch (error) {
+      return false
+    }
+  },
 
-// Login user
-const loginUser = (req, res, next) => {
-  console.log('mongoose: ', mongoose.Model.prototype);
-  apiLogger.debug('User requesting authentication', {
-    params: req.params || '',
-    query: req.query || '',
-    body: req.body || ''
-  })
-  passport.authenticate('local', (err, user, info) => {
-
+  passportCallback: (req, res, next) => (err, user, info) => {
+    apiLogger.debug('begin passport authenticate (auth)');
     // Handle server error
     if (err) { 
       apiLogger.error('Server Error', {
@@ -34,56 +53,46 @@ const loginUser = (req, res, next) => {
       .json({ errors: [{ msg: {title:'Error', description:'Invalid Credentials' }}] })
     };
 
-      // Call passport login
-      req.logIn(user, (err) => {
-      if (err) { 
-        apiLogger.error('Passport login failed')
+    // Call passport login
+    req.logIn(user, (err) => {
+      apiLogger.debug('called req.logIn (auth)');
+    if (err) { 
+      apiLogger.error('Passport login failed')
       res
       .status(400)
       .json({ errors: [{ msg: {title:'Error', description:'Server Error' }}] });
-        return next(err); }
-      
-      return;
+      return next(err); 
+    }
+    return;
     });
+    
+    let sessionDeleteSuccess = passportUtils.deleteExistingSessions(req.user._id, req.session.id);
 
-  const sessionsCollection = sessionStore.db.collection('sessions');
-  // Returns cursor for sessions containing user id
-  sessionsCollection.find({session: new RegExp(req.user._id)}, (err, sessions) => {
-    if(sessions !== null) {
-
-      // Form an array from cursor
-      sessions.toArray((a, sessionsData) => {
-        
-        // Loop through each item in sessions array. If it doesn't have the same session ID as the current session ID, then destroy the session
-        sessionsData.forEach((element, index) => {
-          if (element._id !== req.session.id) {
-            sessionStore.destroy(element._id, (err, data) => {
-              if (err) {
-              } 
-            })
-          }
-        })
-      })
-    } else {
+    if (!sessionDeleteSuccess) {
       return res
       .status(400)
-      .json({ errors: [{ msg: {title:'Error', description:'Server Error' }}] })
+      .json({ errors: [{ msg: {title:'Error', description:'Server Error' }}] })    
     }
-  })
   
   // Remove local credentials of user from memory before returning
-  const reqUser = JSON.parse(JSON.stringify(req.user)) // hack
-  const cleanUser = Object.assign({}, reqUser)
-  if (cleanUser.local) {
-    delete cleanUser.local.hash;
-    delete cleanUser.local.salt;
-  }
-  apiLogger.debug('User successfully authenticated')
+  // let cleanUser = cleanUserObject(req.user);
+
+  apiLogger.debug('User successfully authenticated (auth)')
 
   return res
   .status(200)
   .json({msg: {title: 'Success', description: 'Logged in!'}})
-  })(req,res,next)
+}
+}
+
+// Login user
+const loginUser = (req, res, next) => {
+  apiLogger.debug('User requesting authentication', {
+    params: req.params || '',
+    query: req.query || '',
+    body: req.body || ''
+  })
+  passport.authenticate('local', passportUtils.passportCallback(req,res,next))(req,res,next)
 }
 
 // Return user object
@@ -117,5 +126,6 @@ const logout = (req,res) => {
 module.exports = {
   getAuthUser,
   logout,
-  loginUser
+  loginUser,
+  passportUtils
 }

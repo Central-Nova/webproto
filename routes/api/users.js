@@ -17,13 +17,7 @@ const userAuth = require('../../middleware/userAuth');
 const authorize = require('../../middleware/authorize');
 const invitationCheck = require('../../middleware/invitationCheck');
 const sanitizeBody = require('../../middleware/sanitizeBody');
-const httpContext = require('express-http-context');
 const validationHandler = require('../../middleware/validationHandler');
-
-// Models
-const User = require('../../models/User');
-const Company = require('../../models/Company');
-const Invitation = require('../../models/Invitation');
 
 
 // @route   GET api/users
