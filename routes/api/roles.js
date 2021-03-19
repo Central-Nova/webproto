@@ -49,7 +49,7 @@ router.get(
         apiLogger.info('Generating default company roles...')
         companyRoles = new Role({
           company: userCompany,
-          permissions: [...newRoles]
+          permissions: [...newRoles] 
         });
   
         await companyRoles.save();
