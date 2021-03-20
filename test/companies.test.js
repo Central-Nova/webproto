@@ -20,6 +20,20 @@ describe('API Company Route', () => {
     return res
   }
   
+  const sandbox = sinon.createSandbox();
+  let res = mockResponse();
+  const goodCode = 200;
+  const badCode = 400
+  const errorCode = 500
+
+  beforeEach(function() {
+    sandbox.spy(res);
+  })
+
+  afterEach(function() {
+    sandbox.restore();
+  })
+  
   describe('Get request to /', () => {
     const mockRequest = () => {
       const req = {};
@@ -34,19 +48,6 @@ describe('API Company Route', () => {
         name: 'fake name'
       }
     }
-
-    const sandbox = sinon.createSandbox();
-    let res = mockResponse();
-    const badCode = 400
-    const errorCode = 500
-
-    beforeEach(function() {
-      sandbox.spy(res);
-    })
-
-    afterEach(function() {
-      sandbox.restore();
-    })
 
     it('should return company record', async () => {
       let req = mockRequest();
@@ -101,20 +102,6 @@ describe('API Company Route', () => {
         ein: 10984023894124
       })
     }
-
-    const sandbox = sinon.createSandbox();
-    let res = mockResponse();
-    const goodCode = 200
-    const badCode = 400
-    const errorCode = 500
-
-    beforeEach(function() {
-      sandbox.spy(res);
-    })
-
-    afterEach(function() {
-      sandbox.restore();
-    })
 
     it('should create company if no existing company records are found', async () => {
       let req = mockRequest();
@@ -220,20 +207,6 @@ describe('API Company Route', () => {
 
     }
 
-    const sandbox = sinon.createSandbox();
-    let res = mockResponse();
-    const goodCode = 200
-    const badCode = 400
-    const errorCode = 500
-
-    beforeEach(function() {
-      sandbox.spy(res);
-    })
-
-    afterEach(function() {
-      sandbox.restore();
-    })
-
     it('should update company record and call res.send with company record', async () => {
       let req = mockRequest();
       let fakeCompany = mockCompany();
@@ -303,20 +276,6 @@ describe('API Company Route', () => {
         ]
       })
     }
-
-    const sandbox = sinon.createSandbox();
-    let res = mockResponse();
-    const goodCode = 200
-    const badCode = 400
-    const errorCode = 500
-
-    beforeEach(function() {
-      sandbox.spy(res);
-    })
-
-    afterEach(function() {
-      sandbox.restore();
-    })
 
     it('should update company record and call res.send with company record', async () => {
       let req = mockRequest();

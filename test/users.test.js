@@ -23,6 +23,22 @@ describe('API: User Route', () => {
     return res
   }
 
+  const sandbox = sinon.createSandbox();
+  let res = mockResponse();
+  let next = sandbox.stub();
+  const goodCode = 200;
+  const badCode = 400
+  const errorCode = 500
+
+
+  beforeEach(function() {
+    sandbox.spy(res);
+  })
+
+  afterEach(function() {
+    sandbox.restore();
+  })
+
   describe('Get request to /', () => {
     const mockRequestWithCompany = () => {
       const req = {};
@@ -53,21 +69,6 @@ describe('API: User Route', () => {
         },
       ]
     }
-
-    const sandbox = sinon.createSandbox();
-    let res = mockResponse();
-    let next = sandbox.stub();
-    const badCode = 400
-    const errorCode = 500
-
-
-    beforeEach(function() {
-      sandbox.spy(res);
-    })
-
-    afterEach(function() {
-      sandbox.restore();
-    })
 
     it('should call res.send with users', async () => {
       let users = mockUsers();
@@ -196,21 +197,6 @@ describe('API: User Route', () => {
         },
       ]
     }
-
-    const sandbox = sinon.createSandbox();
-    let res = mockResponse();
-    let next = sandbox.stub();
-    const badCode = 400
-    const errorCode = 500
-
-
-    beforeEach(function() {
-      sandbox.spy(res);
-    })
-
-    afterEach(function() {
-      sandbox.restore();
-    })
 
     it('should call res.send with users filtered by department', async () => {
       let users = mockUsers();
@@ -347,21 +333,6 @@ describe('API: User Route', () => {
         },
       ]
     }
-
-    const sandbox = sinon.createSandbox();
-    let res = mockResponse();
-    let next = sandbox.stub();
-    const badCode = 400
-    const errorCode = 500
-
-
-    beforeEach(function() {
-      sandbox.spy(res);
-    })
-
-    afterEach(function() {
-      sandbox.restore();
-    })
 
     it('should call res.send with users filtered by role', async () => {
       let users = mockUsers();
@@ -515,21 +486,6 @@ describe('API: User Route', () => {
       ]
     }
 
-    const sandbox = sinon.createSandbox();
-    let res = mockResponse();
-    let next = sandbox.stub();
-    const badCode = 400
-    const errorCode = 500
-
-
-    beforeEach(function() {
-      sandbox.spy(res);
-    })
-
-    afterEach(function() {
-      sandbox.restore();
-    })
-
     it('should call res.send with users filtered by department and role', async () => {
       let users = mockUsers();
       let filteredUsers = mockFilteredUsers();
@@ -601,22 +557,6 @@ describe('API: User Route', () => {
        }
       }
     
-
-    const sandbox = sinon.createSandbox();
-    let res = mockResponse();
-    const goodCode = 200
-    const badCode = 400
-    const errorCode = 500
-
-
-    beforeEach(function() {
-      sandbox.spy(res);
-    })
-
-    afterEach(function() {
-      sandbox.restore();
-    })
-
     it('should create user if no existing user is found', async () => {
       let req = mockRequest();
       // Stub db call to return user
@@ -676,21 +616,6 @@ describe('API: User Route', () => {
         email: 'faketest@mail.com',
        }
       }
-
-    const sandbox = sinon.createSandbox();
-    let res = mockResponse();
-    const goodCode = 200
-    const badCode = 400
-    const errorCode = 500
-
-
-    beforeEach(function() {
-      sandbox.spy(res);
-    })
-
-    afterEach(function() {
-      sandbox.restore();
-    })
 
     it('should create user if no existing user is found', async () => {
       let req = mockRequest();
@@ -761,19 +686,6 @@ describe('API: User Route', () => {
       return new User({firstName: 'fake', lastName: 'name', email: 'faketest@mail.com', company: '5fecbe9e983ade22d093cea7', role: [{department: 'fake', worker: true, manager: true}]})
     }
 
-    const sandbox = sinon.createSandbox();
-    let res = mockResponse();
-    const goodCode = 200
-    const badCode = 400
-    const errorCode = 500
-
-    beforeEach(function() {
-      sandbox.spy(res);
-    })
-
-    afterEach(function() {
-      sandbox.restore();
-    })
     it('should add company to user', async () => {
       let req = mockRequest();
       let fakeUser = mockUser();
@@ -917,20 +829,7 @@ describe('API: User Route', () => {
       return new User({firstName: 'fake', lastName: 'name', email: 'faketest@mail.com', company: '5fecbe9e983ade22d093cea7', role: [{department: 'fake', worker: true, manager: true}]})
     }
 
-    const sandbox = sinon.createSandbox();
-    let res = mockResponse();
-    const goodCode = 200
-    const badCode = 400
-    const errorCode = 500
-
-    beforeEach(function() {
-      sandbox.spy(res);
-    })
-
-    afterEach(function() {
-      sandbox.restore();
-    })
-    it('should add company to user', async () => {
+     it('should add company to user', async () => {
       let req = mockRequest();
       let fakeUser = mockUser();
       let fakeInvitation = mockInvitation();
@@ -1048,19 +947,6 @@ describe('API: User Route', () => {
       return new User({firstName: 'fake', lastName: 'name', email: 'faketest@mail.com', role: [{department: 'fake', worker: true, manager: true},{department: 'fake', worker: true, manager: true}]})
     }
 
-    const sandbox = sinon.createSandbox();
-    let res = mockResponse();
-    const goodCode = 200
-    const badCode = 400
-    const errorCode = 500
-
-    beforeEach(function() {
-      sandbox.spy(res);
-    })
-
-    afterEach(function() {
-      sandbox.restore();
-    })
     it('should update user roles and have the same number of user roles', async () => {
       let req = mockRequest();
       let fakeUser = mockUser();

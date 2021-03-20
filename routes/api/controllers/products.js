@@ -11,7 +11,6 @@ const getProducts = async (req, res) => {
     body: req.body || ''
   })
 
-
   let page = parseInt(req.query.page) || 0;
   let limit = parseInt(req.query.limit) || 0;
   let sort = req.query.sort || '';
@@ -45,6 +44,14 @@ const getProducts = async (req, res) => {
 
     let total = await Product.countDocuments({$and: [{company: req.user.company}, {$or: [{name: {$regex: searchRegex, $options: 'i'}}, {sku: {$regex: searchRegex, $options: 'i'}}]}]}).sort(sort);
 
+    if (!total) {
+      apiLogger.debug('No product records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
+
+      return res
+      .status(400)
+      .json({msg: { title: 'Error', description: 'No products found.'}})
+    }
+
     apiLogger.debug('Product records counted', {documents: total, responseTime: `${new Date() - queryStartTime}ms`})
     
     httpContext.set('resDocs', products.length);
@@ -76,9 +83,10 @@ const getProductById = async (req, res) => {
     let queryStartTime = new Date();
     apiLogger.info('Searching db for product by product id', {collection: 'products',operation: 'read'})
 
-    let product = await Product.findById(req.params.productId)
+    let product = await Product.findOne({company: req.user.company,_id: req.params.productId})
 
     if (!product) {
+      console.log('no product');
       apiLogger.debug('No product record found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
 
       return res
@@ -89,6 +97,7 @@ const getProductById = async (req, res) => {
 
     httpContext.set('resDocs', 1);
     apiLogger.info('Sending product record by id', {documents: 1})
+    console.log('end');
     return res.send(product);
     } catch (error) {
 
@@ -116,16 +125,18 @@ const createProduct = async (req,res) => {
     products
   } = req.body;
 
+  
+  try {
     // Price rules are optional. Check if exists
     // Check if units used in priceRules matches basePrice
-
+  
       product:
       for (let product of products) {
         if (product.priceRules) {
           rule:
           for(let i in product.priceRules) {
             let result = uniqueKeyHasValue(product.priceRules[i], 'unit', product.basePrice.unit)
-
+  
             if (result) {
               apiLogger.warn('Price rules unit name does not match base unit name')
               return res
@@ -136,8 +147,7 @@ const createProduct = async (req,res) => {
           }
         }
       }
-     
-  try {
+
     let updatedRecords = 0;
     let createdRecords = 0;
 
@@ -163,7 +173,7 @@ const createProduct = async (req,res) => {
       apiLogger.info('Product record created', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
 
   
-        // console.log('rawResult: ', rawResult)
+        console.log('rawResult: ', rawResult)
   
       if (rawResult.lastErrorObject.updatedExisting) {
         updatedRecords = updatedRecords + 1;
@@ -230,7 +240,7 @@ const editProduct = async (req,res) => {
       company: req.user.company,
       _id: req.params.productId
     });
-
+    console.log('product: ', product);
     if (!product) {
       apiLogger.warn('No product record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
       return res
