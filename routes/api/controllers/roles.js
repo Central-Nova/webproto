@@ -1,8 +1,8 @@
-const actionsBuyer = require('../../lib/actionsBuyer.json');
-const actionsSupplier = require('../../lib/actionsSupplier.json');
+const actionsBuyer = require('../../../lib/actionsBuyer.json');
+const actionsSupplier = require('../../../lib/actionsSupplier.json');
 const httpContext = require('express-http-context');
 
-const Role = require('../../models/Role');
+const Role = require('../../../models/Role');
 
 const getRoles =  async (req, res) => {
   apiLogger.debug('Requesting company roles data', {
@@ -36,6 +36,7 @@ const getRoles =  async (req, res) => {
       apiLogger.info('Default company roles created', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
       return res.status(200).json(companyRoles); 
     }
+
     httpContext.set('resDocs', 1);
     apiLogger.debug('Sending company roles')
 
@@ -62,13 +63,28 @@ const getRolesByDocument = async (req, res) => {
   try {
     
     // Check for existing role by company
-    
-    // Check if company ID is valid
     let queryStartTime = new Date();
     apiLogger.info('Searching db for company roles', {collection: 'roles',operation: 'read'})
-    let companyRoles = await Role.findOne({company: req.user.company})
+    let userCompany = req.user.company;
+    let companyRoles = await Role.findOne({company: userCompany})
     apiLogger.info('Company roles found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
 
+    if (!companyRoles) {
+      console.log('undefined roles');
+      apiLogger.warn('No company roles found')
+      // Build roles
+      let newRoles = userCompany.operation === 'buyer' ? actionsBuyer : actionsSupplier;
+
+      apiLogger.info('Generating default company roles...')
+      companyRoles = new Role({
+        company: userCompany,
+        permissions: [...newRoles] 
+      });
+
+      await companyRoles.save();
+      console.log('save called');
+      apiLogger.info('Default company roles created', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+    }
    
     // Filter only roles that match the document param
     filteredPermissions = companyRoles.permissions.filter(role => role.document.replace(' ','').toLowerCase() === req.params.document)
@@ -93,14 +109,12 @@ const editRoles = async (req, res) => {
     query: req.query
   })
 
-
   try {
 
     let queryStartTime = new Date();
     apiLogger.debug('Searching db for company roles', {collection: 'roles',operation: 'read'})
     let roles = await Role.findOne({company: req.user.company});
     apiLogger.debug('Company roles found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
-
     
     if (!roles) {
       apiLogger.warn('Roles could not be found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
