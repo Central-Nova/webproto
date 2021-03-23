@@ -45,7 +45,6 @@ const getRoles =  async (req, res) => {
 
   } catch (err) {
     apiLogger.error('Caught error')
-    console.log(err);
     return res.status(500).json({msg: {title: 'Error', description: 'Server error.'}});
   }
 }
@@ -95,7 +94,6 @@ const getRolesByDocument = async (req, res) => {
     apiLogger.debug('Sending company roles by document type')
     return res.send(companyRoles);
   } catch (err) {
-    console.log(err);
     apiLogger.error('Caught error');
     return res.status(500).json({msg: {title: 'Error', description: 'Server error.'}});
   }
@@ -142,7 +140,6 @@ const editRoles = async (req, res) => {
     return res.status(200).json({msg: {title: 'Success!', description: 'Roles have been updated.'}});
 
   } catch (err) {
-    console.log(err);
     apiLogger.error('Caught error');
     return res.status(500).send('Server Error');
   }

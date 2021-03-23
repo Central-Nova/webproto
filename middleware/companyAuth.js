@@ -10,13 +10,22 @@ module.exports = async (req, res, next) => {
 
   try {
     
-    // Check if company exists
-    await Company.findById(req.user.company)
+    // Check if product exists
+    let queryStartTime = new Date();
+    apiLogger.debug('Searching for company record in db', {collection: 'companies',operation: 'read'})
+    
+    let company = await Company.findById(req.user.company)
     apiLogger.debug('Verified company')
+
+    if (!company) {
+      apiLogger.warn('No product record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`}) 
+
+      return res.status(400).json({msg: {title: 'Error', description: 'Company could not be found.'}})
+    }
 
     next();
   } catch (err) {
     apiLogger.error('Caught error')
-    return res.status(400).json({msg: {title: 'Error', description: 'Company could not be found.'}})
+    return res.status(500).json({msg: {title: 'Error', description: 'Server Error.'}})
   }
 };

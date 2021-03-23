@@ -65,7 +65,6 @@ const getProducts = async (req, res) => {
     });
     
     } catch (error) {
-      console.log('error: ', error);
     return res.status(500).send('Server Error');
   }
 }
@@ -186,7 +185,6 @@ const createProduct = async (req,res) => {
     
   } catch (err) {
     apiLogger.error('Caught error');
-    console.log(err);
     return res.status(500).send('Server Error');
    
   }
@@ -270,7 +268,6 @@ const editProduct = async (req,res) => {
     .json({msg: {title: 'Success', description: 'Product details have been updated!'}})
     
   } catch (error) {
-    console.log(error);
     if (error.kind === 'ObjectId') {
       return res
       .status(400)

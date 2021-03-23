@@ -157,7 +157,6 @@ const editCompany = async (req, res) => {
     return res.send(company);
 
   } catch (err) {
-    console.log(err);
     apiLogger.error('Caught error')
 
     return res.status(500).json({msg: {title: 'Error', description: 'Server error.'}});
@@ -214,7 +213,6 @@ const addUserToCompany = async (req, res) => {
     ;
 
   } catch (err) {
-    console.log(err);
     apiLogger.error('Caught error');
     return res.status(500).json({msg: {title: 'Error', description: 'Server error.'}});
   }

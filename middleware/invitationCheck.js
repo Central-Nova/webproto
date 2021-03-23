@@ -15,6 +15,7 @@ module.exports = async (req, res, next) => {
       let isValid = invitation.expires.getTime() > now.getTime();
 
       if (!isValid) {
+        console.log('expired time')
         return res
         .status(400)
         .json({ errors: [{ msg: {title: 'Error', description: 'Invitation link is expired.'} }] });
@@ -22,8 +23,12 @@ module.exports = async (req, res, next) => {
 
       // Check if companyId matches invitation record
       isValid = invitation.company.toString() === companyId;
+      console.log('invitation company: ', invitation.company);
+      console.log('req.params: ', companyId);
 
       if (!isValid) {
+        console.log('wrong company')
+
         return res
         .status(400)
         .json({ errors: [{ msg: {title: 'Error', description: 'Invitation link is invalid.'} }] });
@@ -33,6 +38,8 @@ module.exports = async (req, res, next) => {
       isValid = invitation.email === email;
  
       if (!isValid) {
+        console.log('wrong email')
+
         return res
         .status(400)
         .json({ errors: [{ msg: {title: 'Error', description: 'Invitation link is for another user.'} }] });

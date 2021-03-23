@@ -17,7 +17,6 @@ const createInvitations = async (req,res) => {
     // Create invitation expiration
     let expires = new Date();
     expires.setHours(expires.getHours() + 24);
-    expires = expires.getTime();
 
     const code = generateCode(5);
     let invitation = new Invitation({
@@ -42,7 +41,6 @@ const createInvitations = async (req,res) => {
     return res.status(200).json({msg: { title: 'Success', description: 'Invitation email sent to users.'} })
     
   } catch (err) {
-    console.log(err);
     apiLogger.error('Caught error');
     return res.status(500).send('Server Error');
    

@@ -25,7 +25,6 @@ describe('API: User Route', () => {
 
   const sandbox = sinon.createSandbox();
   let res = mockResponse();
-  let next = sandbox.stub();
   const goodCode = 200;
   const badCode = 400
   const errorCode = 500
@@ -76,7 +75,7 @@ describe('API: User Route', () => {
       // Stub db call to return user
       let dbCall = sandbox.stub(User, 'find').returns({select:sandbox.stub().returns(users)})
 
-      await getUsersByCompany(req,res,next)
+      await getUsersByCompany(req,res)
       expect(dbCall.calledOnce).to.be.true;
       expect(res.send.calledOnce).to.be.true;
       expect(res.send.calledWith(users)).to.be.true;
@@ -87,7 +86,7 @@ describe('API: User Route', () => {
       // Stub db call to return undefined
       let dbCall = sandbox.stub(User, 'find').returns({select:sandbox.stub().returns(undefined)})
       
-      await getUsersByCompany(req,res,next)
+      await getUsersByCompany(req,res)
       expect(dbCall.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
@@ -99,7 +98,7 @@ describe('API: User Route', () => {
       // Stub db call to throw error
       let dbCall = sandbox.stub(User, 'find').returns({select:sandbox.stub()}).throws()
       
-      await getUsersByCompany(req,res,next)
+      await getUsersByCompany(req,res)
       expect(dbCall.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true
@@ -205,7 +204,7 @@ describe('API: User Route', () => {
       // Stub db call to return user
       let dbCall = sandbox.stub(User, 'find').returns({select:sandbox.stub().returns(users)})
 
-      await getUsersByDepartment(req,res,next)
+      await getUsersByDepartment(req,res)
       expect(dbCall.calledOnce).to.be.true;
       expect(res.send.calledOnce).to.be.true;
       expect(res.send.calledWith(filteredUsers)).to.be.true;
@@ -216,7 +215,7 @@ describe('API: User Route', () => {
       // Stub db call to return undefined
       let dbCall = sandbox.stub(User, 'find').returns({select:sandbox.stub().returns(undefined)})
       
-      await getUsersByDepartment(req,res,next)
+      await getUsersByDepartment(req,res)
       expect(dbCall.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
@@ -228,7 +227,7 @@ describe('API: User Route', () => {
       // Stub db call to throw error
       let dbCall = sandbox.stub(User, 'find').returns({select:sandbox.stub()}).throws()
       
-      await getUsersByDepartment(req,res,next)
+      await getUsersByDepartment(req,res)
       expect(dbCall.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true
@@ -236,7 +235,7 @@ describe('API: User Route', () => {
     it('should handle error when invalid department is used in req.params', async () => {
       let req = mockRequestWrongDepartment();
       
-      await getUsersByDepartment(req,res,next)
+      await getUsersByDepartment(req,res)
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true
     })
@@ -341,7 +340,7 @@ describe('API: User Route', () => {
       // Stub db call to return user
       let dbCall = sandbox.stub(User, 'find').returns({select:sandbox.stub().returns(users)})
 
-      await getUsersByRole(req,res,next)
+      await getUsersByRole(req,res)
       expect(dbCall.calledOnce).to.be.true;
       expect(res.send.calledOnce).to.be.true;
       expect(res.send.calledWith(filteredUsers)).to.be.true;
@@ -352,7 +351,7 @@ describe('API: User Route', () => {
       // Stub db call to return undefined
       let dbCall = sandbox.stub(User, 'find').returns({select:sandbox.stub().returns(undefined)})
       
-      await getUsersByRole(req,res,next)
+      await getUsersByRole(req,res)
       expect(dbCall.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
@@ -364,7 +363,7 @@ describe('API: User Route', () => {
       // Stub db call to throw error
       let dbCall = sandbox.stub(User, 'find').returns({select:sandbox.stub()}).throws()
       
-      await getUsersByRole(req,res,next)
+      await getUsersByRole(req,res)
       expect(dbCall.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true
@@ -373,7 +372,7 @@ describe('API: User Route', () => {
     it('should handle error when invalid role is used in req.params', async () => {
       let req = mockRequestWrongRole();
      
-      await getUsersByRole(req,res,next)
+      await getUsersByRole(req,res)
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true
     })
@@ -493,7 +492,7 @@ describe('API: User Route', () => {
       // Stub db call to return user
       let dbCall = sandbox.stub(User, 'find').returns({select:sandbox.stub().returns(users)})
 
-      await getUsersByDepartmentAndRole(req,res,next)
+      await getUsersByDepartmentAndRole(req,res)
       expect(dbCall.calledOnce).to.be.true;
       expect(res.send.calledOnce).to.be.true;
       expect(res.send.calledWith(filteredUsers)).to.be.true;
@@ -504,7 +503,7 @@ describe('API: User Route', () => {
       // Stub db call to return undefined
       let dbCall = sandbox.stub(User, 'find').returns({select:sandbox.stub().returns(undefined)})
       
-      await getUsersByDepartmentAndRole(req,res,next)
+      await getUsersByDepartmentAndRole(req,res)
       expect(dbCall.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
@@ -516,7 +515,7 @@ describe('API: User Route', () => {
       // Stub db call to throw error
       sandbox.stub(User, 'find').returns({select:sandbox.stub()}).throws()
       
-      await getUsersByDepartmentAndRole(req,res,next)
+      await getUsersByDepartmentAndRole(req,res)
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true
       })
@@ -524,7 +523,7 @@ describe('API: User Route', () => {
     it('should handle error when invalid role is used in req.params', async () => {
       let req = mockRequestWrongRole();
      
-      await getUsersByDepartmentAndRole(req,res,next)
+      await getUsersByDepartmentAndRole(req,res)
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true
     })
@@ -532,7 +531,7 @@ describe('API: User Route', () => {
     it('should handle error when invalid department is used in req.params', async () => {
       let req = mockRequestWrongDepartment();
      
-      await getUsersByDepartmentAndRole(req,res,next)
+      await getUsersByDepartmentAndRole(req,res)
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true
     })
