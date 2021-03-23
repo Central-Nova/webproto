@@ -1,4 +1,5 @@
 const apiLogger = require('../config/loggers');
+const User = require('../models/User');
 
 module.exports = async (req, res, next) => {
  
@@ -6,7 +7,23 @@ module.exports = async (req, res, next) => {
     apiLogger.warn('User has not been authenticated')
     return res.status(400).json({msg: {title: 'Error', description: 'You are have not been athenticated.'}})
   }
+
+  let queryStartTime = new Date();
+  apiLogger.info('Searching db for users by company', {collection: 'users',operation: 'read'})
+  
+  let user = await User.findById(req.user).select('-local.hash -local.salt')
+
+  if (!user) {
+    apiLogger.debug('No user records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
+    return res
+    .status(400)
+    .json({ errors: [{ msg: {title: 'Error', description: 'Invalid credentials.'} }] });
+  }
+
+  apiLogger.info('User record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+
   apiLogger.debug('User has been authenticated')
+
   next();
 
 };

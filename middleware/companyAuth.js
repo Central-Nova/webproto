@@ -22,6 +22,8 @@ module.exports = async (req, res, next) => {
 
       return res.status(400).json({msg: {title: 'Error', description: 'Company could not be found.'}})
     }
+    apiLogger.info('Company record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+
 
     next();
   } catch (err) {

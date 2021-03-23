@@ -46,6 +46,11 @@ describe('Middleware: companyAuth', () => {
     }
     return req;
   }
+  const mockCompany = () => {
+    return {
+      name: 'fakecompany129038'
+    }
+  }
   
   const sandbox = sinon.createSandbox();
   let res = mockResponse();
@@ -63,18 +68,22 @@ describe('Middleware: companyAuth', () => {
   it('should call next if company exists', async () => {
     let req = mockRequest();
     let next = sandbox.stub();
-    let dbCompanyCall = sandbox.stub(Company, 'findById').callsFake(() => Promise.resolve(this))
+    let fakeCompany = mockCompany();
+    let dbCompanyCall = sandbox.stub(Company, 'findById').returns(fakeCompany);
     
     await companyAuth(req,res,next);
     expect(dbCompanyCall.calledOnce).to.be.true;
     expect(next.calledOnce).to.be.true;
   })
+  
   it('should handle error if req.user.company is undefined', async () => {
     let req = mockRequestUndefined();
     let next = sandbox.stub();
+    let dbCompanyCall = sandbox.stub(Company, 'findById').returns(undefined);
 
     await companyAuth(req,res,next);
     expect(next.callCount).to.be.equal(0);
+    expect(dbCompanyCall.callCount).to.be.equal(0);
     expect(res.status.calledOnce).to.be.true;
     expect(res.status.calledWith(badCode)).to.be.true;
     expect(res.json.calledOnce).to.be.true;
@@ -82,9 +91,11 @@ describe('Middleware: companyAuth', () => {
   it('should handle error if req.user.company is null', async () => {
     let req = mockRequestNull();
     let next = sandbox.stub();
+    let dbCompanyCall = sandbox.stub(Company, 'findById').returns(undefined);
 
     await companyAuth(req,res,next);
     expect(next.callCount).to.be.equal(0);
+    expect(dbCompanyCall.callCount).to.be.equal(0);
     expect(res.status.calledOnce).to.be.true;
     expect(res.status.calledWith(badCode)).to.be.true;
     expect(res.json.calledOnce).to.be.true;
