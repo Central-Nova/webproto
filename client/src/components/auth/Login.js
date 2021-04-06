@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 // Actions
 import { loginUser, loadUser } from '../../actions/auth';
 
-const Login = ({ loginUser, isAuthenticated, user, company }) => {
+export const Login = ({ loginUser, isAuthenticated, user, company }) => {
 
   const [ formData, setFormData ] = useState({
     email: '',
@@ -59,7 +59,9 @@ const Login = ({ loginUser, isAuthenticated, user, company }) => {
         <section className="landing-form-container">
         <i className="logo-landing fas fa-warehouse fa-5x text-primary"></i>
         <h1 className="text-medium">Sign Into Your Account</h1>
-        <form className="form mx-4">
+        <form 
+        data-testid='login-form'
+        className="form mx-4">
           <div className="form form-item">
             <input
               type="email"
@@ -82,7 +84,7 @@ const Login = ({ loginUser, isAuthenticated, user, company }) => {
           </div>
         </form>
         <div className="button-container my-1">
-        <button onClick={e => onSubmit(e)} className="btn btn-large btn-primary mx-4">Sign In</button>
+        <button data-testid='local-login-btn' onClick={e => onSubmit(e)} className="btn btn-large btn-primary mx-4">Sign In</button>
 
           <div className="separator">or</div>
           <a className="btn btn-large btn-light mx-4" onClick={e=> onGoogleClick(e)} href='http://localhost:5000/api/auth/google/login'
@@ -99,7 +101,6 @@ const Login = ({ loginUser, isAuthenticated, user, company }) => {
 
 Login.propTypes = {
   loginUser: PropTypes.func.isRequired,
-  loadUser: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   user: PropTypes.object.isRequired,
   company: PropTypes.object.isRequired,

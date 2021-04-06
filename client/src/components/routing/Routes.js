@@ -33,30 +33,34 @@ import Role from '../userSettings/role/Role';
 const Routes = (props) => {
   return (
     <Fragment>
-    <AlertBox/>
-    <Switch>
-      <Route exact path='/register' component={Register}/>
-      <Route exact path='/login' component={Login}/>
-      <SetupRoute exact path='/company' component={SetupMain}/>
-      <SetupRoute exact path='/create-company' component={CreateCompany}/>
-      <SetupRoute path='/create-account/:account' component={AddAccounts}/>
-      <SetupRoute exact path='/create-team' component={CreateTeam}/>
-      <SetupRoute exact path='/company-join' component={SetupJoin}/>
-      <PrivateRoute exact path='/dashboard' component={Dashboard}/>
+      <AlertBox/>
+      <Switch>
+        {/* Auth */}
+        <Route exact path='/register' component={Register}/>
+        <Route exact path='/login' component={Login}/>
 
-      {/* Settings */}
-      <PrivateRoute exact path='/users' component={Users}/>
-      <PrivateRoute path='/user/:userId' component={User}/>
-      <PrivateRoute exact path='/roles' component={Roles}/>
-      <PrivateRoute path='/role/:department' component={Role}/>
+        {/* Setup */}
+        <SetupRoute exact path='/company' component={SetupMain}/>
+        <SetupRoute exact path='/create-company' component={CreateCompany}/>
+        <SetupRoute path='/create-account/:account' component={AddAccounts}/>
+        <SetupRoute exact path='/create-team' component={CreateTeam}/>
+        <SetupRoute exact path='/company-join' component={SetupJoin}/>
 
-      {/* Products */}
-      <PrivateRoute exact path='/products' component={Products}/>
-      <PrivateRoute path='/product/:productId' component={withRouter(Product)}/>
-      <PrivateRoute path='/create-product' component={CreateProduct}/>
-      <PrivateRoute path='/edit-product/:productId' component={EditProduct}/>
-      
-    </Switch>
+        {/* Dashboard */}
+        <PrivateRoute exact path='/dashboard' component={Dashboard}/>
+
+        {/* Settings */}
+        <PrivateRoute exact path='/users' component={Users}/>
+        <PrivateRoute path='/user/:userId' component={User}/>
+        <PrivateRoute exact path='/roles' component={Roles}/>
+        <PrivateRoute path='/role/:department' component={Role}/>
+
+        {/* Products */}
+        <PrivateRoute exact path='/products' component={Products}/>
+        <PrivateRoute path='/product/:productId' component={withRouter(Product)}/>
+        <PrivateRoute path='/create-product' component={CreateProduct}/>
+        <PrivateRoute path='/edit-product/:productId' component={EditProduct}/>
+      </Switch>
     </Fragment>
   )
 }

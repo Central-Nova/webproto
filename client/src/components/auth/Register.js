@@ -8,11 +8,12 @@ import { register } from '../../actions/auth';
 import { setAlert } from '../../actions/alert';
 
 
-const Register = ({ setAlert, register, isAuthenticated, user, registered }) => {
+export const Register = ({ setAlert, register, isAuthenticated, user, registered }) => {
 
 
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     password2: ''
@@ -58,7 +59,9 @@ const Register = ({ setAlert, register, isAuthenticated, user, registered }) => 
         <section className="landing-form-container">
         <i className="logo-landing fas fa-warehouse fa-5x text-primary"></i>
         <h1 className="text-medium">Register Your Account</h1>
-        <form className="form mx-4">
+        <form 
+        data-testid='register-form'
+        className="form mx-4">
           <div className="form form form-item">
             <input
               type="text"
@@ -111,8 +114,8 @@ const Register = ({ setAlert, register, isAuthenticated, user, registered }) => 
           </div>
         </form>
         <div className="button-container my-1">
-        <button onClick={e=> onSubmit(e)} className="btn btn-large btn-primary mx-4"
-            >Sign Up</button>
+        <button data-testid='local-signup-btn' onClick={e=> onSubmit(e)} className="btn btn-large btn-primary mx-4">
+        Sign Up</button>
           <div className="separator">or</div>
           <a className="btn btn-large btn-light mx-4" href="http://localhost:5000/api/auth/google/register"
             ><i className="fab fa-google mx-1"></i>Sign Up with Google</a>
