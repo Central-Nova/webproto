@@ -42,7 +42,6 @@ export default function (state=initialState, action) {
         allProducts: {
           loading: false,
           data: payload
-
         }
       }
 
@@ -61,8 +60,14 @@ export default function (state=initialState, action) {
     case PRODUCTS_ERROR:
       return {
         ...state,
-        loading: false,
-        productsData: null
+        filteredProducts: {
+          loading: false,
+          data: null
+        },
+        allProducts: {
+          loading: false,
+          data: null
+        }
       }
       
     default:

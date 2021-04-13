@@ -33,6 +33,7 @@ export default function (state = initialState, action) {
     case USERS_UPDATED:
       return {
         ...state,
+        loading: false,
         updated: true
       }
     case USERS_READY: 

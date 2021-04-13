@@ -2,7 +2,7 @@ import {
   COMPANY_LOADED,
   COMPANY_SUCCESS,
   COMPANY_ERROR,
-  CLEAR_COMPANY
+  COMPANY_CLEARED
 } from '../actions/types';
 
 const initialState = {
@@ -22,7 +22,7 @@ export default function (state = initialState, action) {
         profile: payload
       }
     case COMPANY_ERROR:
-    case CLEAR_COMPANY:
+    case COMPANY_CLEARED:
       return {
         ...state,
         loading: false,
