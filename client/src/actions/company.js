@@ -11,8 +11,6 @@ import {
 
 // Create company record
 export const addAccountToCompany = (formData) => async dispatch => {
-  console.log('running addAccountToCompany');
-  console.log('formData: ', formData);
   const { account, company } = formData;
 
   try {
@@ -31,11 +29,8 @@ export const addAccountToCompany = (formData) => async dispatch => {
     dispatch(setAlert({title: 'Success', description: `${account.charAt(0).toUpperCase() + account.slice(1)} account information added.`}, 'success'));
 
   } catch (err) {
-
-    console.log('company err: ', err);
     
     const errors = err.response.data.errors;
-    console.log('company errors: ', errors)
     
     // Loop through errors array and call setAlert to display error message in alert box.
     if (errors) {
@@ -45,10 +40,8 @@ export const addAccountToCompany = (formData) => async dispatch => {
     // Set state.company.profile to null
     dispatch({
       type: COMPANY_ERROR,
-      payload: {msg: err.response.statusText, status: err.response.status}
     })
   }
- 
 };
 
 
@@ -61,7 +54,6 @@ export const createCompany = (formData) => async dispatch => {
         'Content-Type': 'application/json'
       }
     };
-
 
     // Creates company record, gets back companyId in res.data
     const res = await axios.post('/api/companies', formData, config);
@@ -76,11 +68,8 @@ export const createCompany = (formData) => async dispatch => {
     dispatch(loadCompany())
     
   } catch (err) {
-    
-    console.log('company err: ', err);
-    
+   
     const errors = err.response.data.errors;
-    console.log('company errors: ', errors)
     
     // Loop through errors array and call setAlert to display error message in alert box.
     if (errors) {
@@ -90,18 +79,16 @@ export const createCompany = (formData) => async dispatch => {
     // Set state.company.profile to null
     dispatch({
       type: COMPANY_ERROR,
-      payload: {msg: err.response.statusText, status: err.response.status}
     })
   }
 };
 
-// Load company record by
+// Load company record
 export const loadCompany = () => async (dispatch) => {
-console.log('load company');
   try {
     // Get company record
     const res = await axios.get('/api/companies');
-
+    
     // Set state.company.profile to hold company record
     dispatch({
       type: COMPANY_LOADED,
@@ -109,8 +96,6 @@ console.log('load company');
     });
 
   } catch (err) {
-
-    console.log(err);
 
     // Set state.company.profile to null
     dispatch({
@@ -124,7 +109,6 @@ console.log('load company');
 export const addCompanyToUser = (companyId) => async (dispatch) => {
 
   try {
-
     // Add the companyId to user record
     await axios.put(`/api/users/company/${companyId}`);
 
@@ -134,7 +118,6 @@ export const addCompanyToUser = (companyId) => async (dispatch) => {
   } catch (err) {
 
     const errors = err.response.data.errors;
-    console.log('err.response: ',err.response);
 
     //  Loop through errors array and call setAlert to display error message in alert box.
     if (errors) {
@@ -145,7 +128,6 @@ export const addCompanyToUser = (companyId) => async (dispatch) => {
     dispatch({
       type: AUTH_ERROR
     });
-
 
   }
 }

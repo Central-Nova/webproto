@@ -45,5 +45,8 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://webserver"
+  "proxy": "http://webserver",
+  "devDependencies": {
+    "redux-mock-store": "^1.5.4"
+  }
 }

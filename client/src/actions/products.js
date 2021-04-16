@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { 
+import {
   PRODUCTS_LOADED,
   PRODUCTS_FILTERED_LOADED,
   PRODUCT_BY_ID_LOADED,
@@ -19,9 +19,9 @@ export const loadProductById = (productId) => async (dispatch) => {
     // Set state.products.filteredProducts
     dispatch({
       type: PRODUCT_BY_ID_LOADED,
-      payload: res.data 
+      payload: res.data
     })
-    
+
   } catch (error) {
 
     // Set state.products to null
@@ -53,9 +53,9 @@ export const loadFilteredProducts = (page, limit, sort, search) => async (dispat
     // Set state.products.filteredProducts
     dispatch({
       type: PRODUCTS_FILTERED_LOADED,
-      payload: res.data 
+      payload: res.data
     })
-    
+
   } catch (error) {
 
     // Set state.products to null
@@ -73,9 +73,9 @@ export const loadAllProducts = () => async (dispatch) => {
     // Set state.products.allProducts
     dispatch({
       type: PRODUCTS_LOADED,
-      payload: res.data 
+      payload: res.data
     })
-    
+
   } catch (error) {
 
     // Set state.products
@@ -87,22 +87,20 @@ export const loadAllProducts = () => async (dispatch) => {
 
 // Create Product
 export const createProduct = (formData) => async (dispatch) => {
-
-
   try {
 
     const config = {
       headers: {
         'Content-Type': 'application/json'
       }
-    };    
-    
+    };
+
     const res = await axios.post('/api/products', formData, config);
 
     // Set state.products.
     setTimeout(() => dispatch({type: PRODUCTS_ACTION_SUCCESS}), 500)
     dispatch(setAlert(res.data.msg, 'success'))
-    
+
   } catch (err) {
 
     const errors = err.response.data.errors;
@@ -115,4 +113,4 @@ export const createProduct = (formData) => async (dispatch) => {
 export const clearProductSubmission = () => async (dispatch) => {
 
   setTimeout(() => dispatch({type: PRODUCTS_ACTION_CLEARED}), 100)
-} 
+}
