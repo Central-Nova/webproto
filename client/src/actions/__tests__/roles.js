@@ -111,6 +111,7 @@ describe('Roles Action Creators', () => {
       await store.dispatch(loadRolesByDocument(document));
       const actions = store.getActions();
       expect(axios.get).toHaveBeenCalledTimes(1);
+      expect(axios.get.mock.calls[0][0]).toContain(document);
       expect(actions[0]).toEqual(expectedActions.loaded);
     }),
     test('dispatches roles error', async () => {
@@ -126,6 +127,7 @@ describe('Roles Action Creators', () => {
       await store.dispatch(loadRolesByDocument(document));
       const actions = store.getActions();
       expect(axios.get).toHaveBeenCalledTimes(1);
+      expect(axios.get.mock.calls[0][0]).toContain(document);
       expect(actions[0]).toEqual(expectedActions.error);
     })
   }),
@@ -199,10 +201,12 @@ describe('Roles Action Creators', () => {
       axios.get = jest.fn()
       .mockImplementationOnce(() => Promise.resolve(res.getRoles));
       const store = mockStore({})
-      await store.dispatch(updateCompanyRoles(permissionsData, companyId, department));
+      await store.dispatch(updateCompanyRoles(permissionsData, department));
       const actions = store.getActions();
       console.log(actions)
       expect(axios.put).toHaveBeenCalledTimes(1);
+      expect(axios.put.mock.calls[0][1].permissions).toEqual(permissionsData);
+      expect(axios.put.mock.calls[0][0]).toContain(department);
       expect(axios.get).toHaveBeenCalledTimes(1);
       expect(actions[0]).toEqual(expectedActions.setAlert);
       expect(actions[1]).toEqual(expectedActions.loadRoles);
@@ -213,29 +217,60 @@ describe('Roles Action Creators', () => {
           response: {
             data: {
               errors: [
-                {msg: {title: 'Error', description: 'You are not authorized to do that'}}
+                {msg: {title: 'Error', description: 'You are not authorized to do that'}},                
+                {msg: {title: 'Error', description: 'Please log in'}},
               ]
             }
           }
         }
       }
       const expectedActions = {
-        setAlert: {
+        setAlert1: {
           type: SET_ALERT,
           payload: {
             msg: res.putRoles.response.data.errors[0].msg,
             alertType: 'danger',
             id: expect.any(String)
           }
+        },
+        setAlert2: {
+          type: SET_ALERT,
+          payload: {
+            msg: res.putRoles.response.data.errors[1].msg,
+            alertType: 'danger',
+            id: expect.any(String)
+          }
         }
       }
+      const permissionsData = [
+        {
+          department: 'Sales', 
+          document: 'Sales Quote',
+          action: 'Create',
+          worker: true,
+          manager: true
+        },
+        {
+          department: 'Sales', 
+          document: 'Sales Quote',
+          action: 'Edit',
+          worker: false,
+          manager: true
+        }
+      ]
+      const companyId = 'fake0918231309'
+      const department = 'Sales'
+
       axios.put = jest.fn()
       .mockImplementationOnce(() => Promise.reject(res.putRoles));
       const store = mockStore({})
-      await store.dispatch(updateCompanyRoles());
+      await store.dispatch(updateCompanyRoles(permissionsData, department));
       const actions = store.getActions();
       expect(axios.put).toHaveBeenCalledTimes(1);
-      expect(actions[0]).toEqual(expectedActions.setAlert);
+      expect(axios.put.mock.calls[0][1].permissions).toEqual(permissionsData);
+      expect(axios.put.mock.calls[0][0]).toContain(department);
+      expect(actions[0]).toEqual(expectedActions.setAlert1);
+      expect(actions[1]).toEqual(expectedActions.setAlert2);
     })
   })
 })

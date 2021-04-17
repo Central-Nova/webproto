@@ -44,7 +44,6 @@ export const loadFilteredProducts = (page, limit, sort, search) => async (dispat
     searchString = searchArray.toString();
   }
 
-
   try {
     const res = await axios.get(`/api/products?page=${page}&limit=${limit}&sort=${sort}&search=${searchString}`);
 

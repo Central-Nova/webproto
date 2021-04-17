@@ -71,6 +71,7 @@ describe('Products Action Creators', () => {
       jest.runAllTimers();
       const actions = store.getActions();
       expect(axios.post).toHaveBeenCalledTimes(1);
+      expect(axios.post.mock.calls[0]).toContain(formData);
       expect(actions[0]).toEqual(expectedActions.setAlert);
       expect(actions[1]).toEqual(expectedActions.actionSuccess);
     }),
@@ -80,19 +81,9 @@ describe('Products Action Creators', () => {
           response: {
             data: {
               errors: [
-                {
-                  msg: {
-                    title: 'Error',
-                    description: 'SKU is required'
-                  }
-                },
-                {
-                  msg: {
-                    title: 'Error',
-                    description: 'description is required'
-                  }
-                }
-              ]
+                {msg: {title: 'Error',description: 'SKU is required'}},
+                {msg: {title: 'Error',description: 'Description is required'}},
+               ]
             }
           }
         }
@@ -134,6 +125,7 @@ describe('Products Action Creators', () => {
       await store.dispatch(createProduct(formData))
       const actions = store.getActions();
       expect(axios.post).toHaveBeenCalledTimes(1);
+      expect(axios.post.mock.calls[0]).toContain(formData);
       expect(actions[0]).toEqual(expectedActions.setAlert1);
       expect(actions[1]).toEqual(expectedActions.setAlert2);
     })
@@ -199,14 +191,22 @@ describe('Products Action Creators', () => {
           payload: res.getProducts.data
         },
       }
+      let page = 0
+      let limit = 5
+      let sort = 'sku'
+      let search = [['sku-210938', 'ex product a'],['sku-029834', 'ex product b']]
 
       axios.get = jest.fn()
       .mockImplementationOnce(() => Promise.resolve(res.getProducts))
       const store = mockStore({})
-      await store.dispatch(loadFilteredProducts())
+      await store.dispatch(loadFilteredProducts(page, limit, sort, search))
       const actions = store.getActions();
       expect(axios.get).toHaveBeenCalledTimes(1);
+      expect(axios.get.mock.calls[0][0]).toContain(page);
+      expect(axios.get.mock.calls[0][0]).toContain(limit);
+      expect(axios.get.mock.calls[0][0]).toContain(sort);
       expect(actions[0]).toEqual(expectedActions.loaded);
+      search.forEach(array => array.forEach(item => expect(axios.get.mock.calls[0][0]).toContain(item)))
     }),
     test('dispatches products error on error', async () => {
       const expectedActions = {
@@ -214,14 +214,23 @@ describe('Products Action Creators', () => {
           type: PRODUCTS_ERROR,
         },
       }
+      let page = 0
+      let limit = 5
+      let sort = 'sku'
+      let search = [['sku-210938', 'ex product a'],['sku-029834', 'ex product b']]
+
 
       axios.get = jest.fn()
       .mockImplementationOnce(() => Promise.reject())
       const store = mockStore({})
-      await store.dispatch(loadAllProducts())
+      await store.dispatch(loadFilteredProducts(page, limit, sort, search))
       const actions = store.getActions();
       expect(axios.get).toHaveBeenCalledTimes(1);
+      expect(axios.get.mock.calls[0][0]).toContain(page);
+      expect(axios.get.mock.calls[0][0]).toContain(limit);
+      expect(axios.get.mock.calls[0][0]).toContain(sort);
       expect(actions[0]).toEqual(expectedActions.error);
+      search.forEach(array => array.forEach(item => expect(axios.get.mock.calls[0][0]).toContain(item)))
     })
   }),
   describe('loadProductById', () => {
@@ -241,13 +250,15 @@ describe('Products Action Creators', () => {
           payload: res.getProducts.data
         },
       }
+      const productId = 'fake901820398213'
 
       axios.get = jest.fn()
       .mockImplementationOnce(() => Promise.resolve(res.getProducts))
       const store = mockStore({})
-      await store.dispatch(loadProductById())
+      await store.dispatch(loadProductById(productId))
       const actions = store.getActions();
       expect(axios.get).toHaveBeenCalledTimes(1);
+      expect(axios.get.mock.calls[0][0]).toContain(productId)
       expect(actions[0]).toEqual(expectedActions.loaded);
     }),
     test('dispatches products error on error', async () => {
@@ -256,13 +267,15 @@ describe('Products Action Creators', () => {
           type: PRODUCTS_ERROR,
         },
       }
+      const productId = 'fake901820398213'
 
       axios.get = jest.fn()
       .mockImplementationOnce(() => Promise.reject())
       const store = mockStore({})
-      await store.dispatch(loadProductById())
+      await store.dispatch(loadProductById(productId))
       const actions = store.getActions();
       expect(axios.get).toHaveBeenCalledTimes(1);
+      expect(axios.get.mock.calls[0][0]).toContain(productId)
       expect(actions[0]).toEqual(expectedActions.error);
     })
   })

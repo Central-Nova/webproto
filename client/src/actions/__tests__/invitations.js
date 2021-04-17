@@ -65,6 +65,7 @@ describe('Invitation Action Creators', () => {
       jest.runAllTimers();
       const actions = store.getActions();
       expect(axios.post).toHaveBeenCalledTimes(1);
+      expect(axios.post.mock.calls[0]).toContain(formData);
       expect(actions[0]).toEqual(expectedActions.sentInvitations);
       expect(actions[1]).toEqual(expectedActions.setAlert);
       expect(actions[2]).toEqual(expectedActions.clearInvitations);
@@ -75,22 +76,26 @@ describe('Invitation Action Creators', () => {
           response: {
             data: {
               errors: [
-                {
-                  msg: {
-                    title: 'Error',
-                    description: 'Invalid email'
-                  }
-                }
+                {msg: {title: 'Error', description: 'Invalid email'}},
+                {msg: {title: 'Error', description: 'Invalid password'}},
               ]
             }
           }
         }
       }
       const expectedActions = {
-        setAlert: {
+        setAlert1: {
           type: SET_ALERT,
           payload: {
             msg: res.postInvitations.response.data.errors[0].msg,
+            alertType: 'danger',
+            id: expect.any(String)
+          }
+        },
+        setAlert2: {
+          type: SET_ALERT,
+          payload: {
+            msg: res.postInvitations.response.data.errors[1].msg,
             alertType: 'danger',
             id: expect.any(String)
           }
@@ -110,7 +115,9 @@ describe('Invitation Action Creators', () => {
       await store.dispatch(createInvitations(formData));
       const actions = store.getActions();
       expect(axios.post).toHaveBeenCalledTimes(1);
-      expect(actions[0]).toEqual(expectedActions.setAlert);
+      expect(axios.post.mock.calls[0]).toContain(formData);
+      expect(actions[0]).toEqual(expectedActions.setAlert1);
+      expect(actions[1]).toEqual(expectedActions.setAlert2);
     })
   })
 })

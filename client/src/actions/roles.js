@@ -58,7 +58,7 @@ export const loadRolesByDocument = (document) => async (dispatch) => {
 }
 
 
-export const updateCompanyRoles = (permissionsData, companyId, department) => async (dispatch) => {
+export const updateCompanyRoles = (permissionsData, department) => async (dispatch) => {
 
   try {
 
@@ -70,7 +70,7 @@ export const updateCompanyRoles = (permissionsData, companyId, department) => as
 
     const res = await axios.put(`/api/roles/department/${department}`, {permissions: permissionsData}, config);
 
-    dispatch(loadRoles(companyId));
+    dispatch(loadRoles());
 
     dispatch(setAlert(res.data.msg,'success'))
 

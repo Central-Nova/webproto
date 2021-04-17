@@ -23,7 +23,7 @@ export const logoutUser = () => (dispatch) => {
     type: LOGOUT,
   })
 
-  // Clears state.company.profile 
+  // Clears state.company.profile
   dispatch({
     type: COMPANY_CLEARED
   })
@@ -71,7 +71,6 @@ export const register = (formData) => async (dispatch) => {
 //Login User
 export const loginUser = (formData) => async (dispatch) => {
 
-  const { email, password } = formData;
   const config = {
     headers: {
       'Content-Type': 'application/json'
@@ -79,17 +78,17 @@ export const loginUser = (formData) => async (dispatch) => {
   };
 
   try {
-   let res = await axios.post('/api/auth', {email, password}, config);
+   let res = await axios.post('/api/auth', formData, config);
 
     //  Set state.auth.isAuthenticated to true
     dispatch({
       type: LOGIN_SUCCESS,
     });
-   
+
     //  Call setAlert to display success message in alert box.
     dispatch(setAlert(res.data.msg,'success'))
 
-    //  Load user to state.auth.user 
+    //  Load user to state.auth.user
     dispatch(loadUser());
 
   } catch (err) {
@@ -137,4 +136,3 @@ export const loadUser = () => async (dispatch) => {
     });
   }
 };
-

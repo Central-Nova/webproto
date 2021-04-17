@@ -70,19 +70,27 @@ describe('Auth Action Creators', () => {
         getUser: {
           response: {
             data: {
-              errors: [{msg:
-                {title: 'Error', description: 'User has not authenticated'}}
+              errors: [
+                {msg: {title: 'Error', description: 'User has not authenticated'}},
+                {msg: {title: 'Error', description: 'Please log in.'}},
               ]
             }
           }
         },
       }
-
       const expectedActions = {
-        setAlert: {
+        setAlert1: {
           type: SET_ALERT,
           payload: {
             msg: res.getUser.response.data.errors[0].msg,
+            alertType: 'danger',
+            id: expect.any(String)
+          }
+        },
+        setAlert2: {
+          type: SET_ALERT,
+          payload: {
+            msg: res.getUser.response.data.errors[1].msg,
             alertType: 'danger',
             id: expect.any(String)
           }
@@ -91,18 +99,16 @@ describe('Auth Action Creators', () => {
           type: AUTH_ERROR
         }
       }
-
       axios.get = jest.fn()
       .mockImplementationOnce(() => Promise.reject(res.getUser))
-
-
       const store = mockStore({})
         
       await store.dispatch(loadUser())
       let actions = store.getActions();
       expect(axios.get).toHaveBeenCalledTimes(1);
-      expect(actions[0]).toEqual(expectedActions.setAlert)
-      expect(actions[1]).toEqual(expectedActions.authError);
+      expect(actions[0]).toEqual(expectedActions.setAlert1)
+      expect(actions[1]).toEqual(expectedActions.setAlert2)
+      expect(actions[2]).toEqual(expectedActions.authError);
       
     })
   }),
@@ -165,6 +171,7 @@ describe('Auth Action Creators', () => {
       await store.dispatch(loginUser(formData))
       const actions = store.getActions();
       expect(axios.post).toHaveBeenCalledTimes(1);
+      expect(axios.post.mock.calls[0]).toContain(formData);
       expect(axios.get).toHaveBeenCalledTimes(2);
       expect(actions[0]).toEqual(expectedActions.loginUser)
       expect(actions[1]).toEqual(expectedActions.setAlert)
@@ -175,8 +182,9 @@ describe('Auth Action Creators', () => {
         postAuth: {
           response: {
             data: {
-              errors: [{msg:
-                {title: 'Error', description: 'Email is required'}}
+              errors: [
+                {msg: {title: 'Error', description: 'Email is required'}},
+                {msg: {title: 'Error', description: 'Password is required'}}
               ]
             }
           }
@@ -184,10 +192,18 @@ describe('Auth Action Creators', () => {
       }
 
       const expectedActions = {
-        setAlert: {
+        setAlert1: {
           type: SET_ALERT,
           payload: {
             msg: res.postAuth.response.data.errors[0].msg,
+            alertType: 'danger',
+            id: expect.any(String)
+          }      
+        },
+        setAlert2: {
+          type: SET_ALERT,
+          payload: {
+            msg: res.postAuth.response.data.errors[1].msg,
             alertType: 'danger',
             id: expect.any(String)
           }      
@@ -199,7 +215,7 @@ describe('Auth Action Creators', () => {
 
       const formData = {
         email: '',
-        password: 'faketest123098'
+        password: ''
       }
       
       const store = mockStore();
@@ -210,10 +226,11 @@ describe('Auth Action Creators', () => {
       await store.dispatch(loginUser(formData));
       const actions = store.getActions();
       expect(axios.post).toHaveBeenCalledTimes(1);
+      expect(axios.post.mock.calls[0]).toContain(formData);
       expect(axios.get).toHaveBeenCalledTimes(0);
-      expect(actions[0]).toEqual(expectedActions.setAlert)
-      expect(actions[1]).toEqual(expectedActions.loginFail)
-
+      expect(actions[0]).toEqual(expectedActions.setAlert1)
+      expect(actions[1]).toEqual(expectedActions.setAlert2)
+      expect(actions[2]).toEqual(expectedActions.loginFail)
     })
   }),
   describe('register', () => {
@@ -274,6 +291,7 @@ describe('Auth Action Creators', () => {
       await store.dispatch(register(formData))
       const actions = store.getActions()
       expect(axios.post).toHaveBeenCalledTimes(1);
+      expect(axios.post.mock.calls[0]).toContain(formData);
       expect(axios.get).toHaveBeenCalledTimes(2);
       expect(actions[0]).toEqual(expectedActions.register);
       expect(actions[1]).toEqual(expectedActions.setAlert);
@@ -286,10 +304,8 @@ describe('Auth Action Creators', () => {
           response: {
             data: {
               errors: [
-                {
-                  msg: {title: 'Error', description: 'Invalid credentials'
-                  }
-                }
+                {msg: {title: 'Error', description: 'Email is required'}},
+                {msg: {title: 'Error', description: 'Password is required'}}
               ]
             }
           }
@@ -297,10 +313,18 @@ describe('Auth Action Creators', () => {
       }
 
       const expectedActions = {
-        setAlert: {
+        setAlert1: {
           type: SET_ALERT,
           payload: {
             msg: res.postUser.response.data.errors[0].msg,
+            alertType: 'danger',
+            id: expect.any(String)
+          }
+        },        
+        setAlert2: {
+          type: SET_ALERT,
+          payload: {
+            msg: res.postUser.response.data.errors[1].msg,
             alertType: 'danger',
             id: expect.any(String)
           }
@@ -321,9 +345,11 @@ describe('Auth Action Creators', () => {
       await store.dispatch(register(formData))
       const actions = store.getActions()
       expect(axios.post).toHaveBeenCalledTimes(1);
+      expect(axios.post.mock.calls[0]).toContain(formData);
       expect(axios.get).toHaveBeenCalledTimes(0);
-      expect(actions[0]).toEqual(expectedActions.setAlert);
-      expect(actions[1]).toEqual(expectedActions.registerFail)
+      expect(actions[0]).toEqual(expectedActions.setAlert1);
+      expect(actions[1]).toEqual(expectedActions.setAlert2);
+      expect(actions[2]).toEqual(expectedActions.registerFail)
     })
   })
   describe('logoutUser', () => {

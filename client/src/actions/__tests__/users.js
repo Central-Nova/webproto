@@ -54,7 +54,8 @@ describe('User Action Creators', () => {
           response: {
             data: {
               errors: [
-                {msg: {title: 'Error', description: 'You are not authorized to do that'}}
+                {msg: {title: 'Error', description: 'You are not authorized to do that'}},
+                {msg: {title: 'Error', description: 'Please log in'}}
               ]
             }
           }
@@ -64,10 +65,18 @@ describe('User Action Creators', () => {
         error: {
           type: USERS_ERROR,
         },
-        setAlert: {
+        setAlert1: {
           type: SET_ALERT,
           payload: {
             msg: res.getUsers.response.data.errors[0].msg,
+            alertType: 'danger',
+            id: expect.any(String)
+          }
+        },  
+        setAlert2: {
+          type: SET_ALERT,
+          payload: {
+            msg: res.getUsers.response.data.errors[1].msg,
             alertType: 'danger',
             id: expect.any(String)
           }
@@ -79,8 +88,9 @@ describe('User Action Creators', () => {
       await store.dispatch(loadCompanyUsers());
       const actions = store.getActions();
       expect(axios.get).toHaveBeenCalledTimes(1);
-      expect(actions[0]).toEqual(expectedActions.setAlert)
-      expect(actions[1]).toEqual(expectedActions.error)
+      expect(actions[0]).toEqual(expectedActions.setAlert1)
+      expect(actions[1]).toEqual(expectedActions.setAlert2)
+      expect(actions[2]).toEqual(expectedActions.error)
     })
   }),
   describe('updateUserRoles', () => {
@@ -141,6 +151,8 @@ describe('User Action Creators', () => {
       jest.runAllTimers();
       const actions = store.getActions();
       expect(axios.put).toHaveBeenCalledTimes(1);
+      expect(axios.put.mock.calls[0][0]).toContain(userId);
+      expect(axios.put.mock.calls[0][1].roles).toEqual(roleData);
       expect(axios.get).toHaveBeenCalledTimes(1);
       expect(actions[0]).toEqual(expectedActions.setAlert)
       expect(actions[1]).toEqual(expectedActions.loaded)
@@ -153,17 +165,27 @@ describe('User Action Creators', () => {
           response: {
             data: {
               errors: [
-                {msg: {title: 'Error', description: 'You are not authorized to do that'}}
+                {msg: {title: 'Error', description: 'You are not authorized to do that'}},
+                {msg: {title: 'Error', description: 'Please log in'}}
+
               ]
             }
           }
         }
       }
       const expectedActions = {
-        setAlert: {
+        setAlert1: {
           type: SET_ALERT,
           payload: {
             msg: res.putUsers.response.data.errors[0].msg,
+            alertType: 'danger',
+            id: expect.any(String)
+          }
+        },
+        setAlert2: {
+          type: SET_ALERT,
+          payload: {
+            msg: res.putUsers.response.data.errors[1].msg,
             alertType: 'danger',
             id: expect.any(String)
           }
@@ -182,7 +204,10 @@ describe('User Action Creators', () => {
       await store.dispatch(updateUserRoles(roleData, userId));
       const actions = store.getActions();
       expect(axios.put).toHaveBeenCalledTimes(1);
-      expect(actions[0]).toEqual(expectedActions.setAlert)
+      expect(axios.put.mock.calls[0][0]).toContain(userId);
+      expect(axios.put.mock.calls[0][1].roles).toEqual(roleData);
+      expect(actions[0]).toEqual(expectedActions.setAlert1)
+      expect(actions[1]).toEqual(expectedActions.setAlert2)
     })
   })
 })
