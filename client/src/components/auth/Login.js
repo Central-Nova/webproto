@@ -3,10 +3,10 @@ import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-// Actions
+// Action Creators
 import { loginUser, loadUser } from '../../actions/auth';
 
-export const Login = ({ loginUser, isAuthenticated, user, company }) => {
+export const Login = ({ loginUser, isAuthenticated, user, company = null }) => {
 
   const [ formData, setFormData ] = useState({
     email: '',
@@ -102,8 +102,8 @@ export const Login = ({ loginUser, isAuthenticated, user, company }) => {
 Login.propTypes = {
   loginUser: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
-  user: PropTypes.object.isRequired,
-  company: PropTypes.object.isRequired,
+  user: PropTypes.object,
+  company: PropTypes.object,
 }
 
 const mapStateToProps = state => ({

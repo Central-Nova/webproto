@@ -51,8 +51,6 @@ export const register = (formData) => async (dispatch) => {
     // Call setAlert to display success message in alert box.
     dispatch(setAlert(res.data.msg,'success'))
 
-    // Load user to state.auth
-    dispatch(loadUser());
   } catch (err) {
     const errors = err.response.data.errors;
 

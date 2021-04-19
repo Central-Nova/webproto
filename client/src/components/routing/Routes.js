@@ -8,12 +8,13 @@ import Register from '../auth/Register'
 import Login from '../auth/Login'
 import Dashboard from '../dashboard/Dashboard';
 import AlertBox from '../layout/alerts/AlertBox';
+
+// Setup
 import SetupMain from '../auth/setup/SetupMain';
 import CreateCompany from '../auth/setup/create/CreateCompany';
 import AddAccounts from '../auth/setup/create/AddAccounts';
 import CreateTeam from '../auth/setup/create/CreateTeam';
 import SetupJoin from '../auth/setup/join/SetupJoin';
-
 
 // Products
 import Products from '../products/products/Products';

@@ -132,7 +132,7 @@ Register.propTypes = {
   register: PropTypes.func.isRequired,
   registered: PropTypes.bool.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
-  user: PropTypes.object.isRequired,
+  user: PropTypes.object,
 }
 
 const mapStateToProps = state => ({
