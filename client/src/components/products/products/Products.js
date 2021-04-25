@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react'
-import { loadFilteredProducts } from '../../../actions/products';
+import { loadFilteredProducts, clearProducts } from '../../../actions/products';
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 
@@ -9,7 +9,7 @@ import Spinner from '../../layout/Spinner';
 import Pagination from '../../layout/pagination/Pagination';
 import Upload from './Upload';
 
-const Products = ({ products: {filteredProducts}, loadFilteredProducts }) => {
+const Products = ({ products: {filteredProducts}, loadFilteredProducts, clearProducts }) => {
 
   // filterState holds all filter values
   const [filterState, setFilterState] = useState({
@@ -93,12 +93,13 @@ const Products = ({ products: {filteredProducts}, loadFilteredProducts }) => {
         <ProductSF setFilterState={setFilterState} onFilterChange={onFilterChange} setModalState={setModalState} modalState={modalState}/>
         <div className="container-products-grid">
         {/* Render filteredProducts */}
-        {filteredProducts.data.products.length > 0 && filteredProducts.data.products.map(product => (
-          <ProductsCard key={product._id} product={product}/>
-        ))}
+        {filteredProducts.data === null ? (<p>Your product catalog is empty.</p>) : filteredProducts.data.products.length > 0 && filteredProducts.data.products.map(product => (
+          <ProductsCard key={product._id} product={product} clearProducts={clearProducts}/>
+        )) }
         </div>
         {/* Pagination */}
-        <Pagination onPageIncrement={onPageIncrement} onPageChange={onPageChange} current={pageState} total={filteredProducts.data.total / filteredProducts.data.limit < 1 ? 1 : Math.ceil(filteredProducts.data.total / filteredProducts.data.limit)} limit={filteredProducts.data.limit} />
+        {filteredProducts.data && <Pagination onPageIncrement={onPageIncrement} onPageChange={onPageChange} current={pageState} total={filteredProducts.data.total / filteredProducts.data.limit < 1 ? 1 : Math.ceil(filteredProducts.data.total / filteredProducts.data.limit)} limit={filteredProducts.data.limit} />}
+        
       </div>
       </Fragment>
     )}
@@ -108,6 +109,7 @@ const Products = ({ products: {filteredProducts}, loadFilteredProducts }) => {
 
 Products.propTypes = {
   loadFilteredProducts: PropTypes.func.isRequired,
+  clearProducts: PropTypes.func.isRequired,
   products: PropTypes.object.isRequired,
 }
 
@@ -115,4 +117,4 @@ const mapStateToProps = state => ({
   products: state.products
 })
 
-export default connect(mapStateToProps, { loadFilteredProducts })(Products)
+export default connect(mapStateToProps, { loadFilteredProducts, clearProducts })(Products)

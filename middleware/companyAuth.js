@@ -5,7 +5,9 @@ module.exports = async (req, res, next) => {
 
   if (req.user.company === null || req.user.company === undefined) {
     apiLogger.warn('User is not part of a company')
-    return res.status(400).json({msg: {title: 'Error', description: 'You are not part of a company.'}})
+    return res
+    .status(400)
+    .json({ errors: [{ msg: {title: 'Error', description: 'You are not part of a company.'} }] });
   }
 
   try {

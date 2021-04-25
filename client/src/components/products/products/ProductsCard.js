@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 
-const ProductsCard = ({ product}) => {
+const ProductsCard = ({ product, clearProducts}) => {
 
   const { _id, sku, name, basePrice } = product;
 
@@ -11,7 +11,7 @@ const ProductsCard = ({ product}) => {
     <div onClick={()=> setToggle(!toggle)} className="card card-product">
     <div className="card-header">
       <p className="text-primary text-small">{sku}</p>
-      <Link to={`/product/${_id}`}>
+      <Link onClick={() => clearProducts()} to={`/product/${_id}`}>
         <i
           className="settings fas fa-ellipsis-h fa-2x text-primary-light"
         ></i>

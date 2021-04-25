@@ -1,15 +1,16 @@
 import React, { Fragment, useEffect } from 'react'
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { useParams, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { loadProductById } from '../../../actions/products';
+import { clearProducts, loadProductById } from '../../../actions/products';
 
 import Spinner from '../../layout/Spinner';
 import PriceRules from './PriceRules';
 import Specifications from './Specifications';
 import InventorySummary from './InventorySummary';
 
-const Product = ({ match, products: { filteredProducts: { loading, data } }, loadProductById }) => {
+const Product = ({ match, products: { filteredProducts: { loading, data } }, loadProductById, clearProducts }) => {
 
   const { productId } = useParams();
   const { params } = match;
@@ -17,7 +18,7 @@ const Product = ({ match, products: { filteredProducts: { loading, data } }, loa
   useEffect(()=> {
     loadProductById(productId);
 
-  }, [])
+  }, [productId])
 
   return (
     <Fragment>
@@ -45,12 +46,17 @@ const Product = ({ match, products: { filteredProducts: { loading, data } }, loa
       <p className="text-medium text-primary">Specifications</p>
       <Specifications weight={data.weight || 0} basePrice={data.basePrice} dimensions={data.dimensions || 0} />
     </div>
-    <button className="btn btn-primary btn-small">Edit</button>
-    <button className="btn btn-light btn-back btn-small mx-2">
-      <i className="fas fa-arrow-left"></i>Back
-    </button>
+    <div className="my-2">
+      <Link to={`/edit-product/${productId}`}> 
+        <button className="btn btn-primary btn-small mx-2">Edit</button>
+      </Link>
+      <Link onClick={() => clearProducts()} to='/products'> 
+        <button className="btn btn-light btn-back btn-small">
+          <i className="fas fa-arrow-left"></i>Back
+        </button>
+      </Link>
+    </div>
   </div>
-
       </Fragment>
     )}
   </Fragment>
@@ -59,6 +65,7 @@ const Product = ({ match, products: { filteredProducts: { loading, data } }, loa
 
 Product.propTypes = {
   loadProductById: PropTypes.func.isRequired,
+  clearProducts: PropTypes.func.isRequired,
   products: PropTypes.object.isRequired,
 }
 
@@ -66,4 +73,4 @@ const mapStateToProps = state => ({
   products: state.products
 })
 
-export default withRouter(connect(mapStateToProps, {loadProductById} )(Product))
+export default withRouter(connect(mapStateToProps, {loadProductById, clearProducts} )(Product))

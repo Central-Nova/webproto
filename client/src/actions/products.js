@@ -6,6 +6,8 @@ import {
   PRODUCTS_ERROR,
   PRODUCTS_ACTION_SUCCESS,
   PRODUCTS_ACTION_CLEARED,
+  PRODUCTS_FILTERED_CLEARED,
+  PRODUCTS_CLEARED
 } from './types';
 import { setAlert } from './alert';
 
@@ -112,4 +114,14 @@ export const createProduct = (formData) => async (dispatch) => {
 export const clearProductSubmission = () => async (dispatch) => {
 
   setTimeout(() => dispatch({type: PRODUCTS_ACTION_CLEARED}), 100)
+}
+
+// Clear filtered products
+export const clearFilteredProducts = () => (dispatch) => {
+  dispatch({type: PRODUCTS_FILTERED_CLEARED})
+}
+
+// Clear all products
+export const clearProducts = () => dispatch => {
+  dispatch({type: PRODUCTS_CLEARED})
 }

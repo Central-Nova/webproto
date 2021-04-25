@@ -5,7 +5,9 @@ module.exports = async (req, res, next) => {
  
   if (!req.user) {
     apiLogger.warn('User has not been authenticated')
-    return res.status(400).json({msg: {title: 'Error', description: 'You are have not been athenticated.'}})
+    return res
+    .status(400)
+    .json({ errors: [{ msg: {title: 'Error', description: 'You have not been authenticated.'} }] });
   }
 
   let queryStartTime = new Date();

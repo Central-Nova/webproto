@@ -4,6 +4,7 @@ import {
   PRODUCT_BY_ID_LOADED,
   PRODUCTS_ACTION_SUCCESS,
   PRODUCTS_ACTION_CLEARED,
+  PRODUCTS_FILTERED_CLEARED,
   PRODUCTS_CLEARED,
   PRODUCTS_ERROR} from '../actions/types';
 
@@ -35,7 +36,6 @@ export default function (state=initialState, action) {
           data: payload
         }
       }
-
     case PRODUCTS_LOADED:
       return {
         ...state,
@@ -44,19 +44,16 @@ export default function (state=initialState, action) {
           data: payload
         }
       }
-
     case PRODUCTS_ACTION_SUCCESS:
       return {
         ...state,
         submitSuccess: true
       }
-     
     case PRODUCTS_ACTION_CLEARED: 
       return {
         ...state,
         submitSuccess: false
       }
-    
     case PRODUCTS_ERROR:
       return {
         ...state,
@@ -69,7 +66,27 @@ export default function (state=initialState, action) {
           data: null
         }
       }
-      
+    case PRODUCTS_FILTERED_CLEARED:
+      return {
+        ...state,
+        filteredProducts: {
+          loading: true,
+          data: null
+        }
+      }
+      case PRODUCTS_CLEARED:
+        return {
+          ...state,
+          filteredProducts: {
+            loading: true,
+            data: null
+          },
+          allProducts: {
+            loading: true,
+            data: null
+          }
+        }
+  
     default:
       return state
     

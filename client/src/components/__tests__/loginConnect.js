@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { Router, Route, Switch} from 'react-router-dom';
 import '@testing-library/jest-dom/extend-expect'
 import { render, fireEvent, waitForElement, waitForElementToBeRemoved } from '@testing-library/react';
@@ -6,6 +6,10 @@ import { createBrowserHistory } from 'history';
 import { Provider } from 'react-redux';
 import store from '../../store';
 import axios from 'axios';
+
+// Action Creators
+import { loadUser } from '../../actions/auth';
+import { loadRoles } from '../../actions/roles';
 
 // Components
 import Landing from '../landing/Landing';
@@ -20,7 +24,7 @@ import SetupRoute from '../routing/SetupRoute';
 import PrivateRoute from '../routing/PrivateRoute';
 
 describe('Landing', () => {
-  describe('local login', () => {
+  describe('register local login and login', () => {
     
     const renderLanding = () => {
       let history = createBrowserHistory();
@@ -39,9 +43,15 @@ describe('Landing', () => {
           </Fragment>
         )
       }
+      
+      const App = () => {
+        useEffect(() => {
+          store.dispatch(loadUser());
+          store.dispatch(loadRoles());
+        },[])
 
-      let utils = render(
-        <Provider store={store}>
+        return (
+          <Provider store={store}>
           <Router history={history}>
           <Fragment>
               <Switch>
@@ -51,6 +61,11 @@ describe('Landing', () => {
             </Fragment>
           </Router>
         </Provider>
+        )
+      }
+
+      let utils = render( <App/>
+
       )
       return {...utils, history}
     }
@@ -86,13 +101,28 @@ describe('Landing', () => {
           email: 'fake@mail.com'
         }
       },
+      getAuthError: {
+        response: {
+          data: {
+            errors: [
+              {msg: {title: 'Error', description: 'You have not been authenticated'}}
+            ]
+          }
+        }
+      }
     }
 
+    // First call is for registration
+    // Second call is for login
     axios.post = jest.fn()
     .mockImplementationOnce(() => Promise.resolve(res.postUsersSuccess))
     .mockImplementationOnce(() => Promise.resolve(res.postAuth))
 
+    // First two calls are for loadUser and loadRoles in useEffect
+    // Last two calls are for loadUser and loadCompany after login
     axios.get = jest.fn()
+    .mockImplementationOnce(() => Promise.reject(res.getAuthError))
+    .mockImplementationOnce(() => Promise.reject())
     .mockImplementationOnce(() => Promise.resolve(res.getAuth))
     .mockImplementationOnce(() => Promise.reject())
   
@@ -100,7 +130,7 @@ describe('Landing', () => {
 
       // Render Landing and Register Routes, start at Landing
       const { getByText, getByTestId, getByPlaceholderText, getByRole, history } = renderLanding();
-  
+
       // See buttons to login or register
       expect(getByText(/log in/i)).toBeTruthy();
       expect(getByText(/sign up/i)).toBeTruthy();
@@ -108,6 +138,12 @@ describe('Landing', () => {
       // Navigate to Register
       const leftClick = { button: 0 }
       fireEvent.click(getByText(/sign up/i), leftClick)
+
+      // Load user error alert
+      await waitForElement(() => getByText(/you have not been authenticated/i))
+
+      // Close error
+      fireEvent.click(getByText(/close/i), leftClick);
 
       // Arrived at Register page
       expect(window.location.href).toContain('http://localhost/register');
@@ -125,7 +161,6 @@ describe('Landing', () => {
       fireEvent.click(getByTestId('local-signup-btn'), leftClick);
     
       // Error alert appears
-      expect(getByText(/error/i)).toBeTruthy();
       expect(getByText(/passwords do not match/i)).toBeTruthy();
 
       // Fill form with matching password
@@ -135,8 +170,7 @@ describe('Landing', () => {
       fireEvent.click(getByTestId('local-signup-btn'), leftClick);
 
       // Success alert appears
-      await waitForElement(() => getByText(/success/i));
-      expect(getByText(/your account is registered/i)).toBeTruthy();
+      await waitForElement(() => getByText(/your account is registered/i));
       
       // Arrived at Login page
       await waitForElement(() => getByText(/sign into your account/i))
@@ -154,9 +188,6 @@ describe('Landing', () => {
       // Success alert appears
       await waitForElement(() => getByText(/you are now logged in/i))
       
-      // // Close alert
-      // fireEvent.click(getByText(/close/i), leftClick);
-
       // Redirected to company setup
       await waitForElement(() => getByText(/company setup/i));
       expect(getByText(/join an existing company/i)).toBeTruthy();
