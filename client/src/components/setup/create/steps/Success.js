@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types'
 
 import SideNav from '../sidenav/SideNav';
-import Spinner from '../../../../layout/Spinner';
+import Spinner from '../../../layout/Spinner';
 
 const Success = ( { back, company } ) => {
 

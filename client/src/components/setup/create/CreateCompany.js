@@ -1,13 +1,14 @@
 import React, { Fragment, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { createCompany } from '../../../../actions/company';
+import { createCompany } from '../../../actions/company';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+// Components
 import SideNav from './sidenav/SideNav';
-import SupplierCard from './cards/SupplierCard'
-import BuyerCard from './cards/BuyerCard'
+import OptionCard from '../cards/OptionCard';
 import CompanyMainFields from './steps/CompanyMainFields';
+import LargeHeader from '../headers/LargeHeader';
 
 
 const CreateCompany = ({ createCompany, company: { profile }, user}) => {
@@ -30,12 +31,6 @@ const CreateCompany = ({ createCompany, company: { profile }, user}) => {
     createCompany(formState);
   }
 
-
-  // Render the one that needs to be completed
-
-  // If secondary isn't done, give to secondary (link). Normally, the first part would lead right into 2nd part.
-  // Check if they wanna re-use. If so, just create 2nd, if not, let them fill out again (how to show same form again).
-
   return (
     <Fragment>
     <div className="logo">
@@ -50,12 +45,16 @@ const CreateCompany = ({ createCompany, company: { profile }, user}) => {
       <SideNav/>
       {profile !== null ? (
         <div className="container-company-main">
-          <div className="company-headline-text">
-            <h1 className="text-large text-primary">Primary Business Operation</h1>
-          </div>
+          <LargeHeader title='Primary Business Operation'/>
           <div className="container-buttons">
-                <SupplierCard/>
-                <BuyerCard/>
+          <OptionCard link='/create-account/supplier' icon='fas fa-pallet fa-4x'>
+            <p className="text-regular">Supplier</p>
+            <p className="text-small">Use {"{App Name}"}'s functions to manage your wholesale selling tasks.</p>
+          </OptionCard>
+          <OptionCard link='/create-account/buyer' icon='fas fa-money-check-alt fa-4x'>
+            <p className="text-regular">Buyer</p>
+            <p className="text-small">Connect with suppliers on {"{App Name}"} and manage your purchasing tasks.</p>
+          </OptionCard>
           </div>
         </div>
       ) : (

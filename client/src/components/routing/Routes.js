@@ -10,11 +10,11 @@ import Dashboard from '../dashboard/Dashboard';
 import AlertBox from '../layout/alerts/AlertBox';
 
 // Setup
-import SetupMain from '../auth/setup/SetupMain';
-import CreateCompany from '../auth/setup/create/CreateCompany';
-import AddAccounts from '../auth/setup/create/AddAccounts';
-import CreateTeam from '../auth/setup/create/CreateTeam';
-import SetupJoin from '../auth/setup/join/SetupJoin';
+import SetupMain from '../setup/SetupMain';
+import CreateCompany from '../setup/create/CreateCompany';
+import AddAccounts from '../setup/create/AddAccounts';
+import CreateTeam from '../setup/create/CreateTeam';
+import SetupJoin from '../setup/join/SetupJoin';
 
 // Products
 import Products from '../products/products/Products';
@@ -22,14 +22,11 @@ import Product from '../products/product/Product';
 import CreateProduct from '../products/productforms/CreateProduct';
 import EditProduct from '../products/productforms/EditProduct';
 
-
 // Settings
 import Users from '../userSettings/users/Users';
 import User from '../userSettings/user/User';
 import Roles from '../userSettings/roles/Roles';
 import Role from '../userSettings/role/Role';
-
-
 
 const Routes = (props) => {
   return (
