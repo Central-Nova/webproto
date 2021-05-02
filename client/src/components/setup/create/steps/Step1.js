@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import { connect } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { setAlert } from '../../../../../actions/alert';
+import { setAlert } from '../../../../actions/alert';
 
 // Components
 import SideNav from '../sidenav/SideNav';

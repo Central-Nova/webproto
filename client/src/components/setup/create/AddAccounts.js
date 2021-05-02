@@ -1,8 +1,8 @@
 import React, { Fragment, useState } from 'react'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { setAlert } from '../../../../actions/alert';
-import { addAccountToCompany } from '../../../../actions/company';
+import { setAlert } from '../../../actions/alert';
+import { addAccountToCompany } from '../../../actions/company';
 import { Redirect, useParams } from 'react-router-dom';
 
 import AccountStepHandler from './AccountStepHandler';
