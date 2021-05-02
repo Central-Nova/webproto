@@ -10,27 +10,38 @@ import RoleCheck from '../../layout/auth/RoleCheck';
 
   const initialState = [
     {
+      _id: 'startid1',
       department: 'Sales',
       manager: false,
       worker: false
     },
     {
+      _id: 'startid2',
       department: 'Products',
       manager: false,
       worker: false
     },
     {
+      _id: 'startid3',
       department: 'Warehouse',
       manager: false,
       worker: false
     },
     {
+      _id: 'startid4',
       department: 'Fleet',
       manager: false,
       worker: false
     },
     {
+      _id: 'startid5',
       department: 'Payments',
+      manager: false,
+      worker: false
+    },
+    {
+      _id: 'startid6',
+      department: 'Admin',
       manager: false,
       worker: false
     }
@@ -114,8 +125,8 @@ const User = ({ users: { loading, profiles, updated }, loadCompanyUsers, updateU
           <p className="col3">Worker</p>
         </div>
         <hr className="my-1" />
-        {formState.map( (department, id) =>(
-          <UserRow key={id} roleData={department} onChange={handleOnChange} />
+        {formState.map(department => (
+          <UserRow key={department._id} roleData={department} onChange={handleOnChange} />
         ))}
       </div>
       <RoleCheck department='admin' document='userroles' action='edit'

@@ -15,7 +15,7 @@ import { loadRoles } from '../../actions/roles';
 import Landing from '../landing/Landing';
 import Login from '../auth/Login';
 import Register from '../auth/Register';
-import AlertBox from '../../components/layout/alerts/AlertBox';
+import AlertBox from '../layout/alerts/AlertBox';
 import SetupMain from '../auth/setup/SetupMain';
 import Dashboard from '../dashboard/Dashboard';
 
@@ -24,7 +24,7 @@ import SetupRoute from '../routing/SetupRoute';
 import PrivateRoute from '../routing/PrivateRoute';
 
 describe('Landing', () => {
-  describe('register local login and login', () => {
+  describe('local registration and login integration', () => {
     
     const renderLanding = () => {
       let history = createBrowserHistory();
@@ -52,26 +52,21 @@ describe('Landing', () => {
 
         return (
           <Provider store={store}>
-          <Router history={history}>
-          <Fragment>
-              <Switch>
-                <Route exact path='/' component={Landing}/>
-                <Route component={Routes}/>
-              </Switch>
-            </Fragment>
-          </Router>
-        </Provider>
+            <Router history={history}>
+              <Fragment>
+                <Switch>
+                  <Route exact path='/' component={Landing}/>
+                  <Route component={Routes}/>
+                </Switch>
+              </Fragment>
+            </Router>
+          </Provider>
         )
       }
 
-      let utils = render( <App/>
-
-      )
+      let utils = render(<App/>)
       return {...utils, history}
     }
-
-    const register = jest.spyOn(Register.WrappedComponent.propTypes, 'register');
-    const loginUser = jest.spyOn(Login.WrappedComponent.propTypes, 'loginUser');
 
     const res = {
       postUsersError: {

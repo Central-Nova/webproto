@@ -29,7 +29,7 @@ function SideNav({ company: { loading, profile }}) {
         <hr className="my-2" />
         <div className="sidebar-settings-items">
           <Link to="/users"><i className="fas fa-user"></i> Account</Link>
-          <Link to="/users"><i className="fas fa-users"></i>Users</Link>
+          <Link to="/users"><i className="fas fa-users" data-testid='users-btn'></i>Users</Link>
           <Link to="/users"><i className="fas fa-cog"></i> Settings</Link>
           <Link to="/users"><i className="fas fa-sign-out-alt"></i> Logout</Link>
         </div>

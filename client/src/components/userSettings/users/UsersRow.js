@@ -32,7 +32,7 @@ const UserItem = ({profile}) => {
       <p>{workerDepartments.join(', ')}</p>
       <RoleCheck department='admin' document='userroles' action='edit'
         yes={()=>(
-          <Link to={`/user/${_id}`} className="settings btn text-primary">
+          <Link to={`/user/${_id}`} className="settings btn text-primary" data-testid={`edit-${_id}-btn`}>
             <i className="fas fa-cog fa-2x"></i>
           </Link>
         )}
