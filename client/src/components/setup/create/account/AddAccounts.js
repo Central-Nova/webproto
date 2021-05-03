@@ -1,11 +1,14 @@
 import React, { Fragment, useState } from 'react'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { setAlert } from '../../../actions/alert';
-import { addAccountToCompany } from '../../../actions/company';
-import { Redirect, useParams } from 'react-router-dom';
+import { setAlert } from '../../../../actions/alert';
+import { addAccountToCompany } from '../../../../actions/company';
+import { Link, Redirect, useParams } from 'react-router-dom';
 
+// Components
 import AccountStepHandler from './AccountStepHandler';
+import SideNav from '../sidenav/SideNav';
+import LargeHeader from '../../components/headers/LargeHeader';
 
 const removeEmptyFields = (data) => {
   Object.keys(data).forEach(key=> {
@@ -62,19 +65,18 @@ const AddAccounts = ({ setAlert, addAccountToCompany, user, company: { profile, 
   let { step, formData } = formState;
 
   // Handles changes for address forms
-  const onChangeAddress = (e, type) => {
+  const onChangeAddress = (e, addressType) => {
 
-    if (type === 'business') {
-      setFormState({
-        ...formState, formData: {...formData, businessAddress: { ...formData.businessAddress, [e.target.name]: e.target.value}
-      }})
-    }
-
-    if (type === 'warehouse') {
-      setFormState({
-        ...formState, formData: {...formData, warehouseAddress: { ...formData.warehouseAddress, [e.target.name]: e.target.value}
-      }})
-    }
+    setFormState({
+      ...formState, 
+      formData: {
+        ...formData, 
+        [addressType]: {
+          ...formData[addressType],
+          [e.target.name]: e.target.value
+        }
+      }
+    })
   }
 
   // Handles change for non-address forms
@@ -104,7 +106,6 @@ const AddAccounts = ({ setAlert, addAccountToCompany, user, company: { profile, 
   }
 
     // Form Submit
-
   const onSubmit = e => {
     e.preventDefault();
     removeEmptyFields(formData);
@@ -118,7 +119,21 @@ const AddAccounts = ({ setAlert, addAccountToCompany, user, company: { profile, 
 
   return (
     <Fragment>
-      <AccountStepHandler back={onStepBack} next={onStepNext} onChangeGeneral={onChangeGeneral} onChangeAddress={onChangeAddress} onSubmit={onSubmit} {...formState} />
+      <div className="logo">
+        <i className="text-primary fas fa-warehouse fa-4x"></i>
+      </div>
+      <div className="container-company-double">
+        <div className="button-back">
+          <Link className="btn btn-light btn-large" to="/create-company">
+            <i className="fas fa-long-arrow-alt-left"></i>Back
+          </Link>
+        </div>
+        <SideNav/>
+        <div className="container-company-main">
+          <LargeHeader title={`${account.charAt(0).toUpperCase() + account.slice(1)} Account Setup`}/>
+          <AccountStepHandler back={onStepBack} next={onStepNext} onChangeGeneral={onChangeGeneral} onChangeAddress={onChangeAddress} onSubmit={onSubmit} {...formState} />
+        </div>
+      </div>
     </Fragment>
   )
 }

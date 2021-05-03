@@ -1,19 +1,17 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { setAlert } from '../../../../actions/alert';
 
 // Components
-import SideNav from '../sidenav/SideNav';
 import BusinessForm from '../addressForms/BusinessForm'
 import WarehouseForm from '../addressForms/WarehouseForm'
+import FieldContainer from '../../components/containers/FieldContainer';
 
 const Step1 = ( props ) => {
 
   const { next, onChangeAddress, formData } = props;
   const { businessAddress } = formData;
-  const { account } = useParams();
 
   console.log('step 1 props: ', props)
 
@@ -62,40 +60,16 @@ const Step1 = ( props ) => {
 
   return (
     <Fragment>
-    <div className="logo">
-      <i className="text-primary fas fa-warehouse fa-4x"></i>
-    </div>
-    <div className="container-company-double">
-      <div className="button-back">
-        <Link className="btn btn-light btn-large" to="/create-company">
-          <i className="fas fa-long-arrow-alt-left"></i>Back
-        </Link>
-      </div>
-      <SideNav/>
-      <div className="container-company-main">
-        <div className="company-headline-text">
-          <h1 className="text-large text-primary">{account.charAt(0).toUpperCase() + account.slice(1) + ' Account'} Setup</h1>
-        </div>
-        <div className="container-address-field my-4">
-          <div className="container-text">
-            <p className="text-regular text-primary">Business Address</p>
-            <p className="text-small text-primary-light">
-              Your registered business address.
-            </p>
-          </div>
-          <BusinessForm  type='business' onChangeAddress={onChangeAddress} formData={formData} />
-        </div>
-        <div className="container-address-field my-4">
-          <div className="container-text">
-            <p className="text-regular text-primary">Warehouse Address</p>
-            <p className="text-small text-primary-light">
-              Your ship from address for your orders. If left empty, business address will be used.
-            </p>
-          </div>
-          <WarehouseForm type='warehouse' onChangeAddress={onChangeAddress} formData={formData} next={onClick}/>
-        </div>
-      </div>
-    </div>
+      <FieldContainer 
+        label='Business Address'
+        description='Your registered business address'>
+        <BusinessForm  addressType='businessAddress' onChangeAddress={onChangeAddress} formData={formData} />
+      </FieldContainer>
+      <FieldContainer 
+        label='Warehouse Address'
+        description='Your ship from address for all orders. If left empty, business address will be used'>
+        <WarehouseForm addressType='warehouseAddress' onChangeAddress={onChangeAddress} formData={formData} next={onClick}/>
+      </FieldContainer>
     </Fragment>
   )
 }

@@ -1,14 +1,14 @@
 import React, { Fragment, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { createCompany } from '../../../actions/company';
+import { createCompany } from '../../../../actions/company';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // Components
-import SideNav from './sidenav/SideNav';
-import OptionCard from '../cards/OptionCard';
-import CompanyMainFields from './steps/CompanyMainFields';
-import LargeHeader from '../headers/LargeHeader';
+import SideNav from '../sidenav/SideNav';
+import OptionCard from '../../components/cards/OptionCard';
+import MainFields from './MainFields';
+import LargeHeader from '../../components/headers/LargeHeader';
 
 
 const CreateCompany = ({ createCompany, company: { profile }, user}) => {
@@ -58,7 +58,7 @@ const CreateCompany = ({ createCompany, company: { profile }, user}) => {
           </div>
         </div>
       ) : (
-        <CompanyMainFields formState={formState} formChange={formChange} onClick={onClick} />
+        <MainFields formState={formState} formChange={formChange} onClick={onClick} />
       )}
     </div>
     </Fragment>

@@ -1,6 +1,6 @@
 import React from 'react'
-import OptionCard from './cards/OptionCard';
-import LargeHeader from './headers/LargeHeader';
+import OptionCard from './components/cards/OptionCard';
+import LargeHeader from './components/headers/LargeHeader';
 
 const SetupMain = () => {
 

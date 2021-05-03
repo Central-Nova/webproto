@@ -1,8 +1,8 @@
 import React from 'react'
-import LargeHeader from '../../headers/LargeHeader'
-import FieldContainer from '../../containers/FieldContainer';
+import LargeHeader from '../../components/headers/LargeHeader'
+import FieldContainer from '../../components/containers/FieldContainer';
 
-const CompanyMainFields = ({ formState, formChange, onClick }) => {
+const MainFields = ({ formState, formChange, onClick }) => {
 
   const { businessName, ein } = formState;
 
@@ -50,4 +50,4 @@ const CompanyMainFields = ({ formState, formChange, onClick }) => {
   )
 }
 
-export default CompanyMainFields;
+export default MainFields;

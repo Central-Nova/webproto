@@ -11,9 +11,9 @@ import AlertBox from '../layout/alerts/AlertBox';
 
 // Setup
 import SetupMain from '../setup/SetupMain';
-import CreateCompany from '../setup/create/CreateCompany';
-import AddAccounts from '../setup/create/AddAccounts';
-import CreateTeam from '../setup/create/CreateTeam';
+import CreateCompany from '../setup/create/company/CreateCompany';
+import AddAccounts from '../setup/create/account/AddAccounts';
+import CreateTeam from '../setup/create/team/CreateTeam';
 import SetupJoin from '../setup/join/SetupJoin';
 
 // Products

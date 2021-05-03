@@ -1,12 +1,15 @@
 import React, { Fragment, useState, useEffect } from 'react'
 import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import { createInvitations } from '../../../actions/invitations';
+import { createInvitations } from '../../../../actions/invitations';
 
-import SideNav from './sidenav/SideNav';
+// Components
+import SideNav from '../sidenav/SideNav';
 import TeamSlotItem from './TeamSlotItem';
+import LargeHeader from '../../components/headers/LargeHeader';
+import FieldContainer from '../../components/containers/FieldContainer';
 
 const CreateTeam = ({ createInvitations, invitations: { sent } }) => {
 

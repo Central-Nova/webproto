@@ -3,7 +3,7 @@ import React, { Fragment } from 'react'
 const BusinessForm = (props) => {
 console.log('businessform props: ', props)
 
-const { type , onChangeAddress, formData: {businessAddress: {street, aptSuite, city, state, zip}} } = props;
+const { addressType , onChangeAddress, formData: {businessAddress: {street, aptSuite, city, state, zip}} } = props;
    
   return (
     <Fragment>
@@ -14,30 +14,30 @@ const { type , onChangeAddress, formData: {businessAddress: {street, aptSuite, c
           <input type="text" 
             name="street" 
             value={street}
-            onChange={e=> onChangeAddress(e, type)} placeholder="Street" />
+            onChange={e=> onChangeAddress(e, addressType)} placeholder="Street" />
         </div>
         <div className="suite">
           <input type="text" 
             name="aptSuite" 
             value={aptSuite} 
-            onChange={e=> onChangeAddress(e, type)} placeholder="Apt/Suite" />
+            onChange={e=> onChangeAddress(e, addressType)} placeholder="Apt/Suite" />
         </div>
         <div className="city">
           <input type="text"         
             name="city" 
             value={city} 
-            onChange={e=> onChangeAddress(e, type)} placeholder="City" />
+            onChange={e=> onChangeAddress(e, addressType)} placeholder="City" />
             </div>
         <div className="state">
           <input type="text" 
             name="state" 
             value={state} 
-            onChange={e=> onChangeAddress(e, type)}placeholder="State" /></div>
+            onChange={e=> onChangeAddress(e, addressType)}placeholder="State" /></div>
         <div className="zip">
           <input type="text" 
             name="zip" 
             value={zip} 
-            onChange={e=> onChangeAddress(e, type)}placeholder="Zip Code" />
+            onChange={e=> onChangeAddress(e, addressType)}placeholder="Zip Code" />
         </div>
       </div>
     </form>

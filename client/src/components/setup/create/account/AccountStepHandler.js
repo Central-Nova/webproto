@@ -1,8 +1,8 @@
 import React from 'react'
 
 // Components
-import Step1 from './steps/Step1';
-import Step2 from './steps/Step2';
+import Step1 from '../steps/Step1';
+import Step2 from '../steps/Step2';
 
 
 const AccountStepHandler = ( props ) => {
