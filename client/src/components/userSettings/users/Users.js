@@ -17,7 +17,7 @@ const initialState = {
 }
 
 const Users = ({ users, invitations: { sent }, loadCompanyUsers, createInvitations}) => {
-  const { loading, profiles, updated } = users;
+  const { loading, profiles } = users;
 
   const [profilesState, setProfilesState] = useState([])
 

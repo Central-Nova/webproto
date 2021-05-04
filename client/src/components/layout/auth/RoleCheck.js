@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from 'react'
+import React, { Fragment } from 'react'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -6,8 +6,8 @@ const check = (userRoles, companyRoles, department, document, action ) => {
 
   let canPerform = []
 
-  // Get user's granted roles for that department
-  let role = userRoles.filter(role => role.department.toLowerCase() === department)
+  // // Get user's granted roles for that department
+  // let role = userRoles.filter(role => role.department.toLowerCase() === department)
 
   // Find the permission object that has the correct department, document and action
   const permission = companyRoles.rolesData.permissions.find(p => 

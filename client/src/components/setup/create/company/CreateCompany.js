@@ -6,12 +6,11 @@ import { connect } from 'react-redux';
 
 // Components
 import SideNav from '../sidenav/SideNav';
-import OptionCard from '../../components/cards/OptionCard';
 import MainFields from './MainFields';
-import LargeHeader from '../../components/headers/LargeHeader';
+import AccountOptions from './AccountOptions';
 
 
-const CreateCompany = ({ createCompany, company: { profile }, user}) => {
+const CreateCompany = ({ createCompany, company: { profile }}) => {
 
   const [formState, setFormState] = useState({
     businessName: '',
@@ -44,20 +43,8 @@ const CreateCompany = ({ createCompany, company: { profile }, user}) => {
       </div>
       <SideNav/>
       {profile !== null ? (
-        <div className="container-company-main">
-          <LargeHeader title='Primary Business Operation'/>
-          <div className="container-buttons">
-          <OptionCard link='/create-account/supplier' icon='fas fa-pallet fa-4x'>
-            <p className="text-regular">Supplier</p>
-            <p className="text-small">Use {"{App Name}"}'s functions to manage your wholesale selling tasks.</p>
-          </OptionCard>
-          <OptionCard link='/create-account/buyer' icon='fas fa-money-check-alt fa-4x'>
-            <p className="text-regular">Buyer</p>
-            <p className="text-small">Connect with suppliers on {"{App Name}"} and manage your purchasing tasks.</p>
-          </OptionCard>
-          </div>
-        </div>
-      ) : (
+        <AccountOptions/>
+        ) : (
         <MainFields formState={formState} formChange={formChange} onClick={onClick} />
       )}
     </div>
@@ -71,7 +58,6 @@ company: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
-  user: state.auth.user,
   company: state.company
 })
 

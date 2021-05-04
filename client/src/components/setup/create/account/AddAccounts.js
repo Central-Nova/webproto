@@ -1,37 +1,28 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { setAlert } from '../../../../actions/alert';
 import { addAccountToCompany } from '../../../../actions/company';
 import { Link, Redirect, useParams } from 'react-router-dom';
 
+// Utils
+import { removeEmptyFields, removeEmptyObjects } from '../../../../lib/sanitize';
+
 // Components
-import AccountStepHandler from './AccountStepHandler';
+import StepHandler from './StepHandler';
 import SideNav from '../sidenav/SideNav';
 import LargeHeader from '../../components/headers/LargeHeader';
 
-const removeEmptyFields = (data) => {
-  Object.keys(data).forEach(key=> {
-    if (typeof data[key] === 'object') {
-      Object.keys(data[key]).forEach(nestkey => {
-        if (data[key][nestkey] === '') {
-          delete data[key][nestkey]
-        }
-      })
-    } else {
-      if (data[key] === '') {
-        delete data[key]
-      }
-    }
-  })
+const initialState = {
+  errorMessages: [],
+  emptyFields: ['street', 'aptSuite', 'city', 'state', 'zip'],
+  step: 1,
 }
 
-const removeEmptyObjects = (data) => {
-  Object.keys(data).forEach(key => {
-    if (typeof data[key] === 'object' && Object.keys(data[key]).length === 0) {
-      delete data[key]
-    }
-  })
+const createErrMess = (field) => {
+  let capitalized = field.charAt(0).toUpperCase() + field.slice(1);
+
+  return {title: 'Error', description: `${capitalized} is required.`}
 }
 
 const AddAccounts = ({ setAlert, addAccountToCompany, user, company: { profile, loading }}) => {
@@ -39,20 +30,19 @@ const AddAccounts = ({ setAlert, addAccountToCompany, user, company: { profile, 
   const { account } = useParams();
 
   const [formState, setFormState] = useState({
-    step: 1,
     formData: {
       company: user.company,
       account,
       businessAddress: {
         street: '',
-        aptSuite: '',
+        suite: '',
         city: '',
         state: '',
         zip: ''
       },
       warehouseAddress: {
         street: '',
-        aptSuite: '',
+        suite: '',
         city: '',
         state: '',
         zip: ''
@@ -61,14 +51,43 @@ const AddAccounts = ({ setAlert, addAccountToCompany, user, company: { profile, 
       phone: '',
     }
   });
- 
-  let { step, formData } = formState;
+
+  const [ validationState, setValidationState ] = useState(initialState)
+  const { step, errorMessages, emptyFields } = validationState;
+  const { formData } = formState;
+  const { businessAddress, email, phone } = formData;
+
+  useEffect(() => {
+    let newEmptyFields = [];
+    if (step === 1) {
+      // Loop through businessAddress to push empty fields into array
+      for (let field in businessAddress) {
+        if (businessAddress[field] === '') {
+          newEmptyFields.push(`${field}`)
+        }
+      }
+    } if (step === 2) {
+      if (email === '') {
+        newEmptyFields.push('email')
+      } if (phone === '') {
+        newEmptyFields.push('phone')
+      }
+    }
+    setValidationState({...validationState, emptyFields: [...newEmptyFields]});
+  }, [businessAddress, emptyFields, step])
+
+  useEffect(() => {
+    // Loop through emptyFields and create an error message for each value
+    let newMessages = []
+    for (let i in emptyFields) {
+      newMessages.push(createErrMess(emptyFields[i]));
+    }
+    setValidationState({...validationState, errorMessages: [...newMessages]})
+  }, [emptyFields])
 
   // Handles changes for address forms
   const onChangeAddress = (e, addressType) => {
-
     setFormState({
-      ...formState, 
       formData: {
         ...formData, 
         [addressType]: {
@@ -81,37 +100,48 @@ const AddAccounts = ({ setAlert, addAccountToCompany, user, company: { profile, 
 
   // Handles change for non-address forms
   const onChangeGeneral = e => setFormState({
-    ...formState, formData: {...formData, [e.target.name]: e.target.value}
+    formData: {
+      ...formData, [e.target.name]: e.target.value
+    }
   })
 
   // Previous Step
-  const onStepBack = e => setFormState({
-    ...formState, step: step -1
+  const onStepBack = e => setValidationState({
+    ...validationState, step: step -1
   });
 
   // Next Step
-  const onStepNext = (e,filled, messages) => {
-    if (filled) {
-      setFormState({
-      ...formState, step: step + 1 
+  const onStepNext = (e) => {
+    if (errorMessages.length === 0) {
+      setValidationState({
+      ...validationState, step: step + 1 
     })} 
     else {
       e.preventDefault();
-      
-      for (let msg in messages) {
-        console.log('messages: ', messages);
-        setAlert(messages[msg], 'danger');
+
+      for (let msg in errorMessages) {
+        setAlert(errorMessages[msg], 'danger');
       }
     }
   }
 
     // Form Submit
   const onSubmit = e => {
-    e.preventDefault();
-    removeEmptyFields(formData);
-    removeEmptyObjects(formData);
-    addAccountToCompany(formData);
+    if (errorMessages.length === 0) {
+      e.preventDefault();
+      removeEmptyFields(formData);
+      removeEmptyObjects(formData);
+      addAccountToCompany(formData);
+    } else {
+      e.preventDefault();
+
+      for (let msg in errorMessages) {
+        setAlert(errorMessages[msg], 'danger');
+      }
+    }
   }
+
+  console.log('formData: ', formData);
 
   if (!loading && profile.operation !== undefined ) {
     return <Redirect to='/create-team' />
@@ -131,7 +161,7 @@ const AddAccounts = ({ setAlert, addAccountToCompany, user, company: { profile, 
         <SideNav/>
         <div className="container-company-main">
           <LargeHeader title={`${account.charAt(0).toUpperCase() + account.slice(1)} Account Setup`}/>
-          <AccountStepHandler back={onStepBack} next={onStepNext} onChangeGeneral={onChangeGeneral} onChangeAddress={onChangeAddress} onSubmit={onSubmit} {...formState} />
+          <StepHandler back={onStepBack} next={onStepNext} onChangeGeneral={onChangeGeneral} onChangeAddress={onChangeAddress} onSubmit={onSubmit} formData={formData} step={step}/>
         </div>
       </div>
     </Fragment>

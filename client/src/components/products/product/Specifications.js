@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 
 const Specifications = ({basePrice, dimensions: {length, width, height}, weight}) => {
   return (

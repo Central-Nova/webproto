@@ -4,7 +4,6 @@ import { setAlert } from './alert';
 import {
   ROLES_LOADED,
   ROLES_ERROR,
-  ROLES_CLEARED
 } from './types';
 
 

@@ -1,13 +1,11 @@
 import React from 'react'
 
 // Components
-import Step1 from '../steps/Step1';
-import Step2 from '../steps/Step2';
+import Step1 from './Step1';
+import Step2 from './Step2';
 
 
-const AccountStepHandler = ( props ) => {
-  console.log('level 0 props: ', props)
-
+const StepHandler = ( props ) => {
   const { step } = props;
 
   if (step === 1) {
@@ -28,4 +26,4 @@ const AccountStepHandler = ( props ) => {
 }
 
 
-export default AccountStepHandler;
+export default StepHandler;

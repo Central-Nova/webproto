@@ -10,10 +10,9 @@ import PriceRules from './PriceRules';
 import Specifications from './Specifications';
 import InventorySummary from './InventorySummary';
 
-const Product = ({ match, products: { filteredProducts: { loading, data } }, loadProductById, clearProducts }) => {
+const Product = ({ products: { filteredProducts: { loading, data } }, loadProductById, clearProducts }) => {
 
   const { productId } = useParams();
-  const { params } = match;
 
   useEffect(()=> {
     loadProductById(productId);

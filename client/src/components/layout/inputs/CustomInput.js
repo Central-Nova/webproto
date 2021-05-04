@@ -1,6 +1,5 @@
 import React from 'react'
 import AsyncSelect from 'react-select/async';
-import CreatableSelect from 'react-select/creatable';
 import makeAnimated from 'react-select/animated';
 
 const animatedComponents = makeAnimated();

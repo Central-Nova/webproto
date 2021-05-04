@@ -6,7 +6,6 @@ import {
   USERS_ERROR,
   USERS_UPDATED,
   USERS_READY,
-  USERS_CLEARED
 } from './types';
 
 export const loadCompanyUsers = () => async (dispatch) => {

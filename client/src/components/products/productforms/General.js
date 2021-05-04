@@ -1,6 +1,5 @@
 import React, {Fragment} from 'react'
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 
 import CustomTextInput from '../../layout/inputs/CustomTextInput';
 
@@ -58,10 +57,4 @@ const General = ({ register, errors, control }) => {
   )
 }
 
-General.propTypes = {
-}
-
-const mapStateToProps = state => ({
-})
-
-export default connect(mapStateToProps, {})(General)
+export default General

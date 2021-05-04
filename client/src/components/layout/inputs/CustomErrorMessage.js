@@ -17,7 +17,7 @@ const getNameProperties = (inputName) => {
     nameProperties.index = regexMatch[0].replace('[','').replace(']','');
     nameProperties.name = inputName.substring(regexIndex + 4, inputName.length);
   } else if (inputName.includes('.')) {
-    let regexMatch = inputName.match(/\./)
+    // let regexMatch = inputName.match(/\./)
     let regexIndex = inputName.search(/\./)
 
     nameProperties.valueType = 'object';

@@ -37,7 +37,7 @@ const CustomTextInput = ({ defaultValue, control, errors, name, placeholder, lab
   
   const { 
     field: { ref, ...inputProps },
-    meta: { invalid, isTouched, isDirty },
+    meta,
   } = 
   useController({
     name,
