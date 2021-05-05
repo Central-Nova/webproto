@@ -20,7 +20,7 @@ const CompanySchema = new mongoose.Schema({
     street: {
       type: String
     },
-    aptSuite: {
+    suite: {
       type: String
     },
     city: {
@@ -37,7 +37,7 @@ const CompanySchema = new mongoose.Schema({
     street: {
       type: String
     },
-    aptSuite: {
+    suite: {
       type: String
     },
     city: {

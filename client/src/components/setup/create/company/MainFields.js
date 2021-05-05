@@ -40,11 +40,11 @@ const MainFields = ({ formState, formChange, onClick }) => {
               placeholder="EIN"
               />
             </div>
-            <button className="btn btn-small btn-primary my-1" onClick={(e)=>onClick(e)}>
-              Submit 
-            </button>
           </form>
         </div>
+        <button className="btn btn-small btn-primary my-1" onClick={(e)=>onClick(e)}>
+          Submit 
+        </button>
       </FieldContainer>
     </div>
   )

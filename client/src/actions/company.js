@@ -29,7 +29,7 @@ export const addAccountToCompany = (formData) => async dispatch => {
     dispatch(setAlert({title: 'Success', description: `${account.charAt(0).toUpperCase() + account.slice(1)} account information added.`}, 'success'));
 
   } catch (err) {
-    
+    console.log(err);
     const errors = err.response.data.errors;
     
     // Loop through errors array and call setAlert to display error message in alert box.

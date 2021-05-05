@@ -74,7 +74,7 @@ const AddAccounts = ({ setAlert, addAccountToCompany, user, company: { profile, 
       }
     }
     setValidationState({...validationState, emptyFields: [...newEmptyFields]});
-  }, [businessAddress, emptyFields, step])
+  }, [businessAddress, emptyFields, step, email, phone])
 
   useEffect(() => {
     // Loop through emptyFields and create an error message for each value
@@ -142,6 +142,7 @@ const AddAccounts = ({ setAlert, addAccountToCompany, user, company: { profile, 
   }
 
   console.log('formData: ', formData);
+  console.log('validationState: ', validationState);
 
   if (!loading && profile.operation !== undefined ) {
     return <Redirect to='/create-team' />

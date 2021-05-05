@@ -123,7 +123,6 @@ export const loadUser = () => async (dispatch) => {
 
       dispatch(loadCompany());
   } catch (err) {
-    console.log(err);
     const errors = err.response.data.errors;
     
     if (errors) {

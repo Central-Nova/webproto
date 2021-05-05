@@ -14,7 +14,7 @@ import SetupMain from '../setup/SetupMain';
 import CreateCompany from '../setup/create/company/CreateCompany';
 import AddAccounts from '../setup/create/account/AddAccounts';
 import CreateTeam from '../setup/create/team/CreateTeam';
-import SetupJoin from '../setup/join/SetupJoin';
+import JoinCompany from '../setup/join/JoinCompany';
 
 // Products
 import Products from '../products/products/Products';
@@ -42,7 +42,7 @@ const Routes = (props) => {
         <SetupRoute exact path='/create-company' component={CreateCompany}/>
         <SetupRoute path='/create-account/:account' component={AddAccounts}/>
         <SetupRoute exact path='/create-team' component={CreateTeam}/>
-        <SetupRoute exact path='/company-join' component={SetupJoin}/>
+        <SetupRoute exact path='/join-company' component={JoinCompany}/>
 
         {/* Dashboard */}
         <PrivateRoute exact path='/dashboard' component={Dashboard}/>

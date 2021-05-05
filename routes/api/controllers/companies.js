@@ -125,7 +125,7 @@ const editCompany = async (req, res) => {
 
   
   try {
-
+    console.log('made it');
     // Check if company already has account setup
     let queryStartTime = new Date()
   

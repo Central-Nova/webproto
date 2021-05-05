@@ -22,10 +22,10 @@ const Step1 = ( props ) => {
         label='Warehouse Address'
         description='Your ship from address for all orders. If left empty, business address will be used'>
         <AddressForm addressType='warehouseAddress' onChangeAddress={onChangeAddress} formData={warehouseAddress}/>
-      </FieldContainer>
-      <button className="btn btn-small btn-primary my-1" onClick={e =>next(e)}>Next
+        <button className="btn btn-small btn-primary my-1" onClick={e =>next(e)}>Next
           <i className="fas fa-long-arrow-alt-right"></i>
         </button>
+      </FieldContainer>
     </Fragment>
   )
 }

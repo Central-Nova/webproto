@@ -6,15 +6,21 @@ import { Link } from 'react-router-dom'
 import { loadCompanyUsers } from '../../../actions/users';
 import { createInvitations } from '../../../actions/invitations';
 
+// Components
 import UsersRow from './UsersRow';
 import Spinner from '../../layout/Spinner';
 import RoleCheck from '../../layout/auth/RoleCheck';
+import EmailInvite from './EmailInvite';
+import DropDownFilters from './DropDownFilters';
+import SearchBar from './SearchBar';
+import HeroHeader from '../components/headers/HeroHeader';
 
 const initialState = {
   search: '',
   role: '',
   department: ''
 }
+
 
 const Users = ({ users, invitations: { sent }, loadCompanyUsers, createInvitations}) => {
   const { loading, profiles } = users;
@@ -148,65 +154,15 @@ const Users = ({ users, invitations: { sent }, loadCompanyUsers, createInvitatio
     {loading ? (<Spinner/>) : (
       
       <div className="container-dashboard">
-        <div className="container-headline">
-          <p className="text-primary text-medium">Users</p>
-          <p className="text-primary-light text-small">
-            Manage users and their roles.
-          </p>
-        </div>
+        <HeroHeader title='Users' description='Manage users and their roles.'/>
         <div className="container-filter-fields my-2">
-          <div className="form search">
-            <i className="fas fa-search"></i>
-            <input onChange={(e) => onSearchChange(e)} name='search' value={search} type="text" placeholder="Search users by name or email." />
-          </div>
+          <SearchBar onChange={onSearchChange} value={search} />
           <RoleCheck department='admin' document='invitations' action='create' 
           yes={()=> (
-            <Fragment>
-              <div className="form grid-invite">
-                <div className="form email">
-                  <i className="fas fa-paper-plane"></i>
-                  <input
-                    onChange={(e)=> onEmailChange(e)}
-                    value={emailsState}
-                    type="text"
-                    placeholder="Enter emails separated by a comma."
-                  />
-                </div>
-                <div className="">
-                <button onClick={() => onEmailSubmit()} className="btn btn-primary btn-small">Invite</button>
-                </div>
-              </div>
-              <div className=""></div>
-            </Fragment>
+            <EmailInvite emailsState={emailsState} onChange={onEmailChange} onSubmit={onEmailSubmit} />
           )}
-          no={()=> (null)}
-           />
-          <div className="container-filters">
-            <p className="text-small text-primary-light">Filter by:</p>
-            <div className="filter-option">
-              <i className="fas fa-sitemap"></i>
-              <select onChange={(e)=> onSearchChange(e)} name="role" id="">
-                <option value="">Role</option>
-                <option value="manager">Manager</option>
-                <option value="worker">Worker</option>
-              </select>
-            </div>
-            <div className="filter-option">
-              <i className="fas fa-briefcase"></i>
-              <select onChange={(e)=> onSearchChange(e)} name="department" id="">
-                <option value="">Department</option>
-                <option value="Sales">Sales</option>
-                <option value="Products">Products</option>
-                <option value="Inventory">Inventory</option>
-                <option value="Warehouse">Warehouse</option>
-                <option value="Fleet">Fleet</option>
-                <option value="Payments">Payments</option>
-              </select>
-            </div>
-            <div className="">
-              <button onClick={()=> onClear()} className="btn btn-tiny btn-light">Clear</button>
-            </div>
-          </div>
+          no={()=> (null)}/>
+        <DropDownFilters onSearchChange={onSearchChange} onClear={onClear} />
         </div>
         <div className="container-users-grid">
           <div className="grid-users-headers text-regular text-primary">

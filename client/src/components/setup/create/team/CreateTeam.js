@@ -35,12 +35,9 @@ const CreateTeam = ({ createInvitations, invitations: { sent } }) => {
     
     setFormData({employees:newEmployees})
   }
-
-
   
   // Loop through formData and if it matches the index of the even slot, then make a change to that email value. Set the new array to formData
   const onChange = (idx,e) => {
-
     const newEmployees = employees.map( 
       (employee, idy) => {
         if (idy !== idx) {
@@ -79,18 +76,9 @@ const CreateTeam = ({ createInvitations, invitations: { sent } }) => {
     <div className="container-company-double">
       <SideNav/>
       <div className="container-company-main">
-        <div className="company-headline-text">
-          <h1 className="text-large text-primary">Team Details</h1>
-        </div>
-        <div className="container-role-field my-4">
-          <div className="container-text">
-            <p className="text-regular text-primary">
-              Invite your employees to join your team.
-            </p>
-            <p className="text-small text-primary-light">
-              Roles can be changed and customized later.
-            </p>
-          </div>
+        <LargeHeader title='Team Details'/>
+          <FieldContainer label='Invite your employees to join your team.'
+          description='Roles can be changed and customized later.'>
           <div className="form">
             <form action="">
               <div className="form-grid-emails">
@@ -102,18 +90,19 @@ const CreateTeam = ({ createInvitations, invitations: { sent } }) => {
                   </button>
                 </div>
               <div className="buttons my-1">
-                <button onClick={(e) => onSubmit(e)} className="btn btn-small btn-primary my-1">
-                  Send 
-                </button>
-                <Link to='/'>
-                <button className="btn btn-small btn-light my-1">
-                  Done 
-                </button>
-                </Link>
+
               </div>
             </form>
           </div>
-        </div>
+          <button onClick={(e) => onSubmit(e)} className="btn btn-small btn-primary my-1">
+                  Send 
+          </button>
+          </FieldContainer>
+          <Link to='/'>
+          <button className="btn btn-small btn-light my-1">
+            Done 
+          </button>
+          </Link>
       </div>
     </div>
     </Fragment>

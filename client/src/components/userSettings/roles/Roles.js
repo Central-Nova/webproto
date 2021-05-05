@@ -5,6 +5,20 @@ import PropTypes from 'prop-types';
 
 import { loadRoles } from '../../../actions/roles';
 
+// Components
+import HeroHeader from '../components/headers/HeroHeader';
+import RoleRow from './RoleRow';
+
+const categories = [
+  {category: 'Sales', description: 'Sales quotes, sales orders, refunds, communication with buyers', link: '/role/sales'},
+  {category: 'Products', description: 'Product catalog and related tasks', link: '/role/products'},
+  {category: 'Inventory', description: 'Inventory tracking, product lotting, product catalog, inventory counting', link: '/role/inventory'},
+  {category: 'Warehouse', description: 'Sales orders, picking orders, packing orders, space management', link: '/role/warehouse'},
+  {category: 'Fleet', description: 'Zone, route, and driver management and driver actions.', link: '/role/fleet'},
+  {category: 'Payments', description: 'Accounts receivable, cost tracking, and reports', link: '/role/payments'},
+  {category: 'Admin', description: 'Company profile, user profiles, roles and permissions', link: '/role/admin'},
+]
+
 const Roles = ({ loadRoles }) => {
 
   useEffect(()=> {
@@ -12,102 +26,16 @@ const Roles = ({ loadRoles }) => {
   },[])
   return (
       <div className="container-dashboard">
-        <div className="container-headline">
-          <p className="text-primary text-large">Roles</p>
-          <p className="text-primary-light text-small">
-            Manage roles and permissions per task category.
-          </p>
-        </div>
+        <HeroHeader title='Roles' description='Manage roles and permissions per task category.' />
         <div className="container-roles-manage-grid">
           <div className="grid-roles-headers text-primary text-regular">
             <p className="col1 ">Category</p>
             <p className="col2 ">Description</p>
           </div>
           <hr className="my-1" />
-          <div className="grid-roles-item text-primary text-small">
-            <p className="col1">Sales</p>
-            <p className="col2">
-              Sales quotes, sales orders, refunds, communication with buyers
-            </p>
-            <div className="col3">
-            <Link to="/role/sales">
-              <button className="btn btn-primary btn-small btn-next">
-                Manage <i className="fas fa-long-arrow-alt-right"></i>
-              </button>
-            </Link>
-            </div>
-          </div>
-          <hr className="my-2" />
-          <div className="grid-roles-item text-primary text-small">
-            <p className="col1">Inventory</p>
-            <p className="col2">
-              Inventory tracking, product lotting, product catalog, inventory counting
-            </p>
-            <div className="col3">
-            <Link to="/role/inventory">
-              <button className="btn btn-primary btn-small btn-next">
-                Manage <i className="fas fa-long-arrow-alt-right"></i>
-              </button>
-            </Link>
-            </div>
-          </div>
-          <hr className="my-2" />
-          <div className="grid-roles-item text-primary text-small">
-            <p className="col1">Warehouse</p>
-            <p className="col2">
-              Sales orders, picking orders, packing orders, space management
-            </p>
-            <div className="col3">
-            <Link to="/role/warehouse">
-              <button className="btn btn-primary btn-small btn-next">
-                Manage <i className="fas fa-long-arrow-alt-right"></i>
-              </button>
-            </Link>
-            </div>
-          </div>
-          <hr className="my-2" />
-          <div className="grid-roles-item text-primary text-small">
-            <p className="col1">Fleet</p>
-            <p className="col2">
-              Zone, route, and driver management and driver actions.
-            </p>
-            <div className="col3">
-            <Link to="/role/fleet">
-              <button className="btn btn-primary btn-small btn-next">
-                Manage <i className="fas fa-long-arrow-alt-right"></i>
-              </button>
-            </Link>
-            </div>
-          </div>
-          <hr className="my-2" />
-          <div className="grid-roles-item text-primary text-small">
-            <p className="col1">Accounting</p>
-            <p className="col2">
-              Accounts receivable, cost tracking, and reports
-            </p>
-            <div className="col3">
-            <Link to="/role/payments">
-              <button className="btn btn-primary btn-small btn-next">
-                Manage <i className="fas fa-long-arrow-alt-right"></i>
-              </button>
-            </Link>
-            </div>
-          </div>
-          <hr className="my-2" />
-          <div className="grid-roles-item text-primary text-small">
-            <p className="col1">Admin</p>
-            <p className="col2">
-              Account information, payment information, user roles and permissions
-            </p>
-            <div className="col3">
-            <Link to="/role/admin">
-              <button className="btn btn-primary btn-small btn-next">
-                Manage <i className="fas fa-long-arrow-alt-right"></i>
-              </button>
-            </Link>
-            </div>
-          </div>
-          <hr className="my-2" />
+          {categories.map(item => (
+            <RoleRow category={item.category} description={item.description} link={item.link} />
+          ))}
           <Link to="/users">
             <button className="btn btn-small btn-light btn-back my-2">
               <i className="fas fa-long-arrow-alt-left"></i>Back

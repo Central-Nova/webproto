@@ -4,6 +4,7 @@ module.exports = (req, res, next) => {
 
       // Check input fields for errors
       const errors = validationResult(req);
+      console.log('errors: ', errors);
       if (!errors.isEmpty()) {
         return res
         .status(400)

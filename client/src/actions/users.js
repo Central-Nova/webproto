@@ -18,6 +18,7 @@ export const loadCompanyUsers = () => async (dispatch) => {
     })
 
   } catch (err) {
+    console.log(err);
     const errors = err.response.data.errors;
     errors.forEach(error => dispatch(setAlert(error.msg,'danger')));
 
