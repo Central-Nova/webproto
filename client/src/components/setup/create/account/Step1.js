@@ -1,7 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react'
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { setAlert } from '../../../../actions/alert';
+import React, { Fragment } from 'react'
 
 // Components
 import AddressForm from '../forms/AddressForm';

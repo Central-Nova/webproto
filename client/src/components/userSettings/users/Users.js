@@ -13,7 +13,7 @@ import RoleCheck from '../../layout/auth/RoleCheck';
 import EmailInvite from './EmailInvite';
 import DropDownFilters from './DropDownFilters';
 import SearchBar from './SearchBar';
-import HeroHeader from '../components/headers/HeroHeader';
+import HeroHeader from '../../headers/HeroHeader';
 
 const initialState = {
   search: '',

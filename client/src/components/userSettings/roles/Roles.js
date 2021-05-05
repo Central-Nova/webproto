@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { loadRoles } from '../../../actions/roles';
 
 // Components
-import HeroHeader from '../components/headers/HeroHeader';
+import HeroHeader from '../../headers/HeroHeader';
 import RoleRow from './RoleRow';
 
 const categories = [

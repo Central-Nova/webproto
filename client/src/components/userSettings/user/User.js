@@ -7,6 +7,7 @@ import { loadCompanyUsers, updateUserRoles } from '../../../actions/users';
 import Spinner from '../../layout/Spinner';
 import UserRow from './UserRow';
 import RoleCheck from '../../layout/auth/RoleCheck';
+import HeroHeader from '../../headers/HeroHeader';
 
   const initialState = [
     {
@@ -107,44 +108,39 @@ const User = ({ users: { loading, profiles, updated }, loadCompanyUsers, updateU
   }
 
   return (
-  <Fragment>
-  {loading ? (
-  <Spinner/>
-  ) : (
-  <div className="container-dashboard">
-      <div className="container-headline">
-        <p className="text-primary text-large">{`${firstName} ${lastName}`}</p>
-        <p className="text-primary-light text-small">
-          Manage roles for this user.
-        </p>
-      </div>
-      <div className="container-roleswitches-grid">
-        <div className="grid-role-headers text-primary text-regular">
-          <p className="col1">Category</p>
-          <p className="col2">Manager</p>
-          <p className="col3">Worker</p>
+    <Fragment>
+      {loading ? (
+      <Spinner/>
+      ) : (
+      <div className="container-dashboard">
+        <HeroHeader title={`${firstName} ${lastName}`}
+        description='Manage roles for this user' /> 
+        <div className="container-roleswitches-grid">
+          <div className="grid-role-headers text-primary text-regular">
+            <p className="col1">Category</p>
+            <p className="col2">Manager</p>
+            <p className="col3">Worker</p>
+          </div>
+          <hr className="my-1" />
+          {formState.map(department => (
+            <UserRow key={department._id} roleData={department} onChange={handleOnChange} />
+          ))}
         </div>
-        <hr className="my-1" />
-        {formState.map(department => (
-          <UserRow key={department._id} roleData={department} onChange={handleOnChange} />
-        ))}
+        <RoleCheck department='admin' document='userroles' action='edit'
+        yes={()=> (
+          <button onClick={(e) => handleOnSubmit(e)} className="btn btn-small btn-primary btn-back m-2">
+          Save
+        </button>
+        )}
+        no={()=> null}
+        />
+        <Link to="/users">
+        <button className="btn btn-small btn-light btn-back m-2">
+          <i className="fas fa-long-arrow-alt-left"></i>Back
+        </button>
+        </Link>
       </div>
-      <RoleCheck department='admin' document='userroles' action='edit'
-      yes={()=> (
-        <button onClick={(e) => handleOnSubmit(e)} className="btn btn-small btn-primary btn-back m-2">
-        Save
-      </button>
       )}
-      no={()=> null}
-      />
-      <Link to="/users">
-      <button className="btn btn-small btn-light btn-back m-2">
-        <i className="fas fa-long-arrow-alt-left"></i>Back
-      </button>
-      </Link>
-    </div>
-  )
-  }
     </Fragment>
   )
 }

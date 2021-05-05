@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 import { loadRoles, updateCompanyRoles } from '../../../actions/roles';
 import { Link, useParams } from 'react-router-dom'
 
+// Components
 import Spinner from '../../layout/Spinner';
 import RoleSection from './RoleSection';
 import RoleCheck from '../../layout/auth/RoleCheck';
+import HeroHeader from '../../headers/HeroHeader';
 
 
 const Role = ({ auth, roles: {loading, rolesData}, loadRoles, updateCompanyRoles}) => {
@@ -38,7 +40,6 @@ const Role = ({ auth, roles: {loading, rolesData}, loadRoles, updateCompanyRoles
        
       // Loop through each unique document type
       documentTypes.forEach(documentName => {
-        
         
         // Loop through each permission and add to the array of permissions that match the document type. Builds an array for each document type
         
@@ -93,12 +94,9 @@ const Role = ({ auth, roles: {loading, rolesData}, loadRoles, updateCompanyRoles
       <Spinner/>
     ): (
       <div className="container-dashboard">
-        <div className="container-headline">
-          <p className="text-primary text-large">{`${department.charAt(0).toUpperCase() + department.slice(1)} Permissions`}</p>
-          <p className="text-primary-light text-small">
-            Customize permissions for manager and worker roles.
-          </p>
-        </div>
+        <HeroHeader title={`${department.charAt(0).toUpperCase() + department.slice(1)} Permissions`}
+        description='Customize permissions for manager and worker roles'
+        /> 
         { permissionsState.map((permissions, id) => (
           <RoleSection key={id} permissions={permissions} onChange={handleOnChange}/>
         ))
@@ -109,8 +107,7 @@ const Role = ({ auth, roles: {loading, rolesData}, loadRoles, updateCompanyRoles
             Save
           </button>
         )}
-        no={()=> (null)}
-        />
+        no={()=> (null)}/>
         <Link to="/roles">
           <button className="btn btn-small btn-light btn-back m-2">
             <i className="fas fa-long-arrow-alt-left"></i>Back

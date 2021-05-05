@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 
-const ProductsCard = ({ product, clearProducts}) => {
+const ProductCard = ({ product, clearProducts}) => {
 
   const { _id, sku, name, basePrice } = product;
 
@@ -46,4 +46,4 @@ const ProductsCard = ({ product, clearProducts}) => {
   )
 }
 
-export default ProductsCard
+export default ProductCard

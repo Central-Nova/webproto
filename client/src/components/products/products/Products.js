@@ -3,8 +3,10 @@ import { loadFilteredProducts, clearProducts } from '../../../actions/products';
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 
+// Components
 import ProductSF from './ProductSF';
-import ProductsCard from './ProductsCard';
+import ProductsCard from '../components/ProductCard';
+import Results from './Results';
 import Spinner from '../../layout/Spinner';
 import Pagination from '../../layout/pagination/Pagination';
 import Upload from './Upload';
@@ -93,9 +95,8 @@ const Products = ({ products: {filteredProducts}, loadFilteredProducts, clearPro
         <ProductSF setFilterState={setFilterState} onFilterChange={onFilterChange} setModalState={setModalState} modalState={modalState}/>
         <div className="container-products-grid">
         {/* Render filteredProducts */}
-        {filteredProducts.data === null ? (<p>Your product catalog is empty.</p>) : filteredProducts.data.products.length > 0 && filteredProducts.data.products.map(product => (
-          <ProductsCard key={product._id} product={product} clearProducts={clearProducts}/>
-        )) }
+        {filteredProducts.data === null ? (<p>Your product catalog is empty.</p>) : filteredProducts.data.products.length > 0 && 
+        <Results products={filteredProducts.data.products} clearProducts={clearProducts} />}
         </div>
         {/* Pagination */}
         {filteredProducts.data && <Pagination onPageIncrement={onPageIncrement} onPageChange={onPageChange} current={pageState} total={filteredProducts.data.total / filteredProducts.data.limit < 1 ? 1 : Math.ceil(filteredProducts.data.total / filteredProducts.data.limit)} limit={filteredProducts.data.limit} />}
