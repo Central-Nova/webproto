@@ -7,7 +7,7 @@ import { loadCompanyUsers, updateUserRoles } from '../../../actions/users';
 import Spinner from '../../layout/Spinner';
 import UserRow from './UserRow';
 import RoleCheck from '../../layout/auth/RoleCheck';
-import HeroHeader from '../../headers/HeroHeader';
+import HeroHeader from '../../../components/headers/HeroHeader';
 
   const initialState = [
     {

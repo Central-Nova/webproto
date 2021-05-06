@@ -1,6 +1,9 @@
 import React from 'react'
+
+// Components
 import LargeHeader from '../../components/headers/LargeHeader'
 import FieldContainer from '../../components/containers/FieldContainer';
+import BackButton from '../../../../components/buttons/BackButton';
 
 const MainFields = ({ formState, formChange, onClick }) => {
 
@@ -8,10 +11,12 @@ const MainFields = ({ formState, formChange, onClick }) => {
 
   return (
     <div className="container-company-main">
+      <BackButton link='/create-company'/>
       <LargeHeader title='Company Setup'/>
       <FieldContainer 
       label='Business Name'
       description='Your registered business name. Other businesses will need this to identify you.'
+      last={false}
       >
         <div className="form">
           <form action="">
@@ -29,6 +34,7 @@ const MainFields = ({ formState, formChange, onClick }) => {
       <FieldContainer 
       label='Business EIN'
       description='This will be used to verify your business.'
+      last={true}
       >
         <div className="form">
           <form action="">

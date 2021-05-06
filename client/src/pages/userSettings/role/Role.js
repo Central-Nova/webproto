@@ -8,7 +8,7 @@ import { Link, useParams } from 'react-router-dom'
 import Spinner from '../../layout/Spinner';
 import RoleSection from './RoleSection';
 import RoleCheck from '../../layout/auth/RoleCheck';
-import HeroHeader from '../../headers/HeroHeader';
+import HeroHeader from '../../../components/headers/HeroHeader';
 
 
 const Role = ({ auth, roles: {loading, rolesData}, loadRoles, updateCompanyRoles}) => {

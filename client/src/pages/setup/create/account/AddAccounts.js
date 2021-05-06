@@ -12,6 +12,7 @@ import { removeEmptyFields, removeEmptyObjects } from '../../../../lib/sanitize'
 import StepHandler from './StepHandler';
 import SideNav from '../sidenav/SideNav';
 import LargeHeader from '../../components/headers/LargeHeader';
+import BackButton from '../../../../components/buttons/BackButton'
 
 const initialState = {
   errorMessages: [],
@@ -154,13 +155,9 @@ const AddAccounts = ({ setAlert, addAccountToCompany, user, company: { profile, 
         <i className="text-primary fas fa-warehouse fa-4x"></i>
       </div>
       <div className="container-company-double">
-        <div className="button-back">
-          <Link className="btn btn-light btn-large" to="/create-company">
-            <i className="fas fa-long-arrow-alt-left"></i>Back
-          </Link>
-        </div>
         <SideNav/>
         <div className="container-company-main">
+          <BackButton link='/create-company'/>
           <LargeHeader title={`${account.charAt(0).toUpperCase() + account.slice(1)} Account Setup`}/>
           <StepHandler back={onStepBack} next={onStepNext} onChangeGeneral={onChangeGeneral} onChangeAddress={onChangeAddress} onSubmit={onSubmit} formData={formData} step={step}/>
         </div>

@@ -1,5 +1,5 @@
 .m-1 {
-  margin: 0 1rem;
+  margin: 1rem;
 }
 
 .mx-1 {
@@ -11,7 +11,7 @@
 }
 
 .p-1 {
-  padding: 0 1rem;
+  padding: 1rem;
 }
 
 .px-1 {
@@ -23,7 +23,7 @@
 }
 
 .m-2 {
-  margin: 0 2rem;
+  margin: 2rem;
 }
 
 .mx-2 {
@@ -35,7 +35,7 @@
 }
 
 .p-2 {
-  padding: 0 2rem;
+  padding: 2rem;
 }
 
 .px-2 {
@@ -47,7 +47,7 @@
 }
 
 .m-3 {
-  margin: 0 3rem;
+  margin: 3rem;
 }
 
 .mx-3 {
@@ -59,7 +59,7 @@
 }
 
 .p-3 {
-  padding: 0 3rem;
+  padding: 3rem;
 }
 
 .px-3 {
@@ -71,7 +71,7 @@
 }
 
 .m-4 {
-  margin: 0 4rem;
+  margin: 4rem;
 }
 
 .mx-4 {
@@ -83,7 +83,7 @@
 }
 
 .p-4 {
-  padding: 0 4rem;
+  padding: 4rem;
 }
 
 .px-4 {
@@ -95,7 +95,7 @@
 }
 
 .m-5 {
-  margin: 0 5rem;
+  margin: 5rem;
 }
 
 .mx-5 {
@@ -107,7 +107,7 @@
 }
 
 .p-5 {
-  padding: 0 5rem;
+  padding: 5rem;
 }
 
 .px-5 {
@@ -218,6 +218,10 @@
   transition: all 0.2s ease-in;
 }
 
+.btn a {
+  text-decoration: none;
+}
+
 .btn .icon {
   position: relative;
   left: 40px;
@@ -287,7 +291,7 @@
 
 .btn.btn-small {
   font-size: 1rem;
-  padding: 0.5rem 2rem;
+  padding: 0.3rem 2rem;
   width: 150px;
   border-radius: 0.75rem;
 }
@@ -687,7 +691,7 @@ table tbody {
 }
 
 .m-1 {
-  margin: 0 1rem;
+  margin: 1rem;
 }
 
 .mx-1 {
@@ -699,7 +703,7 @@ table tbody {
 }
 
 .p-1 {
-  padding: 0 1rem;
+  padding: 1rem;
 }
 
 .px-1 {
@@ -711,7 +715,7 @@ table tbody {
 }
 
 .m-2 {
-  margin: 0 2rem;
+  margin: 2rem;
 }
 
 .mx-2 {
@@ -723,7 +727,7 @@ table tbody {
 }
 
 .p-2 {
-  padding: 0 2rem;
+  padding: 2rem;
 }
 
 .px-2 {
@@ -735,7 +739,7 @@ table tbody {
 }
 
 .m-3 {
-  margin: 0 3rem;
+  margin: 3rem;
 }
 
 .mx-3 {
@@ -747,7 +751,7 @@ table tbody {
 }
 
 .p-3 {
-  padding: 0 3rem;
+  padding: 3rem;
 }
 
 .px-3 {
@@ -759,7 +763,7 @@ table tbody {
 }
 
 .m-4 {
-  margin: 0 4rem;
+  margin: 4rem;
 }
 
 .mx-4 {
@@ -771,7 +775,7 @@ table tbody {
 }
 
 .p-4 {
-  padding: 0 4rem;
+  padding: 4rem;
 }
 
 .px-4 {
@@ -783,7 +787,7 @@ table tbody {
 }
 
 .m-5 {
-  margin: 0 5rem;
+  margin: 5rem;
 }
 
 .mx-5 {
@@ -795,7 +799,7 @@ table tbody {
 }
 
 .p-5 {
-  padding: 0 5rem;
+  padding: 5rem;
 }
 
 .px-5 {
@@ -814,6 +818,7 @@ table tbody {
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
+  width: 100%;
 }
 
 .form-item {
@@ -824,11 +829,12 @@ table tbody {
 .form select,
 .form textarea {
   padding: 0.5rem 0rem;
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-family: 'Montserrat';
   text-indent: 1rem;
   border-radius: 0.5rem;
   border: 1px solid #ccc;
+  min-width: 100px;
   width: 100%;
   -webkit-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
@@ -861,7 +867,6 @@ table tbody {
   row-gap: 1rem;
   -webkit-column-gap: 5rem;
   column-gap: 5rem;
-  width: 60vw;
 }
 
 .form-grid .street {
@@ -1022,20 +1027,19 @@ table tbody {
   text-decoration: none;
 }
 
+.container-field {
+  min-width: 400px;
+  width: 100%;
+}
+
 .container-company-single {
-  position: absolute;
-  left: 20%;
-  top: 15%;
-}
-
-.container-company-single .button-back {
-  position: absolute;
-  top: -10%;
-}
-
-.container-company-single .button-back i {
   position: relative;
-  right: 20%;
+  padding: 7% 20%;
+}
+
+.container-company-single .container-field button {
+  position: relative;
+  float: right;
 }
 
 h1,
@@ -1099,21 +1103,9 @@ p {
 .container-company-double {
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: 1fr 4fr;
-  grid-template-columns: 1fr 4fr;
+  -ms-grid-columns: 1fr 5fr;
+  grid-template-columns: 1fr 5fr;
   height: 100vh;
-}
-
-.container-company-double .button-back {
-  position: absolute;
-  top: 10%;
-  left: 28%;
-  z-index: 1;
-}
-
-.container-company-double .button-back i {
-  position: relative;
-  right: 20%;
 }
 
 .container-company-double .side-bar {
@@ -1127,6 +1119,17 @@ p {
 
 .container-company-double .side-bar-item {
   margin: 1rem 0;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.container-company-double .side-bar-item i {
+  margin-right: 1rem;
+}
+
+.container-company-double .side-bar .item-current {
+  font-weight: bold;
 }
 
 .container-company-double .side-bar .item-main {
@@ -1151,48 +1154,27 @@ p {
 
 .container-company-double .container-company-main {
   position: relative;
-  padding-top: 11%;
-  padding-left: 10%;
+  padding: 7% 10%;
 }
 
-.container-company-double .container-field {
-  min-width: 400px;
-  width: 40vw;
-}
-
-.container-company-double .container-field .form-item {
-  width: 100%;
-}
-
-.container-company-double .container-field .form button {
+.container-company-double .container-company-main .btn-next {
   position: relative;
-  padding: 0.3rem 2rem;
   float: right;
 }
 
-.container-company-double .container-field .form button i {
+.container-company-double .container-company-main .btn-back {
   position: relative;
-  left: 2rem;
+  z-index: 1;
+  top: 20%;
 }
 
 .container-company-double .container-address-field {
   min-width: 400px;
-  width: 63vw;
+  width: 100%;
 }
 
 .container-company-double .container-address-field .form-item {
   width: 100%;
-}
-
-.container-company-double .container-address-field .form button {
-  position: relative;
-  padding: 0.3rem 2rem;
-  float: right;
-}
-
-.container-company-double .container-address-field .form button i {
-  position: relative;
-  left: 2rem;
 }
 
 .container-company-double .container-role-field {
@@ -1228,7 +1210,7 @@ p {
 }
 
 .m-1 {
-  margin: 0 1rem;
+  margin: 1rem;
 }
 
 .mx-1 {
@@ -1240,7 +1222,7 @@ p {
 }
 
 .p-1 {
-  padding: 0 1rem;
+  padding: 1rem;
 }
 
 .px-1 {
@@ -1252,7 +1234,7 @@ p {
 }
 
 .m-2 {
-  margin: 0 2rem;
+  margin: 2rem;
 }
 
 .mx-2 {
@@ -1264,7 +1246,7 @@ p {
 }
 
 .p-2 {
-  padding: 0 2rem;
+  padding: 2rem;
 }
 
 .px-2 {
@@ -1276,7 +1258,7 @@ p {
 }
 
 .m-3 {
-  margin: 0 3rem;
+  margin: 3rem;
 }
 
 .mx-3 {
@@ -1288,7 +1270,7 @@ p {
 }
 
 .p-3 {
-  padding: 0 3rem;
+  padding: 3rem;
 }
 
 .px-3 {
@@ -1300,7 +1282,7 @@ p {
 }
 
 .m-4 {
-  margin: 0 4rem;
+  margin: 4rem;
 }
 
 .mx-4 {
@@ -1312,7 +1294,7 @@ p {
 }
 
 .p-4 {
-  padding: 0 4rem;
+  padding: 4rem;
 }
 
 .px-4 {
@@ -1324,7 +1306,7 @@ p {
 }
 
 .m-5 {
-  margin: 0 5rem;
+  margin: 5rem;
 }
 
 .mx-5 {
@@ -1336,7 +1318,7 @@ p {
 }
 
 .p-5 {
-  padding: 0 5rem;
+  padding: 5rem;
 }
 
 .px-5 {
@@ -1605,7 +1587,7 @@ p {
 }
 
 .m-1 {
-  margin: 0 1rem;
+  margin: 1rem;
 }
 
 .mx-1 {
@@ -1617,7 +1599,7 @@ p {
 }
 
 .p-1 {
-  padding: 0 1rem;
+  padding: 1rem;
 }
 
 .px-1 {
@@ -1629,7 +1611,7 @@ p {
 }
 
 .m-2 {
-  margin: 0 2rem;
+  margin: 2rem;
 }
 
 .mx-2 {
@@ -1641,7 +1623,7 @@ p {
 }
 
 .p-2 {
-  padding: 0 2rem;
+  padding: 2rem;
 }
 
 .px-2 {
@@ -1653,7 +1635,7 @@ p {
 }
 
 .m-3 {
-  margin: 0 3rem;
+  margin: 3rem;
 }
 
 .mx-3 {
@@ -1665,7 +1647,7 @@ p {
 }
 
 .p-3 {
-  padding: 0 3rem;
+  padding: 3rem;
 }
 
 .px-3 {
@@ -1677,7 +1659,7 @@ p {
 }
 
 .m-4 {
-  margin: 0 4rem;
+  margin: 4rem;
 }
 
 .mx-4 {
@@ -1689,7 +1671,7 @@ p {
 }
 
 .p-4 {
-  padding: 0 4rem;
+  padding: 4rem;
 }
 
 .px-4 {
@@ -1701,7 +1683,7 @@ p {
 }
 
 .m-5 {
-  margin: 0 5rem;
+  margin: 5rem;
 }
 
 .mx-5 {
@@ -1713,7 +1695,7 @@ p {
 }
 
 .p-5 {
-  padding: 0 5rem;
+  padding: 5rem;
 }
 
 .px-5 {
@@ -1824,6 +1806,10 @@ p {
   transition: all 0.2s ease-in;
 }
 
+.btn a {
+  text-decoration: none;
+}
+
 .btn .icon {
   position: relative;
   left: 40px;
@@ -1893,7 +1879,7 @@ p {
 
 .btn.btn-small {
   font-size: 1rem;
-  padding: 0.5rem 2rem;
+  padding: 0.3rem 2rem;
   width: 150px;
   border-radius: 0.75rem;
 }
@@ -2293,7 +2279,7 @@ table tbody {
 }
 
 .m-1 {
-  margin: 0 1rem;
+  margin: 1rem;
 }
 
 .mx-1 {
@@ -2305,7 +2291,7 @@ table tbody {
 }
 
 .p-1 {
-  padding: 0 1rem;
+  padding: 1rem;
 }
 
 .px-1 {
@@ -2317,7 +2303,7 @@ table tbody {
 }
 
 .m-2 {
-  margin: 0 2rem;
+  margin: 2rem;
 }
 
 .mx-2 {
@@ -2329,7 +2315,7 @@ table tbody {
 }
 
 .p-2 {
-  padding: 0 2rem;
+  padding: 2rem;
 }
 
 .px-2 {
@@ -2341,7 +2327,7 @@ table tbody {
 }
 
 .m-3 {
-  margin: 0 3rem;
+  margin: 3rem;
 }
 
 .mx-3 {
@@ -2353,7 +2339,7 @@ table tbody {
 }
 
 .p-3 {
-  padding: 0 3rem;
+  padding: 3rem;
 }
 
 .px-3 {
@@ -2365,7 +2351,7 @@ table tbody {
 }
 
 .m-4 {
-  margin: 0 4rem;
+  margin: 4rem;
 }
 
 .mx-4 {
@@ -2377,7 +2363,7 @@ table tbody {
 }
 
 .p-4 {
-  padding: 0 4rem;
+  padding: 4rem;
 }
 
 .px-4 {
@@ -2389,7 +2375,7 @@ table tbody {
 }
 
 .m-5 {
-  margin: 0 5rem;
+  margin: 5rem;
 }
 
 .mx-5 {
@@ -2401,7 +2387,7 @@ table tbody {
 }
 
 .p-5 {
-  padding: 0 5rem;
+  padding: 5rem;
 }
 
 .px-5 {

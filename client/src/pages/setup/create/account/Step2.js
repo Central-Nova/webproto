@@ -10,7 +10,8 @@ const Step2 = (props) => {
     <Fragment>
       <FieldContainer 
       label='Business Contact Information'
-      description='How your contacts can reach you.'>
+      description='How your contacts can reach you.'
+      last={true}>
         <div className="form">
           <form action="">
             <div className="form form-item">
@@ -29,12 +30,12 @@ const Step2 = (props) => {
                 onChange={e=>onChangeGeneral(e)}
                 placeholder="Phone Number" />
             </div>
-            <button className="btn btn-small btn-primary my-1" onClick={e => onSubmit(e)}>
-              Create
-            </button>
           </form>
         </div>
       </FieldContainer>
+      <button className="btn btn-primary btn-small btn-next my-1" onClick={e => onSubmit(e)}>
+        Create
+      </button>
     </Fragment>
   )
 }

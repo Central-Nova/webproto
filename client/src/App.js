@@ -4,8 +4,8 @@ import { loadUser } from './actions/auth';
 import { loadRoles } from './actions/roles';
 
 // Components
-import Landing from './components/landing/Landing.js';
-import Routes from './components/routing/Routes';
+import Landing from './pages/landing/Landing.js';
+import Routes from './pages/routing/Routes';
 
 // Redux
 import { Provider } from 'react-redux';

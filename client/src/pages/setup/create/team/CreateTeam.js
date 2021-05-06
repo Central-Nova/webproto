@@ -78,7 +78,8 @@ const CreateTeam = ({ createInvitations, invitations: { sent } }) => {
       <div className="container-company-main">
         <LargeHeader title='Team Details'/>
           <FieldContainer label='Invite your employees to join your team.'
-          description='Roles can be changed and customized later.'>
+          description='Roles can be changed and customized later.'
+          last={true}>
           <div className="form">
             <form action="">
               <div className="form-grid-emails">
@@ -90,7 +91,6 @@ const CreateTeam = ({ createInvitations, invitations: { sent } }) => {
                   </button>
                 </div>
               <div className="buttons my-1">
-
               </div>
             </form>
           </div>

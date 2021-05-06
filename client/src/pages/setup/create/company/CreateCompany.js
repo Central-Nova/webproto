@@ -36,11 +36,7 @@ const CreateCompany = ({ createCompany, company: { profile }}) => {
       <i className="text-primary fas fa-warehouse fa-4x"></i>
     </div>
     <div className="container-company-double">
-      <div className="button-back">
-        <Link className="btn btn-light btn-large" to="/company">
-          <i className="fas fa-long-arrow-alt-left"></i>Back
-        </Link>
-      </div>
+
       <SideNav/>
       {profile !== null ? (
         <AccountOptions/>

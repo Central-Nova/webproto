@@ -12,17 +12,19 @@ const Step1 = ( props ) => {
     <Fragment>
       <FieldContainer 
         label='Business Address'
-        description='Your registered business address'>
+        description='Your registered business address'
+        last={false}>
         <AddressForm  addressType='businessAddress' onChangeAddress={onChangeAddress} formData={businessAddress} />
       </FieldContainer>
       <FieldContainer 
         label='Warehouse Address'
-        description='Your ship from address for all orders. If left empty, business address will be used'>
+        description='Your ship from address for all orders. If left empty, business address will be used'
+        last={true}>
         <AddressForm addressType='warehouseAddress' onChangeAddress={onChangeAddress} formData={warehouseAddress}/>
-        <button className="btn btn-small btn-primary my-1" onClick={e =>next(e)}>Next
-          <i className="fas fa-long-arrow-alt-right"></i>
-        </button>
       </FieldContainer>
+      <button className="btn btn-primary btn-small btn-next my-1" onClick={e =>next(e)}>Next
+        <i className="fas fa-long-arrow-alt-right"></i>
+      </button>
     </Fragment>
   )
 }
