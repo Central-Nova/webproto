@@ -23,7 +23,7 @@ const createInvitations = async (req,res) => {
       company: req.user.company,
       code,
       expires,
-      email,
+      email: emails[email],
       })
       
       // Create url link
