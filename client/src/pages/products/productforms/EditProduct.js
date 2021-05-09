@@ -1,10 +1,12 @@
 import React, { Fragment, useEffect } from 'react'
+import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { createProduct, loadProductById } from '../../../actions/products';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+// Components
 import General from './General';
 import Specifications from './Specifications';
 import BasePrice from './BasePrice';
@@ -91,9 +93,11 @@ const EditProduct = ({ createProduct, loadProductById, filteredProducts: { loadi
         <PriceRules errors={errors} control={control} register={register}/>
       </div>
       <button onClick={handleSubmit(onSubmit)} className="btn btn-primary btn-small">Save</button>
-      <button className="btn btn-light btn-back btn-small mx-2">
-        <i className="fas fa-arrow-left"></i>Back
-      </button>
+      <Link to={`/product/${data._id}`}>
+        <button className="btn btn-light btn-back btn-small mx-2">
+          <i className="fas fa-arrow-left"></i>Back
+        </button>
+      </Link>
     </div>
     )}
   </Fragment>

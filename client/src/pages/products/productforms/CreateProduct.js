@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react'
+import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { createProduct, loadAllProducts } from '../../../actions/products';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { setAlert } from '../../../actions/alert';
 
+// Components
 import General from './General';
 import Specifications from './Specifications';
 import BasePrice from './BasePrice';
@@ -79,9 +81,11 @@ const CreateProduct = ({ products: {allProducts: {loading, data}}, loadAllProduc
       <PriceRules errors={errors} control={control} register={register}/>
     </div>
     <button onClick={handleSubmit(onSubmit)} className="btn btn-primary btn-small">Save</button>
-    <button className="btn btn-light btn-back btn-small mx-2">
-      <i className="fas fa-arrow-left"></i>Back
-    </button>
+    <Link to='/products'>
+      <button className="btn btn-light btn-back btn-small mx-2">
+        <i className="fas fa-arrow-left"></i>Back
+      </button>
+    </Link>
   </div>
 
   )
