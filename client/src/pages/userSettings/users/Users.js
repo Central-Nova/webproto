@@ -164,14 +164,14 @@ const Users = ({ users, invitations: { sent }, loadCompanyUsers, createInvitatio
           no={()=> (null)}/>
         <DropDownFilters onSearchChange={onSearchChange} onClear={onClear} />
         </div>
-        <div className="container-users-grid">
-          <div className="grid-users-headers text-regular text-primary">
+        <div className="container-users-grid text-primary">
+          <div className="grid-auto grid-auto-headers text-regular">
             <p>Name</p>
             <p>Email</p>
             <p>Manager</p>
             <p>Worker</p>
             <RoleCheck department='admin' document='userroles' action='edit'
-            yes={()=> (<p>Edit</p>)}
+            yes={()=> (<p class="option">Edit</p>)}
             no={()=>(null)}
             />
           </div>

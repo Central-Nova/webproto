@@ -6,11 +6,11 @@ const RoleSection = ({ permissions, onChange }) => {
 
   return (
     <Fragment>
-        <div className="container-roleswitches-grid my-4">
-          <div className="grid-role-headers text-primary text-regular">
-            <p className="col1">{documentType}</p>
-            <p className="col2">Manager</p>
-            <p className="col3">Worker</p>
+        <div className="container-role-switches-grid text-primary my-4">
+          <div className="grid-auto grid-auto-headers text-regular">
+            <p>{documentType}</p>
+            <p className="option">Manager</p>
+            <p className="option">Worker</p>
           </div>
           <hr className="my-1" />
           {

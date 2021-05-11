@@ -115,11 +115,11 @@ const User = ({ users: { loading, profiles, updated }, loadCompanyUsers, updateU
       <div className="container-dashboard">
         <HeroHeader title={`${firstName} ${lastName}`}
         description='Manage roles for this user' /> 
-        <div className="container-roleswitches-grid">
-          <div className="grid-role-headers text-primary text-regular">
-            <p className="col1">Category</p>
-            <p className="col2">Manager</p>
-            <p className="col3">Worker</p>
+        <div className="container-role-switches-grid text-primary">
+          <div className="grid-auto grid-auto-headers text-regular">
+            <p>Category</p>
+            <p className="option">Manager</p>
+            <p className="option">Worker</p>
           </div>
           <hr className="my-1" />
           {formState.map(department => (

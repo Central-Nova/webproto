@@ -27,10 +27,11 @@ const Roles = ({ loadRoles }) => {
   return (
       <div className="container-dashboard">
         <HeroHeader title='Roles' description='Manage roles and permissions per task category.' />
-        <div className="container-roles-manage-grid">
-          <div className="grid-roles-headers text-primary text-regular">
-            <p className="col1 ">Category</p>
-            <p className="col2 ">Description</p>
+        <div className="container-roles-manage-grid text-primary">
+          <div className="grid-auto grid-auto-headers text-regular">
+            <p>Category</p>
+            <p>Description</p>
+            <p className="option">Edit</p>
           </div>
           <hr className="my-1" />
           {categories.map(item => (
