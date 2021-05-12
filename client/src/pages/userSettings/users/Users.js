@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 
 import { loadCompanyUsers } from '../../../actions/users';
 import { createInvitations } from '../../../actions/invitations';
+import { filterProfiles } from '../../../lib/filter';
 
 // Components
 import UsersRow from './UsersRow';
@@ -21,7 +22,6 @@ const initialState = {
   department: ''
 }
 
-
 const Users = ({ users, invitations: { sent }, loadCompanyUsers, createInvitations}) => {
   const { loading, profiles } = users;
 
@@ -33,95 +33,32 @@ const Users = ({ users, invitations: { sent }, loadCompanyUsers, createInvitatio
 
   const { search } = filterState;
 
-  // Reload profilesState whenever filterState is updated
-  useEffect(()=> {
-
+  // Load user profiles
+  useEffect(() => {
     loadCompanyUsers();
+  }, [])
 
-    if (!loading && profiles!==null) {
+  // Apply search and filters
+  useEffect(() => {
+    if (!loading && profiles !== null) {
 
-
-      if (filterState.search !== '' || filterState.department !== '' || filterState.role !== '') {
-
-        let filteredProfiles = [...profiles]
-        
-        // Filter only by search
-        if (filterState.department === '' && filterState.role ==='') {
-          // Filter by search 
-          filteredProfiles = filteredProfiles.filter(profile => {
-            return (profile.firstName.toLowerCase().includes(filterState.search.toLowerCase()) || profile.lastName.toLowerCase().includes(filterState.search.toLowerCase()) || profile.email.toLowerCase().includes(filterState.search.toLowerCase()))
-          })
+      // compile filter criteria
+      let filters = []
+      for (let [key, value] of Object.entries(filterState)) {
+        if (value !== '') {
+          filters.push({filterName: key,  filterValue: value})
         }
-
-        // For filter by department and role
-        if (filterState.department !=='' && filterState.role !== '') {
-
-          filteredProfiles = filteredProfiles.filter(profile =>{
-          // Loop through each role item
-          let containsRole = profile.roles.map(role => {
-            // Check if the user has either worker or manager role in the specified department. If true, then containsRole will have a 'true' value
-            if (role.department.toString() === filterState.department) {
-                if (role[filterState.role] === true) {
-                  return true
-                } return false
-              }
-            })
-            // If containsRole has at least one 'true' value, then filter condition will receive 'true', adding profile to filtered array
-            return containsRole.includes(true)
-          }) 
-
-          // Filter by search 
-          filteredProfiles = filteredProfiles.filter(profile => {
-          return (profile.firstName.toLowerCase().includes(filterState.search.toLowerCase()) || profile.lastName.toLowerCase().includes(filterState.search.toLowerCase()) || profile.email.toLowerCase().includes(filterState.search.toLowerCase()))
-        })
-
-          // Filter by department
-        } if (filterState.department !=='' && filterState.role === '') {
-          filteredProfiles = filteredProfiles.filter(profile =>{
-          let containsRole = profile.roles.map(role => {
-            if (role.department.toString() === filterState.department) {
-                if (role.manager === true || role.worker === true) {
-                  return true
-                } return false
-              }
-            })
-            return containsRole.includes(true)
-          }) 
-
-          // Filter by search 
-          filteredProfiles = filteredProfiles.filter(profile => {
-            return (profile.firstName.toLowerCase().includes(filterState.search.toLowerCase()) || profile.lastName.toLowerCase().includes(filterState.search.toLowerCase()) || profile.email.toLowerCase().includes(filterState.search.toLowerCase()))
-          })
-
-          // Filter by role
-        } if (filterState.department ==='' && filterState.role !== '') {
-          filteredProfiles = filteredProfiles.filter(profile =>{
-          let containsRole = profile.roles.map(role => {
-              if (role[filterState.role] === true) {
-                return true
-              } return false
-              
-            })
-            return containsRole.includes(true)
-          }) 
-
-          // Filter by search 
-          filteredProfiles = filteredProfiles.filter(profile => {
-            return (profile.firstName.toLowerCase().includes(filterState.search.toLowerCase()) || profile.lastName.toLowerCase().includes(filterState.search.toLowerCase()) || profile.email.toLowerCase().includes(filterState.search.toLowerCase()))
-          })
-        } 
-
-        // Set profiles after filters applied
-        setProfilesState(filteredProfiles);
+      };
+      
+      // apply filters if there are filter values
+      if (filters.length > 0) {
+        let newProfiles = filterProfiles(profiles, filters)
+        setProfilesState(newProfiles)
       } else {
-        // If no filters applied, then show all profiles
-        setProfilesState(profiles);
+        setProfilesState(profiles)
       }
-
     }
-
-
-  }, [loading, filterState])
+  }, [loading, profiles, filterState])
 
   useEffect(()=> {
     if (sent) {
@@ -171,14 +108,18 @@ const Users = ({ users, invitations: { sent }, loadCompanyUsers, createInvitatio
             <p>Manager</p>
             <p>Worker</p>
             <RoleCheck department='admin' document='userroles' action='edit'
-            yes={()=> (<p class="option">Edit</p>)}
+            yes={()=> (<p className="option">Edit</p>)}
             no={()=>(null)}
             />
           </div>
           <hr className="my-1" />
-          {profilesState.map((profile) => (
+          {profilesState.length > 0 ? (
+            profilesState.map((profile) => (
             <UsersRow key={profile._id} profile={profile}/>
-          ))}
+          ))
+          ):(
+            <p className='text-primary text-small'>No users found...</p>
+          )}
         </div>
         <RoleCheck 
           department='admin'
