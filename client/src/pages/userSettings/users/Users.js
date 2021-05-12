@@ -49,7 +49,7 @@ const Users = ({ users, invitations: { sent }, loadCompanyUsers, createInvitatio
           filters.push({filterName: key,  filterValue: value})
         }
       };
-      
+
       // apply filters if there are filter values
       if (filters.length > 0) {
         let newProfiles = filterProfiles(profiles, filters)
@@ -95,10 +95,10 @@ const Users = ({ users, invitations: { sent }, loadCompanyUsers, createInvitatio
         <div className="container-filter-fields my-2">
           <SearchBar onChange={onSearchChange} value={search} />
           <RoleCheck department='admin' document='invitations' action='create' 
-          yes={()=> (
-            <EmailInvite emailsState={emailsState} onChange={onEmailChange} onSubmit={onEmailSubmit} />
-          )}
-          no={()=> (null)}/>
+            yes={()=> (
+              <EmailInvite emailsState={emailsState} onChange={onEmailChange} onSubmit={onEmailSubmit} />
+            )}
+            no={()=> (null)}/>
         <DropDownFilters onSearchChange={onSearchChange} onClear={onClear} />
         </div>
         <div className="container-users-grid text-primary">
