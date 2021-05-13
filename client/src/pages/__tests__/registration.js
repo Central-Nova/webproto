@@ -16,7 +16,7 @@ import Landing from '../landing/Landing';
 import Login from '../auth/Login';
 import Register from '../auth/Register';
 import AlertBox from '../layout/alerts/AlertBox';
-import SetupMain from '../auth/setup/SetupMain';
+import SetupMain from '../setup/SetupMain';
 import Dashboard from '../dashboard/Dashboard';
 
 // Route Components

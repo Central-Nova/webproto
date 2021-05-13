@@ -292,10 +292,8 @@ describe('Auth Action Creators', () => {
       const actions = store.getActions()
       expect(axios.post).toHaveBeenCalledTimes(1);
       expect(axios.post.mock.calls[0]).toContain(formData);
-      expect(axios.get).toHaveBeenCalledTimes(2);
       expect(actions[0]).toEqual(expectedActions.register);
       expect(actions[1]).toEqual(expectedActions.setAlert);
-      expect(actions[2]).toEqual(expectedActions.loadUser);
       
     }),
     test('dispatches setAlert for each error', async () => {
