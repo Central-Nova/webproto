@@ -63,3 +63,24 @@ export const filterProfiles = (profiles, filters) => {
       return newProfiles
   }
 }
+
+export const filterDepartments = (rolesArray, roleCriteria) => {
+  console.log('rolesArray: ', rolesArray)
+  console.log('roleCriteria: ', roleCriteria);
+  // rolesArray must be an array
+  if (!Array.isArray(rolesArray)) {
+    throw new Error('Roles must be an Array of objects')
+  }
+
+  // roleCriteria must be a string
+  if (typeof roleCriteria !== 'string') {
+    throw new Error('Criteria must be of type string')
+  }
+  let departments = []
+  rolesArray.forEach(role => {
+    if (role[roleCriteria] === true) {
+      departments.push(role.department)
+    }
+  })
+  return departments
+}

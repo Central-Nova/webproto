@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/extend-expect'
-import { filterProfiles } from '../filter';
+import { filterProfiles, filterDepartments } from '../filter';
 
-describe('lib: filter', () => {
+describe('lib: filterProfiles', () => {
     let employees = {
         warehouseManager: {
             email: "john@mail.com",
@@ -67,7 +67,7 @@ describe('lib: filter', () => {
     const { warehouseManager, paymentsWorker1, paymentsWorker2 } = employees;
     const profiles = [warehouseManager, paymentsWorker1, paymentsWorker2]
 
-    const filterDepartment = [{
+    const filterDepartments = [{
         filterName: 'department',
         filterValue: 'Payments'
     }]
@@ -139,5 +139,78 @@ describe('lib: filter', () => {
     }),
     test('throws error if profiles is not an array', () => {
         expect(() => filterProfiles('profiles', filters.byDepartment)).toThrow('Profiles must be an Array of objects');
+    })
+}),
+describe('lib: filterDepartments', () => {
+    const rolesArray = {
+        salesWorker: [
+                {   department: "Sales",
+                manager: false,
+                worker: true,
+                _id: "60858b12af99ca0034999d26"},
+                {   department: "Warehouse",
+                manager: false,
+                worker: false,
+                _id: "60858b12af99ca0034999d27"},
+                {   department: "Payments",
+                manager: false,
+                worker: false,
+                _id: "60858b12af99ca0034999d28"}
+            ]
+        ,
+        warehouseManager: [
+            {   department: "Sales",
+            manager: false,
+            worker: false,
+            _id: "60858b12af99ca0034999d26"},
+            {   department: "Warehouse",
+            manager: true,
+            worker: false,
+            _id: "60858b12af99ca0034999d27"},
+            {   department: "Payments",
+            manager: false,
+            worker: false,
+            _id: "60858b12af99ca0034999d28"}
+        ],
+        noRoles: [
+            {   department: "Sales",
+            manager: false,
+            worker: false,
+            _id: "60858b12af99ca0034999d26"},
+            {   department: "Warehouse",
+            manager: false,
+            worker: false,
+            _id: "60858b12af99ca0034999d27"},
+            {   department: "Payments",
+            manager: false,
+            worker: false,
+            _id: "60858b12af99ca0034999d28"}
+        ],
+    }
+
+    const roleCriteria = {
+        worker: 'worker',
+        manager: 'manager'
+    }
+
+    test('filters by worker role', () => {
+        let departments = filterDepartments(rolesArray.salesWorker, roleCriteria.worker);
+        expect(departments.length).toBe(1)
+        expect(departments[0]).toBe('Sales');
+    }),
+    test('filters by manager role', () => {
+        let departments = filterDepartments(rolesArray.warehouseManager, roleCriteria.manager);
+        expect(departments.length).toBe(1)
+        expect(departments[0]).toBe('Warehouse');
+    }),
+    test('can return no result', () => {
+        let departments = filterDepartments(rolesArray.noRoles, roleCriteria.worker);
+        expect(departments.length).toBe(0);
+    }),
+    test('throws error if rolesArray is not an array', () => {
+        expect(() => filterDepartments('rolesArray', roleCriteria.worker)).toThrow('Roles must be an Array of objects');
+    }),
+    test('throws error if roleCriteria is not a string', () => {
+        expect(() => filterDepartments(rolesArray.salesWorker,['roleCriteria'] )).toThrow('Criteria must be of type string');
     })
 })
