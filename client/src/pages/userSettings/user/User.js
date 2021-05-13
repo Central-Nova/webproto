@@ -9,16 +9,16 @@ import UserRow from './UserRow';
 import RoleCheck from '../../layout/auth/RoleCheck';
 import HeroHeader from '../../../components/headers/HeroHeader';
 
-  const initialState = [
+  const initialFormState = [
     {
       _id: 'startid1',
-      department: 'Sales',
+      department: 'Products',
       manager: false,
       worker: false
     },
     {
       _id: 'startid2',
-      department: 'Products',
+      department: 'Sales',
       manager: false,
       worker: false
     },
@@ -48,45 +48,42 @@ import HeroHeader from '../../../components/headers/HeroHeader';
     }
   ]
 
-const User = ({ users: { loading, profiles, updated }, loadCompanyUsers, updateUserRoles }) => {
-
-  const [ formState, setFormState ] = useState(initialState)
-
-  const { userId } = useParams();
-  
-  // Load users and filter for requested user. Then set initialState to user's role.
-  useEffect(()=> {
-    
-    loadCompanyUsers();
-    
-    if (!loading) {
-      const roleData = [...initialState]
-      
-      let profileToState = profiles.find((profile) => profile._id === userId);
-
-      for (let role in profileToState.roles) {
-        roleData[role] = profileToState.roles[role]
-      }
-
-      setFormState(roleData);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }
-    
-  }, [loadCompanyUsers, loading, userId])
-
-  // Get user name from url params
-  let profileToLoad = {}
-
-  if (!loading && profiles!== null) {
-    profileToLoad = profiles.find((profile) => profile._id === userId);
+  const initialUserState = {
+    firstName: 'User',
+    lastName: ''
   }
 
-  let { firstName, lastName } = profileToLoad;
+const User = ({ users: { loading, profiles, updated }, loadCompanyUsers, updateUserRoles }) => {
+
+  const [ formState, setFormState ] = useState(initialFormState)
+  const [ userState, setUserState ] = useState(initialUserState)
+  const { firstName, lastName } = userState;
+  const { userId } = useParams();
+  
+  // Load users.
+  useEffect(()=> {
+    loadCompanyUsers();    
+  }, [loadCompanyUsers])
+
+  // Filter profiles for userId params. Then set formState to the user's roles.
+  useEffect(() => {
+    if (!loading && profiles !== null) {      
+      let reqProfile = profiles.find((profile) => profile._id === userId);
+
+      // Set roles
+      setFormState(reqProfile.roles);
+
+      // Set user name
+      setUserState({firstName: reqProfile.firstName, lastName: reqProfile.lastName})
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }
+  }, [loading, userId])
 
   // Toggles the boolean value of worker/manager input
   const handleOnChange = (dept, e) => {
     const newRoles = [...formState]
 
+    // Loop through roles to find the user toggled department, and toggle the boolean value
     for (let role in newRoles) {
       if (newRoles[role].department === dept) {
 
