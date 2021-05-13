@@ -35,7 +35,7 @@ const Roles = ({ loadRoles }) => {
           </div>
           <hr className="my-1" />
           {categories.map(item => (
-            <RoleRow category={item.category} description={item.description} link={item.link} />
+            <RoleRow key={item.category} category={item.category} description={item.description} link={item.link} />
           ))}
           <Link to="/users">
             <button className="btn btn-small btn-light btn-back my-2">

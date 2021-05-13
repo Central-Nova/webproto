@@ -65,8 +65,6 @@ export const filterProfiles = (profiles, filters) => {
 }
 
 export const filterDepartments = (rolesArray, roleCriteria) => {
-  console.log('rolesArray: ', rolesArray)
-  console.log('roleCriteria: ', roleCriteria);
   // rolesArray must be an array
   if (!Array.isArray(rolesArray)) {
     throw new Error('Roles must be an Array of objects')
@@ -83,4 +81,48 @@ export const filterDepartments = (rolesArray, roleCriteria) => {
     }
   })
   return departments
+}
+
+export const filterRoles = (permissions, department) => {
+  // permissions must be an array
+  if (!Array.isArray(permissions)) {
+    throw new Error('Roles must be an Array')
+  }
+
+  // department must be a string
+  if (typeof department !== 'string') {
+    throw new Error('Department must be of type string')
+  }
+
+  let permissionsByDocumentType = []
+  
+  // filter permissions to only select by department based on url params
+  let permissionsByDepartment = permissions.filter(permission =>
+    permission.department.toLowerCase() === department)
+    
+  // Build array of unique document types (ex. 'Sales Quotes', 'Sales Orders');
+  let documentTypes = getDocumentTypes(permissionsByDepartment)
+    
+  // Loop through each unique document type
+  documentTypes.forEach(documentName => {
+    
+    // Loop through each permission and add to the array of permissions that match the document type. Builds an array for each document type
+    
+    let filteredPermissions = permissionsByDepartment.filter( permission => permission.document === documentName)
+
+    // Builds an array of arrays [[doctype1][doctype2][doctype3]...]
+    permissionsByDocumentType.push(filteredPermissions);        
+  })
+  return permissionsByDocumentType
+}
+
+export const getDocumentTypes = (permissionsByDepartment) => {
+  let documentTypes = []
+  for (let i in permissionsByDepartment) {
+    // If the document is not in documentTypes, then push it
+    if (!documentTypes.includes(permissionsByDepartment[i].document)) {
+      documentTypes.push(permissionsByDepartment[i].document);
+    }
+  }
+  return documentTypes
 }

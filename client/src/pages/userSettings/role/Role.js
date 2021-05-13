@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { loadRoles, updateCompanyRoles } from '../../../actions/roles';
 import { Link, useParams } from 'react-router-dom'
+import { filterRoles } from '../../../lib/filter';
 
 // Components
 import Spinner from '../../layout/Spinner';
@@ -21,41 +22,16 @@ const Role = ({ auth, roles: {loading, rolesData}, loadRoles, updateCompanyRoles
   
   useEffect( ()=> {
     loadRoles(auth.user.company)
-    
-    if (!loading && rolesData) {
-      
-      let permissionsByDocumentType = []
-      
-      // filter roles state to only select by department based on url params
-      let permissionsByDepartment = rolesData.permissions.filter(permission =>
-        permission.department.toLowerCase() === department)
-        
-      // Build array of unique document types (ex. 'Sales Quotes', 'Sales Orders');
-      let documentTypes = [];
-      for (let i in permissionsByDepartment) {
-        if (!documentTypes.includes(permissionsByDepartment[i].document)) {
-          documentTypes.push(permissionsByDepartment[i].document);
-        }
-      }
-       
-      // Loop through each unique document type
-      documentTypes.forEach(documentName => {
-        
-        // Loop through each permission and add to the array of permissions that match the document type. Builds an array for each document type
-        
-        let filteredPermissions = permissionsByDepartment.filter( permission => permission.document === documentName)
-
-        // Builds an array of arrays [[doctype1][doctype2][doctype3]...]
-        permissionsByDocumentType.push(filteredPermissions);
-
-        
-      })
-
-      setPermissionsState([...permissionsByDocumentType])
-
-    } 
-  }, [auth.user.company, loading, department, loadRoles]
+  }, [auth.user.company, department, loadRoles]
   )
+
+  useEffect(() => {
+    if (!loading && rolesData) {
+      // Builds an array of arrays for each document type [[doctype1][doctype2][doctype3]...]
+      const permissionsByDocumentType = filterRoles(rolesData.permissions, department);
+        setPermissionsState([...permissionsByDocumentType])
+      } 
+  }, [loading, rolesData, department])
 
   console.log('permissionsState: ', permissionsState);
 

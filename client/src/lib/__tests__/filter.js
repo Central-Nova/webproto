@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/extend-expect'
-import { filterProfiles, filterDepartments } from '../filter';
+import { filterProfiles, filterDepartments, filterRoles, getDocumentTypes } from '../filter';
 
 describe('lib: filterProfiles', () => {
     let employees = {
@@ -212,5 +212,115 @@ describe('lib: filterDepartments', () => {
     }),
     test('throws error if roleCriteria is not a string', () => {
         expect(() => filterDepartments(rolesArray.salesWorker,['roleCriteria'] )).toThrow('Criteria must be of type string');
+    })
+}),
+describe('Lib: filterRoles', () => {
+    const permissions = [
+        {
+            department: "Sales",
+            document: "Sales Quotes",
+            action: "View",
+          },
+          {
+            department: "Sales",
+            document: "Sales Quotes",
+            action: "Create",
+          },
+          {
+            department: "Sales",
+            document: "Refund Order",
+            action: "View",
+          },
+          {
+            department: "Sales",
+            document: "Refund Order",
+            action: "Create",
+          },
+          {
+            department: "Warehouse",
+            document: "Pick Order",
+            action: "View",
+          },
+          {
+            department: "Warehouse",
+            document: "Pick Order",
+            action: "Create",
+          },
+          {
+            department: "Warehouse",
+            document: "Fulfillment Order",
+            action: "View",
+          },
+          {
+            department: "Warehouse",
+            document: "Fulfillment Order",
+            action: "Create",
+          },
+    ]
+
+    const departments = {
+        sales: 'sales',
+        warehouse: 'warehouse'
+    }
+
+    test('filters by department', () => {
+        let newPermissions = filterRoles(permissions, departments.sales)
+        newPermissions.forEach(documentType => {
+            documentType.forEach(permission => {
+                expect(permission.department.toLowerCase()).toBe(departments.sales) 
+            })
+        })
+    }),
+    test('returns an array of arrays', () => {
+        let newPermissions = filterRoles(permissions, departments.sales)
+        expect(Array.isArray(newPermissions)).toBe(true)
+        newPermissions.forEach(documentPermissions => {
+            expect(Array.isArray(documentPermissions)).toBe(true);
+        })
+    }),
+    test('can return empty array', () => {
+        let newPermissions = filterRoles(permissions, 'fakedept')
+        expect(newPermissions.length).toBe(0);
+    }),
+    test('throws error if rolesArray is not an array', () => {
+        expect(() => filterRoles('rolesArray', departments.sales)).toThrow('Roles must be an Array');
+    }),
+    test('throws error if roleCriteria is not a string', () => {
+        expect(() => filterRoles(permissions,['roleCriteria'] )).toThrow('Department must be of type string');
+    })
+}),
+describe('Lib: getDocumentTypes', () => {
+    const permissions = [
+        {
+            department: "Sales",
+            document: "Sales Quotes",
+            action: "View",
+          },
+          {
+            department: "Sales",
+            document: "Refund Order",
+            action: "View",
+          },
+          {
+            department: "Sales",
+            document: "Pick Order",
+            action: "View",
+          },
+          {
+            department: "Sales",
+            document: "Fulfillment Order",
+            action: "View",
+          },
+    ]
+    test('returns an array of document values', () => {
+        let documentTypes = getDocumentTypes(permissions)
+        permissions.forEach(permission =>{
+            expect(documentTypes.includes(permission.document))
+        })
+    }),
+    test('returns an array of only unique values', () => {
+        let documentTypes = getDocumentTypes(permissions)
+        let duplicates = documentTypes.filter( (item, index) => documentTypes.indexOf(item) !== index)
+        expect(duplicates.length).toBe(0);
     })
 })
