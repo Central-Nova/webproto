@@ -29,7 +29,7 @@ const optionsSort = [
   {value: 'basePrice.price', name: 'sort', label: 'Lowest Price'},
 ]
 
-const ProductSF = ({ setModalState, modalState, setFilterState, loadAllProducts, onFilterChange, products: { allProducts}}) => {
+const ProductSF = ({ setModalState, modalState, loadAllProducts, onFilterChange, products: { allProducts}}) => {
   const [productOptionsState, setProductOptionsState] = useState([])
 
   useEffect(()=> {
@@ -64,7 +64,6 @@ const ProductSF = ({ setModalState, modalState, setFilterState, loadAllProducts,
     <div className="container-multi-filter-fields my-2">
         <CustomInput 
           name='search'
-          setFilterState={setFilterState}
           onChange={onFilterChange}
           isMulti
           blurInputOnSelect={false}

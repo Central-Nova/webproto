@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 
 // Components
+import HeroHeader from '../../../components/headers/HeroHeader';
 import ProductSF from './ProductSF';
-import ProductsCard from '../components/ProductCard';
 import Results from './Results';
 import Spinner from '../../layout/Spinner';
 import Pagination from '../../layout/pagination/Pagination';
@@ -13,7 +13,7 @@ import Upload from './Upload';
 
 const Products = ({ products: {filteredProducts}, loadFilteredProducts, clearProducts }) => {
 
-  // filterState holds all filter values
+  // filterState holds all filter values for api call
   const [filterState, setFilterState] = useState({
     search: [],
     promotions: [],
@@ -84,23 +84,21 @@ const Products = ({ products: {filteredProducts}, loadFilteredProducts, clearPro
     ):(
       <Fragment>
       <div className="container-dashboard">
-        <div className="container-headline">
-          <p className="text-primary text-medium">Product Catalog</p>
-          <p className="text-primary-light text-small">
-            Manage your product catalog.
-          </p>
-        </div>
+        <HeroHeader title='Product Catalog' description='Manage your product catalog'/>
+        {/* Bulk Upload Modal */}
         <Upload setModalState={setModalState} modalState={modalState}/>
+
         {/* Products Sort and Filter Options */}
-        <ProductSF setFilterState={setFilterState} onFilterChange={onFilterChange} setModalState={setModalState} modalState={modalState}/>
-        <div className="container-products-grid">
+        <ProductSF onFilterChange={onFilterChange} setModalState={setModalState} modalState={modalState}/>
+
         {/* Render filteredProducts */}
+        <div className="container-products-grid">
         {filteredProducts.data === null ? (<p>Your product catalog is empty.</p>) : filteredProducts.data.products.length > 0 && 
         <Results products={filteredProducts.data.products} clearProducts={clearProducts} />}
         </div>
+
         {/* Pagination */}
         {filteredProducts.data && <Pagination onPageIncrement={onPageIncrement} onPageChange={onPageChange} current={pageState} total={filteredProducts.data.total / filteredProducts.data.limit < 1 ? 1 : Math.ceil(filteredProducts.data.total / filteredProducts.data.limit)} limit={filteredProducts.data.limit} />}
-        
       </div>
       </Fragment>
     )}
