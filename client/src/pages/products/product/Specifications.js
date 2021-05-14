@@ -3,7 +3,7 @@ import React from 'react'
 const Specifications = ({basePrice, dimensions: {length, width, height}, weight}) => {
   return (
       <div
-      className="container-specifications-grid text-regular text-primary-light">
+      className="container-specifications-grid text-small text-primary-light">
         <p>Unit Name</p>
         <p className="text-primary value">1 {basePrice.unit}</p>
         <p>Weight</p>
