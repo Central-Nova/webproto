@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { removeEmptyObjects, removeEmptyFields } from '../../../lib/sanitize';
 
 // Components
-import HeroHeader from '../../../components/headers';
+import HeroHeader from '../../../components/headers/HeroHeader';
 import General from './General';
 import Specifications from './Specifications';
 import BasePrice from './BasePrice';
