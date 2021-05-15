@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { loadAllProducts } from '../../../actions/products';
@@ -61,54 +61,55 @@ const ProductSF = ({ setModalState, modalState, loadAllProducts, onFilterChange,
   }
 
   return (
-    <div className="container-multi-filter-fields my-2">
-        <CustomInput 
-          name='search'
-          onChange={onFilterChange}
-          isMulti
-          blurInputOnSelect={false}
-          placeholder="Type name or SKU and press enter" 
-          defaultOptions={productOptionsState}
-          loadOptions={loadOptions} />
+    <Fragment>
+      <div className="container-search-sort my-2">
+          <CustomInput 
+            name='search'
+            onChange={onFilterChange}
+            isMulti
+            blurInputOnSelect={false}
+            placeholder="Type name or SKU and press enter" 
+            defaultOptions={productOptionsState}
+            loadOptions={loadOptions} />
+          <div className="container-sort">
+            <div className="sort-label text-small text-primary-light">Sort by:</div>
+            <div className="sort-option">
+              <CustomSelect
+                name='sort'
+                isSearchable={false}
+                onChange={onFilterChange}
+                options={optionsSort}
+                />
+            </div>
+            <div className="sort-clear">
+              <button className="btn btn-tiny btn-light">Clear</button>
+            </div>
+        </div>
+      </div>
       <div className="container-filters">
-        <p className="text-small text-primary-light">Filter by:</p>
-        <div className="filter-option">
-          <CustomSelect
-            onChange={onFilterChange}
-            placeholder='Promotions'
-            name='promotions'
-            isSearcable={false}
-            options={optionsCoupon}
-            />
-        </div>
-        <div className="filter-option">
-          <CustomSelect
-            onChange={onFilterChange}
-            isSearcable={false}
-            placeholder='Inventory'
-            options={optionsInventory}
-            closeMenuOnSelect={false}
-            />
-        </div>
-        <div className="container-filters mx-2">
-          <p className="text-small text-primary-light">Sort by:</p>
+        <div className="filter-label text-small text-primary-light">Filter by:</div>
+        <div className='grid-filter-options'>
           <div className="filter-option">
-          <CustomSelect
-            name='sort'
-            isSearchable={false}
-            onChange={onFilterChange}
-            options={optionsSort}
-            />
+            <CustomSelect
+              onChange={onFilterChange}
+              placeholder='Promotions'
+              name='promotions'
+              isSearcable={false}
+              options={optionsCoupon}
+              />
           </div>
-          <div className="">
-            <button className="btn btn-tiny btn-light">Clear</button>
+          <div className="filter-option">
+            <CustomSelect
+              onChange={onFilterChange}
+              isSearcable={false}
+              placeholder='Inventory'
+              options={optionsInventory}
+              closeMenuOnSelect={false}
+              />
           </div>
         </div>
       </div>
-    <div className="button-create">
-      <button onClick={()=>setModalState(!modalState)} className="btn btn-success btn-small">Create</button>
-    </div>
-  </div>
+    </Fragment>
   )
 }
 

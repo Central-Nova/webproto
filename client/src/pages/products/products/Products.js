@@ -88,6 +88,9 @@ const Products = ({ products: {filteredProducts}, loadFilteredProducts, clearPro
         {/* Bulk Upload Modal */}
         <Upload setModalState={setModalState} modalState={modalState}/>
 
+        <div className="button-create py-1">
+          <button onClick={()=>setModalState(!modalState)} className="btn btn-success btn-small">Create</button>
+        </div>
         {/* Products Sort and Filter Options */}
         <ProductSF onFilterChange={onFilterChange} setModalState={setModalState} modalState={modalState}/>
 

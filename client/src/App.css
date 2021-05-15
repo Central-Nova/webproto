@@ -15,11 +15,11 @@
 }
 
 .px-1 {
-  padding: 1rem 0;
+  padding: 0 1rem;
 }
 
 .py-1 {
-  padding: 0 1rem;
+  padding: 1rem 0;
 }
 
 .m-2 {
@@ -39,11 +39,11 @@
 }
 
 .px-2 {
-  padding: 2rem 0;
+  padding: 0 2rem;
 }
 
 .py-2 {
-  padding: 0 2rem;
+  padding: 2rem 0;
 }
 
 .m-3 {
@@ -63,11 +63,11 @@
 }
 
 .px-3 {
-  padding: 3rem 0;
+  padding: 0 3rem;
 }
 
 .py-3 {
-  padding: 0 3rem;
+  padding: 3rem 0;
 }
 
 .m-4 {
@@ -87,11 +87,11 @@
 }
 
 .px-4 {
-  padding: 4rem 0;
+  padding: 0 4rem;
 }
 
 .py-4 {
-  padding: 0 4rem;
+  padding: 4rem 0;
 }
 
 .m-5 {
@@ -111,11 +111,11 @@
 }
 
 .px-5 {
-  padding: 5rem 0;
+  padding: 0 5rem;
 }
 
 .py-5 {
-  padding: 0 5rem;
+  padding: 5rem 0;
 }
 
 .bg-primary {
@@ -703,11 +703,11 @@ table tbody {
 }
 
 .px-1 {
-  padding: 1rem 0;
+  padding: 0 1rem;
 }
 
 .py-1 {
-  padding: 0 1rem;
+  padding: 1rem 0;
 }
 
 .m-2 {
@@ -727,11 +727,11 @@ table tbody {
 }
 
 .px-2 {
-  padding: 2rem 0;
+  padding: 0 2rem;
 }
 
 .py-2 {
-  padding: 0 2rem;
+  padding: 2rem 0;
 }
 
 .m-3 {
@@ -751,11 +751,11 @@ table tbody {
 }
 
 .px-3 {
-  padding: 3rem 0;
+  padding: 0 3rem;
 }
 
 .py-3 {
-  padding: 0 3rem;
+  padding: 3rem 0;
 }
 
 .m-4 {
@@ -775,11 +775,11 @@ table tbody {
 }
 
 .px-4 {
-  padding: 4rem 0;
+  padding: 0 4rem;
 }
 
 .py-4 {
-  padding: 0 4rem;
+  padding: 4rem 0;
 }
 
 .m-5 {
@@ -799,11 +799,11 @@ table tbody {
 }
 
 .px-5 {
-  padding: 5rem 0;
+  padding: 0 5rem;
 }
 
 .py-5 {
-  padding: 0 5rem;
+  padding: 5rem 0;
 }
 
 .form {
@@ -1207,11 +1207,11 @@ p {
 }
 
 .px-1 {
-  padding: 1rem 0;
+  padding: 0 1rem;
 }
 
 .py-1 {
-  padding: 0 1rem;
+  padding: 1rem 0;
 }
 
 .m-2 {
@@ -1231,11 +1231,11 @@ p {
 }
 
 .px-2 {
-  padding: 2rem 0;
+  padding: 0 2rem;
 }
 
 .py-2 {
-  padding: 0 2rem;
+  padding: 2rem 0;
 }
 
 .m-3 {
@@ -1255,11 +1255,11 @@ p {
 }
 
 .px-3 {
-  padding: 3rem 0;
+  padding: 0 3rem;
 }
 
 .py-3 {
-  padding: 0 3rem;
+  padding: 3rem 0;
 }
 
 .m-4 {
@@ -1279,11 +1279,11 @@ p {
 }
 
 .px-4 {
-  padding: 4rem 0;
+  padding: 0 4rem;
 }
 
 .py-4 {
-  padding: 0 4rem;
+  padding: 4rem 0;
 }
 
 .m-5 {
@@ -1303,11 +1303,11 @@ p {
 }
 
 .px-5 {
-  padding: 5rem 0;
+  padding: 0 5rem;
 }
 
 .py-5 {
-  padding: 0 5rem;
+  padding: 5rem 0;
 }
 
 .sidebar-nav {
@@ -1585,11 +1585,11 @@ p {
 }
 
 .px-1 {
-  padding: 1rem 0;
+  padding: 0 1rem;
 }
 
 .py-1 {
-  padding: 0 1rem;
+  padding: 1rem 0;
 }
 
 .m-2 {
@@ -1609,11 +1609,11 @@ p {
 }
 
 .px-2 {
-  padding: 2rem 0;
+  padding: 0 2rem;
 }
 
 .py-2 {
-  padding: 0 2rem;
+  padding: 2rem 0;
 }
 
 .m-3 {
@@ -1633,11 +1633,11 @@ p {
 }
 
 .px-3 {
-  padding: 3rem 0;
+  padding: 0 3rem;
 }
 
 .py-3 {
-  padding: 0 3rem;
+  padding: 3rem 0;
 }
 
 .m-4 {
@@ -1657,11 +1657,11 @@ p {
 }
 
 .px-4 {
-  padding: 4rem 0;
+  padding: 0 4rem;
 }
 
 .py-4 {
-  padding: 0 4rem;
+  padding: 4rem 0;
 }
 
 .m-5 {
@@ -1681,11 +1681,11 @@ p {
 }
 
 .px-5 {
-  padding: 5rem 0;
+  padding: 0 5rem;
 }
 
 .py-5 {
-  padding: 0 5rem;
+  padding: 5rem 0;
 }
 
 .bg-primary {
@@ -2273,11 +2273,11 @@ table tbody {
 }
 
 .px-1 {
-  padding: 1rem 0;
+  padding: 0 1rem;
 }
 
 .py-1 {
-  padding: 0 1rem;
+  padding: 1rem 0;
 }
 
 .m-2 {
@@ -2297,11 +2297,11 @@ table tbody {
 }
 
 .px-2 {
-  padding: 2rem 0;
+  padding: 0 2rem;
 }
 
 .py-2 {
-  padding: 0 2rem;
+  padding: 2rem 0;
 }
 
 .m-3 {
@@ -2321,11 +2321,11 @@ table tbody {
 }
 
 .px-3 {
-  padding: 3rem 0;
+  padding: 0 3rem;
 }
 
 .py-3 {
-  padding: 0 3rem;
+  padding: 3rem 0;
 }
 
 .m-4 {
@@ -2345,11 +2345,11 @@ table tbody {
 }
 
 .px-4 {
-  padding: 4rem 0;
+  padding: 0 4rem;
 }
 
 .py-4 {
-  padding: 0 4rem;
+  padding: 4rem 0;
 }
 
 .m-5 {
@@ -2369,11 +2369,11 @@ table tbody {
 }
 
 .px-5 {
-  padding: 5rem 0;
+  padding: 0 5rem;
 }
 
 .py-5 {
-  padding: 0 5rem;
+  padding: 5rem 0;
 }
 
 .grid-auto {
@@ -2426,39 +2426,96 @@ body {
   width: 100vw;
 }
 
-.container-filters {
+.container-search-sort {
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: (1fr)[8];
-      grid-template-columns: repeat(8, 1fr);
-  -webkit-box-align: end;
-      -ms-flex-align: end;
-          align-items: end;
-  grid-gap: 0.5rem;
+  -ms-grid-columns: 4fr 1fr;
+      grid-template-columns: 4fr 1fr;
+  grid-gap: 2rem;
+  width: 100%;
 }
 
-.container-filters .filter-option {
+.container-search-sort .form {
+  -ms-flex-item-align: end;
+      -ms-grid-row-align: end;
+      align-self: end;
+}
+
+.container-search-sort .form input {
+  text-indent: 2rem;
+  min-width: 400px;
+}
+
+.container-search-sort input,
+.container-search-sort select {
+  font-size: 1rem;
+}
+
+.container-sort {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.container-sort .sort-label {
+  -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
+  display: inline;
+  justify-self: flex-start;
+  margin-right: 0.5rem;
+}
+
+.container-sort .sort-option {
+  -ms-flex-item-align: end;
+      align-self: flex-end;
+  -ms-flex-line-pack: end;
+      align-content: flex-end;
+  margin-right: 0.5rem;
+}
+
+.container-sort .sort-clear {
   -ms-flex-item-align: end;
       align-self: flex-end;
   -ms-flex-line-pack: end;
       align-content: flex-end;
 }
 
-.container-filters:nth-child(4) {
-  justify-items: start;
+.container-sort select {
+  background-color: #d7d7d7;
+  color: #333;
+  font-size: 1rem;
+  font-family: 'Montserrat';
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+  padding: 0.25rem 0.5rem;
+  -webkit-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
 }
 
-.container-filters p {
-  display: inline;
-  justify-self: flex-start;
-  margin: 0;
+.container-sort select:hover {
+  -webkit-box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.3);
+          box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
 }
 
-.container-filters i {
-  position: relative;
-  top: 25px;
-  left: 15px;
-  color: grey;
+.container-filters {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-bottom: 2rem;
+}
+
+.container-filters .grid-filter-options {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (minmax(125px, 1fr))[auto-fill];
+      grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
+  grid-gap: 1rem;
+  width: 100%;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .container-filters select {
@@ -2468,9 +2525,10 @@ body {
   font-family: 'Montserrat';
   border-radius: 0.5rem;
   border: 1px solid #ccc;
-  padding: 0.25rem 0.5rem 0.25rem 2.5rem;
+  padding: 0.25rem 0.5rem;
   -webkit-transition: all 0.2s ease-in;
   transition: all 0.2s ease-in;
+  width: 100%;
 }
 
 .container-filters select:hover {
@@ -2522,46 +2580,6 @@ body {
 .container-filter-fields input,
 .container-filter-fields select {
   font-size: 1rem;
-}
-
-.container-multi-filter-fields {
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: (minmax(400px, 1fr))[auto-fit];
-      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  grid-gap: 2rem;
-  width: 100%;
-}
-
-.container-multi-filter-fields .form {
-  -ms-flex-item-align: end;
-      -ms-grid-row-align: end;
-      align-self: end;
-}
-
-.container-multi-filter-fields .form input {
-  text-indent: 2rem;
-  min-width: 400px;
-}
-
-.container-multi-filter-fields .form i {
-  -ms-flex-item-align: start;
-      align-self: flex-start;
-  position: relative;
-  padding: 0.5rem;
-  color: grey;
-  top: 35px;
-}
-
-.container-multi-filter-fields input,
-.container-multi-filter-fields select {
-  font-size: 1rem;
-}
-
-.container-multi-filter-fields .button-create {
-  -ms-flex-item-align: end;
-      -ms-grid-row-align: end;
-      align-self: end;
 }
 
 .container-dashboard .container-headline {

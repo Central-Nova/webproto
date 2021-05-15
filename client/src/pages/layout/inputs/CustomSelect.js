@@ -53,7 +53,7 @@ const customStyles = {
   container: (provided, state) => ({
     ...provided,
     maxWidth: '400',
-    width: 200
+    width: 150
   }),
   multiValueContainer: (provided) => ({
     ...provided,
