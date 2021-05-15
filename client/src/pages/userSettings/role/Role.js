@@ -33,8 +33,6 @@ const Role = ({ auth, roles: {loading, rolesData}, loadRoles, updateCompanyRoles
       } 
   }, [loading, rolesData, department])
 
-  console.log('permissionsState: ', permissionsState);
-
   const handleOnChange = (document, action, e) => {
 
     const newPermissions = [...permissionsState];

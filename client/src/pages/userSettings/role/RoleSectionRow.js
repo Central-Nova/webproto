@@ -2,7 +2,7 @@ import React, {Fragment} from 'react'
 
 const RoleSectionRow = ({permission, onChange}) => {
 
-  const {document, action, manager, worker} = permission;
+  const {_id, document, action, manager, worker} = permission;
 
   return (
     <Fragment>
@@ -10,13 +10,13 @@ const RoleSectionRow = ({permission, onChange}) => {
       <p>{action}</p>
       <div className="option">
         <label className="switch">
-          <input name="manager" onChange={(e) => onChange(document,action,e)} type="checkbox" checked={manager} />
+          <input name="manager" onChange={(e) => onChange(document,action,e)} type="checkbox" checked={manager} data-testid={`switch-manager-btn-${_id}`}/>
           <span className="slider round"></span>
         </label>
       </div>
       <div className="option">
         <label className="switch">
-        <input name="worker" onChange={(e) => onChange(document,action,e)} type="checkbox" checked={worker} />
+        <input name="worker" onChange={(e) => onChange(document,action,e)} type="checkbox" checked={worker} data-testid={`switch-worker-btn-${_id}`}/>
           <span className="slider round"></span>
         </label>
       </div>
