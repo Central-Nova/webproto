@@ -5,8 +5,10 @@ import { useForm } from 'react-hook-form';
 import { createProduct, loadProductById } from '../../../actions/products';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { removeEmptyObjects, removeEmptyFields } from '../../../lib/sanitize';
 
 // Components
+import HeroHeader from '../../../components/headers';
 import General from './General';
 import Specifications from './Specifications';
 import BasePrice from './BasePrice';
@@ -41,36 +43,11 @@ const EditProduct = ({ createProduct, loadProductById, filteredProducts: { loadi
     }
   },[loadProductById,productId, loading, reset])
 
-  const removeEmptyFields = (data) => {
-    Object.keys(data).forEach(key=> {
-      if (typeof data[key] === 'object') {
-        Object.keys(data[key]).forEach(nestkey => {
-          if (data[key][nestkey] === '') {
-            delete data[key][nestkey]
-          }
-        })
-      } else {
-        if (data[key] === '') {
-          delete data[key]
-        }
-      }
-    })
-  }
-
-  const removeEmptyObjects = (data) => {
-    Object.keys(data).forEach(key => {
-      if (typeof data[key] === 'object' && Object.keys(data[key]).length === 0) {
-        delete data[key]
-      }
-    })
-  }
-
   const onSubmit = data => {
     removeEmptyFields(data);
     removeEmptyObjects(data)
     createProduct({products: [data]});
     window.scrollTo(0,0);
-
   };
 
  
@@ -80,25 +57,20 @@ const EditProduct = ({ createProduct, loadProductById, filteredProducts: { loadi
       <Spinner/>
     ):(
       <div className="container-dashboard">
-      <div className="container-headline">
-        <p className="text-primary text-medium">Edit Product</p>
-        <p className="text-primary-light text-small">
-          Enter the details of your new product.
-        </p>
+        <HeroHeader title='Edit Product' description='Enter the new details for this product'/>
+        <div className="form">
+          <General errors={errors} control={control} register={register}/>
+          <Specifications  errors={errors} control={control}/>
+          <BasePrice errors={errors} control={control}/>
+          <PriceRules errors={errors} control={control} register={register}/>
+        </div>
+        <button onClick={handleSubmit(onSubmit)} className="btn btn-primary btn-small">Save</button>
+        <Link to={`/product/${data._id}`}>
+          <button className="btn btn-light btn-back btn-small mx-2">
+            <i className="fas fa-arrow-left"></i>Back
+          </button>
+        </Link>
       </div>
-      <div className="form">
-        <General errors={errors} control={control} register={register}/>
-        <Specifications  errors={errors} control={control}/>
-        <BasePrice errors={errors} control={control}/>
-        <PriceRules errors={errors} control={control} register={register}/>
-      </div>
-      <button onClick={handleSubmit(onSubmit)} className="btn btn-primary btn-small">Save</button>
-      <Link to={`/product/${data._id}`}>
-        <button className="btn btn-light btn-back btn-small mx-2">
-          <i className="fas fa-arrow-left"></i>Back
-        </button>
-      </Link>
-    </div>
     )}
   </Fragment>
 
