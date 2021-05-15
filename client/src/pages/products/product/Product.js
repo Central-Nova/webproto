@@ -39,7 +39,7 @@ const Product = ({ products: { filteredProducts: { loading, data } }, loadProduc
           <InfoCard title='Specifications'>
             <Specifications weight={data.weight || 0} basePrice={data.basePrice} dimensions={data.dimensions || 0} />
           </InfoCard>
-          <div className="my-2">
+          <div className="py-2">
             <Link to={`/edit-product/${productId}`}> 
               <button className="btn btn-primary btn-small mx-2">Edit</button>
             </Link>
