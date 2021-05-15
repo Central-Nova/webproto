@@ -74,7 +74,7 @@ const customStyles = {
     backgroundColor: '#819cff',
     })
 }
-const CustomSelect = ({ value,onChange, ...rest}) => {
+const CustomSelect = ({ onChange, ...rest}) => {
 
   return (
     <Select {...rest} onChange={(valueType, actionMeta) => onChange(valueType, actionMeta)} styles={customStyles} />
