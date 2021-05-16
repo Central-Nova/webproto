@@ -12,7 +12,7 @@ const AccountOptions = () => {
       <BackButton link='/company'/>
       <LargeHeader title='Primary Business Operation'/>
       <div className="container-buttons">
-      <OptionCard link='/create-account/supplier' icon='fas fa-pallet fa-4x'>
+      <OptionCard link='/create-account/supplier' icon='fas fa-pallet fa-4x' testid='supplier'>
         <p className="text-regular">Supplier</p>
         <p className="text-small">Use {"{App Name}"}'s functions to manage your wholesale selling tasks.</p>
       </OptionCard>

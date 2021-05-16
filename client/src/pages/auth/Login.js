@@ -36,10 +36,6 @@ export const Login = ({ loginUser, isAuthenticated, user, company = null }) => {
       return <Redirect to='/dashboard'/>
     }
   }
-
-  if(isAuthenticated && user!== null) {
-    return <Redirect to='/dashboard'/>
-  }
   
 
   return (
@@ -109,7 +105,7 @@ Login.propTypes = {
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated,
   user: state.auth.user,
-  company: state.company.company
+  company: state.company.profile
 })
 
 export default connect(mapStateToProps, { loginUser, loadUser })(Login);

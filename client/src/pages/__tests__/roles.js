@@ -100,13 +100,9 @@ describe('Roles', () => {
                 {_id: "60858b8baf99ca0034999d69", department: "Sales", document: "Sales Orders", action: "Create", manager: true, worker: true},
                 {_id: "60858b8baf99ca0034999d70", department: "Sales", document: "Sales Orders", action: "View", manager: true, worker: true},
                 {_id: "60858b8baf99ca0034999d71", department: "Admin", document: "Invitations", action: "Create", manager: true, worker: true},
-                {_id: "60858b8baf99ca0034999d72", department: "Admin", document: "Users", action: "View", manager: true, worker: true},
-                {_id: "60858b8baf99ca0034999d73", department: "Admin", document: "User Roles", action: "View", manager: true, worker: true},
-                {_id: "60858b8baf99ca0034999d74", department: "Admin", document: "User Roles", action: "Edit", manager: true, worker: true},
-                {_id: "60858b8baf99ca0034999d75", department: "Admin", document: "Role Permissions", action: "Edit", manager: true, worker: true},
-                {_id: "60858b8baf99ca0034999d76", department: "Admin", document: "Company Information", action: "Edit", manager: true, worker: true},
-            //   {_id: "60858b8baf99ca0034999d77", department: "Admin", document: "Payment Information", action: "Edit", manager: true, worker: true}
-          ]
+                {_id: "60858b8baf99ca0034999d72", department: "Admin", document: "User Roles", action: "Edit", manager: true, worker: true},
+                {_id: "60858b8baf99ca0034999d73", department: "Admin", document: "Role Permissions", action: "Edit", manager: true, worker: true},
+            ]
           }
         },
         getUsers: {
@@ -162,6 +158,7 @@ describe('Roles', () => {
     // Render Landing and Register Routes, start at Landing
     const { getByText, getByTestId, getByPlaceholderText, getByRole, history } = renderLanding();
     const leftClick = { button: 0 }
+    window.scrollTo = jest.fn();
 
     // Start at Landing already authenticated
     expect(window.location.href).toContain('http://localhost')
@@ -169,6 +166,7 @@ describe('Roles', () => {
 
     // Redirected to Dashboard
     await waitForElement(()=> getByText(/sales/i))
+    expect(window.location.href).toContain('http://localhost/dashboard')
     expect(getByText(/products/i)).toBeTruthy();
     expect(getByText(/inventory/i)).toBeTruthy();
     expect(getByTestId('users-btn')).toBeTruthy();
@@ -219,7 +217,7 @@ describe('Roles', () => {
     // See success alert
     await waitForElement(() => getByText(/success/i))
     expect(getByText(res.postRoles.data.msg.description)).toBeTruthy();
-    
+    expect(window.scrollTo).toBeCalledWith(0,0)
     })
   })
 })

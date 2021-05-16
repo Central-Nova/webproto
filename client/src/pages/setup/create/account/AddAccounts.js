@@ -145,8 +145,10 @@ const AddAccounts = ({ setAlert, addAccountToCompany, user, company: { profile, 
   console.log('formData: ', formData);
   console.log('validationState: ', validationState);
 
-  if (!loading && profile.operation !== undefined ) {
-    return <Redirect to='/create-team' />
+  if (!loading && profile !== null ) {
+    if (profile.operation !== undefined) {
+      return <Redirect to='/create-team' />
+    }
   }
 
   return (

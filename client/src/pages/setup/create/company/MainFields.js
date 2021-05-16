@@ -11,7 +11,7 @@ const MainFields = ({ formState, formChange, onClick }) => {
 
   return (
     <div className="container-company-main">
-      <BackButton link='/create-company'/>
+      <BackButton link='/company'/>
       <LargeHeader title='Company Setup'/>
       <FieldContainer 
       label='Business Name'
@@ -25,7 +25,7 @@ const MainFields = ({ formState, formChange, onClick }) => {
               name="businessName"
               value={businessName}
               onChange={e => formChange(e)}
-              placeholder="Name"
+              placeholder="Business Name"
               />
             </div>
           </form>

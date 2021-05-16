@@ -36,7 +36,6 @@ const CreateCompany = ({ createCompany, company: { profile }}) => {
       <i className="text-primary fas fa-warehouse fa-4x"></i>
     </div>
     <div className="container-company-double">
-
       <SideNav/>
       {profile !== null ? (
         <AccountOptions/>

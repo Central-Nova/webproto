@@ -3,10 +3,14 @@ import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-export const Landing = ({ isAuthenticated }) => {
+export const Landing = ({ isAuthenticated, user, company }) => {
 
-  if(isAuthenticated) {
-    return <Redirect to='/dashboard'/>
+  if (isAuthenticated && user !== null) {
+    if (company === null) {
+      return <Redirect to='/company'/>
+    } else {
+      return <Redirect to='/dashboard'/>
+    }
   }
 
   return(
@@ -42,10 +46,14 @@ export const Landing = ({ isAuthenticated }) => {
 
 Landing.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
+  user: PropTypes.bool.isRequired,
+  company: PropTypes.bool.isRequired,
 }
 
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated,
+  user: state.auth.user,
+  company: state.company.profile
 })
 
 export default connect(mapStateToProps)(Landing);

@@ -1,9 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 
-const OptionCard = ({link, icon, children}) => {
+const OptionCard = ({link, icon, children, testid}) => {
   return (
-    <Link to={link}>
+    <Link to={link} data-testid={`opt-${testid}-btn`}>
       <div className="button-option btn btn-light">
         <i className={icon}></i>
         <div className="text-box">

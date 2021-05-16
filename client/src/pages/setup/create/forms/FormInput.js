@@ -10,7 +10,9 @@ const FormInput = ({formData, addressType, onChange}) => {
       name={string} 
       value={formData[string]}
       onChange={e=> onChange(e, addressType)} 
-      placeholder={`${string.charAt(0).toUpperCase() + string.slice(1)}`} />
+      placeholder={`${string.charAt(0).toUpperCase() + string.slice(1)}`} 
+      data-testid={`${addressType}-${string}-field`}
+      />
     </div>
   )
 }

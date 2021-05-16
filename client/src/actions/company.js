@@ -11,7 +11,9 @@ import {
 
 // Create company record
 export const addAccountToCompany = (formData) => async dispatch => {
+  console.log('calling addAccountToCompany');
   const { account, company } = formData;
+  console.log('formData: ', formData);
 
   try {
     const config = {
@@ -22,6 +24,7 @@ export const addAccountToCompany = (formData) => async dispatch => {
 
     // Creates company record, gets back companyId in res.data
     let res = await axios.put(`/api/companies/company/${company}`, formData, config);
+    console.log('res.data: ', res.data);
 
     // Sets state.company.profile to hold company record
     dispatch({type: COMPANY_SUCCESS, payload: res.data})
