@@ -91,6 +91,7 @@ export const loadCompany = () => async (dispatch) => {
   try {
     // Get company record
     const res = await axios.get('/api/companies');
+    console.log('loadCompany: ', res.data)
     
     // Set state.company.profile to hold company record
     dispatch({

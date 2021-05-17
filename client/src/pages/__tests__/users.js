@@ -17,9 +17,11 @@ import Landing from '../landing/Landing';
 import Dashboard from '../dashboard/Dashboard';
 import Users from '../userSettings/users/Users';
 import User from '../userSettings/user/User';
+import SetupMain from '../setup/SetupMain';
 
 // Route Components
 import PrivateRoute from '../routing/PrivateRoute';
+import SetupRoute from '../routing/SetupRoute'
 
 describe('User Roles', () => {
   describe('edit user roles', () => {
@@ -32,6 +34,7 @@ describe('User Roles', () => {
           <Fragment>
             <AlertBox/>
             <Switch>
+              <SetupRoute exact path='/company' component={SetupMain}/>
               <PrivateRoute exact path='/dashboard' component={Dashboard}/>
               <PrivateRoute exact path='/users' component={Users}/>
               <PrivateRoute path='/user/:userId' component={User}/>
@@ -86,7 +89,8 @@ describe('User Roles', () => {
       getCompany: {
         data: {
           name: 'fake company',
-          ein: '0923809234234'
+          ein: '0923809234234',
+          operation: 'supplier'
         }
       },
       getRoles: {
@@ -152,14 +156,14 @@ describe('User Roles', () => {
   
     test('go to users page and update a users role', async () => {
 
-      // Render Landing and Register Routes, start at Landing
+      // Render Landing Routes, start at Landing
       const { getByText, getByTestId } = renderLanding();
 
       // Start at Landing already authenticated
       expect(window.location.href).toContain('http://localhost')
       expect(getByText(/welcome/i)).toBeTruthy();
 
-      // Redirected to Dashboard
+      // // Redirected to Dashboard
       await waitForElement(()=> getByText(/sales/i))
       expect(getByText(/products/i)).toBeTruthy();
       expect(getByText(/inventory/i)).toBeTruthy();

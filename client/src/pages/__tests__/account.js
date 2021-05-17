@@ -131,9 +131,9 @@ describe('Company setup', () => {
 
     axios.get = jest.fn()
     .mockImplementationOnce(() => Promise.resolve(res.getAuth))
-    .mockImplementationOnce(() => Promise.resolve(res.getCompanies))
     .mockImplementationOnce(() => Promise.resolve(res.getRoles))
-    .mockImplementation(() => Promise.resolve(res.getCompaniesWithAccount))
+    .mockImplementationOnce(() => Promise.resolve(res.getCompanies))
+    // .mockImplementation(() => Promise.resolve(res.getCompaniesWithAccount))
 
   
     test.only('setup new company supplier account', async () => {

@@ -88,7 +88,8 @@ describe('Roles', () => {
         getCompany: {
           data: {
             name: 'fake company',
-            ein: '0923809234234'
+            ein: '0923809234234',
+            operation: 'supplier'
           }
         },
         getRoles: {

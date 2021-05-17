@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 // Action Creators
 import { loginUser, loadUser } from '../../actions/auth';
 
-export const Login = ({ loginUser, isAuthenticated, user, company = null }) => {
+export const Login = ({ loginUser, isAuthenticated, user, company: { loading, profile } }) => {
 
   const [ formData, setFormData ] = useState({
     email: '',
@@ -30,13 +30,21 @@ export const Login = ({ loginUser, isAuthenticated, user, company = null }) => {
   }
 
   if (isAuthenticated && user !== null) {
-    if (company === null) {
-      return <Redirect to='/company'/>
+    if (!loading && profile !== null) {
+      if(profile.operation !==undefined) {
+        return <Redirect to='/dashboard'/>
+      } else {
+        return <Redirect to='/company'/>
+      }
     } else {
-      return <Redirect to='/dashboard'/>
+      return <Redirect to='/company'/>
     }
   }
-  
+
+  // // For development
+  // if (isAuthenticated && user!== null) {
+  //   return <Redirect to='/dashboard'/>
+  // }
 
   return (
     <Fragment>
@@ -105,7 +113,7 @@ Login.propTypes = {
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated,
   user: state.auth.user,
-  company: state.company.profile
+  company: state.company
 })
 
 export default connect(mapStateToProps, { loginUser, loadUser })(Login);
