@@ -29,8 +29,8 @@ export const Login = ({ loginUser, isAuthenticated, user, company: { loading, pr
 
   }
 
-  if (isAuthenticated && user !== null) {
-    if (!loading && profile !== null) {
+  if (isAuthenticated && !loading && user !== null) {
+    if (profile !== null) {
       if(profile.operation !==undefined) {
         return <Redirect to='/dashboard'/>
       } else {
