@@ -103,21 +103,6 @@ describe('Company setup', () => {
                 ein: '9508230523534256'
             }
         },
-        getCompaniesWithAccount: {
-            data: {
-                _id: '0s9adf808sadfa0sdf1',
-                businessName: 'Business Supplies Company',
-                ein: '9508230523534256',
-                operation: 'supplier',
-                addressBusiness: {
-                    street: 'fake street',
-                    suite: '91082',
-                    city: 'new york', 
-                    state: 'ny',
-                    zip: '123901'
-                }
-            }
-        },
         getRoles: {
           data: {
             company: '0s9adf808sadfa0sdf1',
@@ -130,10 +115,16 @@ describe('Company setup', () => {
     .mockImplementationOnce(() => Promise.resolve(res.putCompanies))
 
     axios.get = jest.fn()
-    .mockImplementationOnce(() => Promise.resolve(res.getAuth))
-    .mockImplementationOnce(() => Promise.resolve(res.getRoles))
-    .mockImplementationOnce(() => Promise.resolve(res.getCompanies))
-    // .mockImplementation(() => Promise.resolve(res.getCompaniesWithAccount))
+    .mockImplementation((url)=> {
+      switch (url) {
+        case '/api/companies': 
+          return Promise.resolve(res.getCompanies)
+        case '/api/auth':
+          return Promise.resolve(res.getAuth)
+        case '/api/roles': 
+          return Promise.resolve(res.getRoles)
+      }
+    })
 
   
     test.only('setup new company supplier account', async () => {

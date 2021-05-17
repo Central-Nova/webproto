@@ -107,6 +107,12 @@ describe('Company setup', () => {
                 businessName: 'Business Supplies Company',
                 ein: '9508230523534256'
             }
+        },
+        getRoles: {
+          data: {
+            company: '0s9adf808sadfa0sdf1',
+            permissions: [{permission: 'yes'}]
+          }
         }
     }
 
@@ -117,14 +123,18 @@ describe('Company setup', () => {
     .mockImplementationOnce(() => Promise.reject(res.postCompaniesError))
     .mockImplementationOnce(() => Promise.resolve(res.postCompanies))
 
-    axios.get = jest.fn()
-    .mockImplementationOnce(() => Promise.resolve(res.getAuth))
-    .mockImplementationOnce(() => Promise.reject())
-    .mockImplementationOnce(() => Promise.reject())
-    .mockImplementationOnce(() => Promise.resolve(res.getCompanies))
-    .mockImplementationOnce(() => Promise.resolve(res.getAuthWithCompany))
-    .mockImplementationOnce(() => Promise.resolve(res.getCompanies));
 
+    axios.get = jest.fn()
+    .mockImplementation((url) => {
+      switch (url) {
+        case '/api/auth':
+          return Promise.resolve(res.getAuth);
+        case '/api/roles':
+          return Promise.resolve(res.getRoles)
+        case '/api/companies':
+          return Promise.reject()
+      }
+    })
   
     test('new account setup company', async () => {
 
@@ -163,6 +173,19 @@ describe('Company setup', () => {
 
     // Fill in EIN
     fireEvent.change(getByPlaceholderText(/ein/i), {target: {value: '6590385923509325'}})
+
+    // New axios get companies
+    axios.get = jest.fn()
+    .mockImplementation((url) => {
+      switch (url) {
+        case '/api/auth':
+          return Promise.resolve(res.getAuth);
+        case '/api/roles':
+          return Promise.resolve(res.getRoles)
+        case '/api/companies':
+          return Promise.resolve(res.getCompanies)
+      }
+    })
 
     // Click Submit
     fireEvent.click(getByText(/submit/i), leftClick);

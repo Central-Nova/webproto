@@ -148,11 +148,18 @@ describe('User Roles', () => {
     .mockImplementationOnce(() => Promise.resolve(res.postUsers))
 
     axios.get = jest.fn()
-    .mockImplementationOnce(() => Promise.resolve(res.getAuth))
-    .mockImplementationOnce(() => Promise.resolve(res.getRoles))
-    .mockImplementationOnce(() => Promise.resolve(res.getCompany))
-    .mockImplementation(() => Promise.resolve(res.getUsers))
-
+    .mockImplementation((url) => {
+      switch (url) {
+        case '/api/auth':
+          return Promise.resolve(res.getAuth);
+        case '/api/roles':
+          return Promise.resolve(res.getRoles)
+        case '/api/companies':
+          return Promise.resolve(res.getCompany)
+        case '/api/users':
+          return Promise.resolve(res.getUsers);
+      }
+    })
   
     test('go to users page and update a users role', async () => {
 

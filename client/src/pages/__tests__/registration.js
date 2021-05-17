@@ -116,10 +116,17 @@ describe('Landing', () => {
     // First two calls are for loadUser and loadRoles in useEffect
     // Last two calls are for loadUser and loadCompany after login
     axios.get = jest.fn()
-    .mockImplementationOnce(() => Promise.reject(res.getAuthError))
-    .mockImplementationOnce(() => Promise.reject())
-    .mockImplementationOnce(() => Promise.resolve(res.getAuth))
-    .mockImplementationOnce(() => Promise.reject())
+    .mockImplementation((url) => {
+      switch (url) {
+        case '/api/auth':
+          return Promise.reject(res.getAuthError);
+        case '/api/roles':
+          return Promise.reject()
+        case '/api/companies':
+          return Promise.reject()
+      }
+    })
+
   
     test('register then login', async () => {
 
@@ -177,6 +184,19 @@ describe('Landing', () => {
       fireEvent.change(getByPlaceholderText(/email/i), {target: {value: 'fake@mail.com'}})
       fireEvent.change(getByPlaceholderText(/password/i), {target: {value: 'test123'}})
       
+      // New axios mock
+      axios.get = jest.fn()
+      .mockImplementation((url) => {
+        switch (url) {
+          case '/api/auth':
+            return Promise.resolve(res.getAuth);
+          case '/api/roles':
+            return Promise.rejeect()
+          case '/api/companies':
+            return Promise.reject()
+        }
+      })
+
       // Click login button
       fireEvent.click(getByTestId('local-login-btn'), leftClick);
 
