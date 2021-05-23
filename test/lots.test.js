@@ -191,13 +191,13 @@ describe('API Lot Route', () => {
         lots: [
             {
                 lotCode: 'lot1903214',
-                sku: 'sku12093801',
+                product: 'product12093801',
                 cost: '9999',
                 dateManufacture: new Date(),
                 dateExpiration: new Date()
             },            {
                 lotCode: 'lot1903212',
-                sku: 'sku12093812',
+                product: 'product12093812',
                 cost: '9999',
                 dateManufacture: new Date(),
                 dateExpiration: new Date()
@@ -212,54 +212,6 @@ describe('API Lot Route', () => {
       return req;
     }
 
-    const mockRequestWithBadLot = () => {
-      const req = {};
-      req.body = {
-        lots: [
-          {
-            sku: 'skue0218940',
-            name: 'fake name',
-            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, nostrum!',
-            basePrice: {
-              unit: 'Pallet',
-              subUnit: 'Boxes',
-              contains: 20,
-              price: 99999,
-            },
-            priceRules: [
-              {
-                unit: 'Wrong',
-                quantity: 10,
-                price: 499999
-              }
-            ]
-          },
-          {
-            sku: 'sku201381',
-            name: 'fake name',
-            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, nostrum!',
-            basePrice: {
-              unit: 'Pallet',
-              subUnit: 'Boxes',
-              contains: 20,
-              price: 99999,
-            },
-            priceRules: [
-              {
-                unit: 'Pallet',
-                quantity: 10,
-                price: 499999
-              }
-            ]
-          },
-        ]
-      }
-      req.user = {
-        _id: 'fake1908239021',
-        company: 'fakecompany492384902'
-      }
-      return req;
-    }
  
     const mockDbReturn = () => {
       return {
@@ -272,22 +224,26 @@ describe('API Lot Route', () => {
     it('should create a lot for each lot object in req.body.lots', async () => {
       let req = mockRequest();
       let fakeDbReturn = mockDbReturn();
-      let dbLotCall = sandbox.stub(Lot, 'findOneAndUpdate').returns(fakeDbReturn);
+      let dbLotCall = sandbox.stub(Lot, 'findOne').returns(undefined);
+      let save = sandbox.stub(Lot.prototype, 'save').callsFake(()=> Promise.resolve(this));
+
 
       await createLot(req,res);
       expect(dbLotCall.callCount).to.equal(req.body.lots.length);
+      expect(save.callCount).to.equal(req.body.lots.length)
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(goodCode)).to.be.true;
     })
     it('should handle error when db lot call throws error', async () => {
       let req = mockRequest();
       let fakeDbReturn = mockDbReturn();
-      let dbLotCall = sandbox.stub(Lot, 'findOneAndUpdate')
-      dbLotCall.onCall(0).returns(fakeDbReturn);
-      dbLotCall.onCall(1).throws();
+      let dbLotCall = sandbox.stub(Lot, 'findOne')
+      dbLotCall.onCall(0).throws();
+      let save = sandbox.stub(Lot.prototype, 'save').callsFake(()=> Promise.resolve(this));
       await createLot(req,res);
 
-      expect(dbLotCall.callCount).to.equal(req.body.lots.length);
+      expect(dbLotCall.callCount).to.equal(1);
+      expect(save.callCount).to.equal(0);
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true;
     })

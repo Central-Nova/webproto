@@ -127,42 +127,42 @@ const createLot = async (req,res) => {
   
   try {
 
-    let updatedRecords = 0;
-    let createdRecords = 0;
-
     for (let lot of lots) {
 
-      let lotData = {
+      // Check for existing company by owner
+      let queryStartTime = new Date();
+      apiLogger.debug('Searching DB for existing lot code', {collection: 'lots',operation: 'read'})
+
+      let existingLot = await Lot.findOne({lotCode: lot.lotCode})
+      
+      if (existingLot) {
+        apiLogger.debug('Existing lot record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+
+        return res
+        .status(400)
+        .json({errors: [{ msg: {title: 'Error', description: 'Lot code is already in use.'}}]})
+      }
+  
+      // Find one and create
+      ueryStartTime = new Date();
+      apiLogger.info('Creating new lot record in db', {collection: 'lots',operation: 'create'})
+
+      const newLot = new Lot({
         company: req.user.company,
         createdBy: req.user._id,
         ...lot
-      }
+      })
   
-      // Find one and update
-      let queryStartTime = new Date();
-      apiLogger.info('Creating new lot record in db', {collection: 'lots',operation: 'create'})
-  
-      let rawResult = await Lot.findOneAndUpdate(
-        {lotCode: lotData.lotCode}, 
-        {$set: lotData},
-        { new: true, 
-        upsert: true,
-        rawResult: true
-      });
+      await newLot.save();
+
       apiLogger.info('Lot record created', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
 
-        console.log('rawResult: ', rawResult)
-  
-      if (rawResult.lastErrorObject.updatedExisting) {
-        updatedRecords = updatedRecords + 1;
-      } else {
-        createdRecords = createdRecords + 1;
-      }
     }
     
-    return res.status(200).json({msg: { title: 'Success', description: `${updatedRecords} records updated and ${createdRecords} records created.`} })
+    return res.status(200).json({msg: { title: 'Success', description: `${lots.length} new lot records created.`} })
     
   } catch (err) {
+    console.log(err);
     apiLogger.error('Caught error');
     return res.status(500).send('Server Error');
    

@@ -4,12 +4,12 @@ const LotSchema = new mongoose.Schema({
   company: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'company'
+  },  
+  product: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'product'
   },
   lotCode: {
-    type: String,
-    required: true
-  },
-  sku: {
     type: String,
     required: true
   },
