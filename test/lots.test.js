@@ -184,7 +184,7 @@ describe('API Lot Route', () => {
       expect(res.status.calledWith(errorCode)).to.be.true;
     })
   })
-  describe.only('Post request to /', () => {
+  describe('Post request to /', () => {
     const mockRequest = () => {
       const req = {};
       req.body = {
@@ -248,55 +248,28 @@ describe('API Lot Route', () => {
       expect(res.status.calledWith(errorCode)).to.be.true;
     })
   })
-  describe('Put request to /lot/:lotId', () => {
+  describe.only('Put request to /', () => {
     const mockRequest = () => {
       const req = {};
       req.params = {
         lotId:'fake0198123'
       }
       req.body = {
-        sku: 'skue0218940',
-        name: 'fake name',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, nostrum!',
-        basePrice: {
-          unit: 'Pallet',
-          subUnit: 'Boxes',
-          contains: 20,
-          price: 99999,
-        },
-        priceRules: [
+        lots: [
           {
-            unit: 'Pallet',
-            quantity: 10,
-            price: 499999
-          }
-        ]
-      }
-      req.user = {
-        _id: 'fake1908239021',
-        company: 'fakecompany492384902'
-      }
-      return req;
-    }
-
-    const mockRequestWithBadLot = () => {
-      const req = {};
-      req.body = {
-        sku: 'skue0218940',
-        name: 'fake name',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, nostrum!',
-        basePrice: {
-          unit: 'Pallet',
-          subUnit: 'Boxes',
-          contains: 20,
-          price: 99999,
-        },
-        priceRules: [
+            currentLotCode: "lot1093812",
+            newLotCode: "lot1093812",
+            cost: "9999",
+            dateExpiration: "2021-05-07T16:20:35.984Z",
+            dateManufacture: "2021-05-07T16:20:35.984Z",
+          },
           {
-            unit: 'Wrong',
-            quantity: 10,
-            price: 499999
-          }
+            currentLotCode: "lot1093813",
+            newLotCode: "lot1093813",
+            cost: "9999",
+            dateExpiration: "2021-05-07T16:20:35.984Z",
+            dateManufacture: "2021-05-07T16:20:35.984Z",
+          },
         ]
       }
       req.user = {
@@ -307,46 +280,58 @@ describe('API Lot Route', () => {
     }
 
     let mockLot = () => {
-      return {name: 'fake'}
-      
+      return {
+        _id: 'fake1908239041',
+        lotCode: "lot1093812",
+        cost: "9999",
+        dateExpiration: "2021-05-07T16:20:35.984Z",
+        dateManufacture: "2021-05-07T16:20:35.984Z",
+        save: sandbox.stub()
+      }
     }
 
-    it('should update the lot', async () => {
+    let secondMockLot = () => {
+      return {
+        _id: 'fake1908239051',
+        name: 'fake',
+        save: sandbox.stub()
+      }
+    }
+
+    it('should update the lots', async () => {
       let req = mockRequest();
       let fakeLot = mockLot();
       let dbLotFind = sandbox.stub(Lot, 'findOne').returns(fakeLot);
-      let dbLotUpdate = sandbox.stub(Lot, 'findOneAndUpdate')
 
       await editLot(req,res)
-      expect(dbLotFind.calledOnce).to.be.true;
-      expect(dbLotUpdate.calledOnce).to.be.true;
+      expect(dbLotFind.callCount).to.equal(req.body.lots.length * 2);
+      expect(fakeLot.save.callCount).to.equal(req.body.lots.length);
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(goodCode)).to.be.true;
     })
 
-    it("should handle error if a product's price rule unit does not match base price unit", async () => {
-      let req = mockRequestWithBadLot();
+    it('should handle error if new lot code is already in use', async () => {
+      let req = mockRequest();
       let fakeLot = mockLot();
-      let dbLotFind = sandbox.stub(Lot, 'findOne').returns(fakeLot);
-      let dbLotUpdate = sandbox.stub(Lot, 'findOneAndUpdate')
+      let secondLot = secondMockLot();
+      let dbLotFind = sandbox.stub(Lot, 'findOne')
+      dbLotFind.onFirstCall().returns(fakeLot);
+      dbLotFind.onSecondCall().returns(secondLot)
+
 
       await editLot(req,res)
-      expect(dbLotFind.calledOnce).to.be.false;
-      expect(dbLotUpdate.calledOnce).to.be.false;
+      expect(dbLotFind.calledTwice).to.be.true;
+      expect(fakeLot.save.callCount).to.equal(0);
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
-      expect(res.json.calledOnce).to.be.true;
-
     })
 
     it('should handle error if wrong object id is given', async () => {
-      let req = mockRequestWithBadLot();
+      let req = mockRequest();
       let dbLotFind = sandbox.stub(Lot, 'findOne').throws({kind: 'ObjectId'})
-      let dbLotUpdate = sandbox.stub(Lot, 'findOneAndUpdate')
 
       await editLot(req,res)
-      expect(dbLotFind.calledOnce).to.be.false;
-      expect(dbLotUpdate.calledOnce).to.be.false;
+      expect(dbLotFind.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
       expect(res.json.calledOnce).to.be.true;    
@@ -355,11 +340,9 @@ describe('API Lot Route', () => {
     it('should handle error if db lot find call returns undefined', async () => {
       let req = mockRequest();
       let dbLotFind = sandbox.stub(Lot, 'findOne').returns(undefined);
-      let dbLotUpdate = sandbox.stub(Lot, 'findOneAndUpdate')
 
       await editLot(req,res)
       expect(dbLotFind.calledOnce).to.be.true;
-      expect(dbLotUpdate.calledOnce).to.be.false;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
       expect(res.json.calledOnce).to.be.true;
@@ -367,26 +350,23 @@ describe('API Lot Route', () => {
 
     it('should handle error if db lot call throws', async () => {
       let req = mockRequest();
-      let fakeLot = mockLot();
       let dbLotFind = sandbox.stub(Lot, 'findOne').throws();
-      let dbLotUpdate = sandbox.stub(Lot, 'findOneAndUpdate');
 
       await editLot(req,res)
       expect(dbLotFind.calledOnce).to.be.true;
-      expect(dbLotUpdate.calledOnce).to.be.false;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true;
     })
 
-    it('should handle error if db lot update call throws', async () => {
+    it('should handle error if lot save call throws', async () => {
       let req = mockRequest();
       let fakeLot = mockLot();
       let dbLotFind = sandbox.stub(Lot, 'findOne').returns(fakeLot);
-      let dbLotUpdate = sandbox.stub(Lot, 'findOneAndUpdate').throws();
+      fakeLot.save = sandbox.stub().throws();
 
       await editLot(req,res)
-      expect(dbLotFind.calledOnce).to.be.true;
-      expect(dbLotUpdate.calledOnce).to.be.true;
+      expect(dbLotFind.calledTwice).to.be.true;
+      expect(fakeLot.save.callCount).to.equal(1);
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true;
     })

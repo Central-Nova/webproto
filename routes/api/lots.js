@@ -19,7 +19,7 @@ router.get('/',[userAuth,companyAuth], getLots);
 // @desc    Get Lot by id
 // @access  private
 
-router.get('/:lotId', [userAuth,companyAuth], getLotById);
+router.get('/lot/:lotId', [userAuth,companyAuth], getLotById);
 
 
 // @route   POST api/lots
@@ -29,7 +29,6 @@ router.get('/:lotId', [userAuth,companyAuth], getLotById);
 router.post('/', [userAuth, sanitizeBody, [
         check('lots.*.lotCode', {title:'Error', description:'Lot code is required.'}).not().isEmpty(),
         check('lots.*.cost', {title:'Error', description:'Cost is required.'}).not().isEmpty(),
-        check('lots.*.sku', {title:'Error', description:'SKU is required.'}).not().isEmpty(),
         ], validationHandler], 
         createLot);
 
@@ -38,10 +37,10 @@ router.post('/', [userAuth, sanitizeBody, [
 // @access  Has company and has 'Account Information':'Edit' permission
 
 router.put('/', [userAuth, companyAuth, sanitizeBody, [
-        check('lotCode', {title:'Error', description:'Lot code is required.'}).not().isEmpty(),
-        check('cost', {title:'Error', description:'Cost is required.'}).not().isEmpty(),
-        check('dateExpiration', {title:'Error', description:'Expiration date is required.'}).not().isEmpty(),
-        check('dateManufacture', {title:'Error', description:'Manufacture date is required.'}).not().isEmpty(),
+        check('lots.*.currentLotCode', {title:'Error', description:'Lot code is required.'}).not().isEmpty(),
+        check('lots.*.cost', {title:'Error', description:'Cost is required.'}).not().isEmpty(),
+        check('lots.*.dateExpiration', {title:'Error', description:'Expiration date is required.'}).not().isEmpty(),
+        check('lots.*.dateManufacture', {title:'Error', description:'Manufacture date is required.'}).not().isEmpty(),
         ], validationHandler],
         editLot);
 

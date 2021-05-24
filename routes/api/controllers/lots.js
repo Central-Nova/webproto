@@ -22,14 +22,11 @@ const getLots = async (req, res) => {
     let queryStartTime = new Date();
     apiLogger.info('Searching db for lots by company', {collection: 'lots',operation: 'read'})
 
-    let lots = await Lot.find({
-      $and: [{company: req.user.company}, {
-        $and: [{
-          name: {$regex: searchRegex, $options: 'i'}}, {
-            sku: {$regex: searchRegex, $options: 'i'}}]}]})
-            .sort(sort).skip(page * limit).limit(limit);
+    let lots = await Lot.find({company: req.user.company})
+    .sort(sort)
+    .skip(page * limit)
+    .limit(limit);
     
-   
     if (!lots) {
       apiLogger.debug('No lot records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
 
@@ -65,7 +62,8 @@ const getLots = async (req, res) => {
     });
     
     } catch (error) {
-    return res.status(500).send('Server Error');
+      console.log(error);
+      return res.status(500).send('Server Error');
   }
 }
 
@@ -82,10 +80,9 @@ const getLotById = async (req, res) => {
     let queryStartTime = new Date();
     apiLogger.info('Searching db for lot by lot id', {collection: 'lots',operation: 'read'})
 
-    let lot = await Lot.findOne({company: req.user.company,_id: req.params.lotId})
+    let lot = await Lot.findOne({company: req.user.company, _id: req.params.lotId})
 
     if (!lot) {
-      console.log('no lot');
       apiLogger.debug('No lot record found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
 
       return res
@@ -120,11 +117,8 @@ const createLot = async (req,res) => {
     body: req.body || ''
   })
   
-  const { 
-    lots
-  } = req.body;
+  const { lots } = req.body;
 
-  
   try {
 
     for (let lot of lots) {
@@ -144,7 +138,7 @@ const createLot = async (req,res) => {
       }
   
       // Find one and create
-      ueryStartTime = new Date();
+      queryStartTime = new Date();
       apiLogger.info('Creating new lot record in db', {collection: 'lots',operation: 'create'})
 
       const newLot = new Lot({
@@ -152,7 +146,7 @@ const createLot = async (req,res) => {
         createdBy: req.user._id,
         ...lot
       })
-  
+      console.log('newLot: ', newLot)
       await newLot.save();
 
       apiLogger.info('Lot record created', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
@@ -179,78 +173,69 @@ const editLot = async (req,res) => {
   })
   
   const { 
-    sku, 
-    name, 
-    description,
-    basePrice,
-    priceRules,
-    dimensions,
-    weight,
-    color,
-    primaryMaterial,
-
+    lots
   } = req.body;
-
-    let priceRulesError = [];
-
-    priceRules.forEach(rule => { 
-      if (rule.unit !== basePrice.unit) {
-        priceRulesError.push(true)
-      }
-    })
-
-    if (priceRulesError.includes(true)) {
-      apiLogger.warn('Price rules unit name does not match')
-
-      return res
-      .status(400)
-      .json({ msg: {title: 'Error', description: 'This lot does not use that unit.'}})
-    }
     
     try {
+
+    for (let lot of lots) {
+      // Check if lot exists
+      let queryStartTime = new Date();
+      apiLogger.debug('Searching for lot record in db', {collection: 'lots',operation: 'findOne'})
       
-    // Check if lot exists
-    let queryStartTime = new Date();
-    apiLogger.debug('Searching for lot record in db', {collection: 'lots',operation: 'update'})
-
-    let lot = await Lot.findOne({
-      company: req.user.company,
-      _id: req.params.productId
-    });
-    console.log('lot: ', lot);
-    if (!lot) {
-      apiLogger.warn('No lot record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
-      return res
-      .status(400)
-      .json({errors: [{msg: {title: 'Error', description: 'Lot does not exist.'}}]})
-    }
-    apiLogger.debug('Lot record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
-    
-    queryStartTime = new Date();
-    apiLogger.info('Updating Lot record in db', {collection: 'lots',operation: 'update'})
-    await Lot.findOneAndUpdate({sku, 
-      name, 
-      description,
-      basePrice,
-      priceRules,
-      dimensions,
-      weight,
-      color,
-      primaryMaterial,
-      lastEdited: Date.now(),
-      lastEditedBy: req.user._id,})
-
+      let currentLot = await Lot.findOne({
+        company: req.user.company,
+        lotCode: lot.currentLotCode
+      });
+      if (!currentLot) {
+        apiLogger.warn('No lot record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+        return res
+        .status(400)
+        .json({errors: [{msg: {title: 'Error', description: 'Lot does not exist.'}}]})
+      }
+      apiLogger.debug('Lot record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+      
+      // Check if new lotCode already exists
+      queryStartTime = new Date();
+      apiLogger.debug('Searching for existing lot record in db', {collection: 'lots',operation: 'findOne'})
+  
+      let secondLot = await Lot.findOne({
+        company: req.user.company,
+        lotCode: lot.newLotCode
+      });
+  
+      if (secondLot._id.toString() !== currentLot._id.toString()) {
+        apiLogger.warn('Existing lot code found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+        return res
+        .status(400)
+        .json({errors: [{msg: {title: 'Error', description: 'Lot code is already in use.'}}]})
+      }
+      apiLogger.debug('Lot code is available to use', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+  
+      queryStartTime = new Date();
+      apiLogger.info('Updating Lot record in db', {collection: 'lots',operation: 'save'})
+  
+      currentLot.lotCode = lot.newLotCode;
+      currentLot.cost = lot.cost;
+      currentLot.dateExpiration = lot.dateExpiration;
+      currentLot.dateManufacture = lot.dateManufacture;
+      currentLot.save();
+  
       apiLogger.info('Lot record updated', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+    }
+      
 
     return res
     .status(200)
     .json({msg: {title: 'Success', description: 'Lot details have been updated!'}})
     
   } catch (error) {
+    console.log(error);
     if (error.kind === 'ObjectId') {
+      console.log(error.kind);
       return res
       .status(400)
-      .json({msg: { title: 'Error', description: 'Product not found.'}})      
+      .json({msg: { title: 'Error', description: 'Lot not found.'}})      
     }
     return res.status(500).send('Server Error');
    
