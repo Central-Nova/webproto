@@ -27,6 +27,10 @@ const LotSchema = new mongoose.Schema({
       type: String,
       required: true
   },
+  created: {
+    type: Date,
+    default: Date.now
+  },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user'  

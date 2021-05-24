@@ -1,10 +1,11 @@
-const Lot = require('../../../models/Lot');
+const Inventory = require('../../../models/Inventory');
+const Product = require('../../../models/Product')
 const uniqueKeyHasValue = require('../../../lib/uniqueKeyHasValue');
 const apiLogger = require('../../../config/loggers');
 const httpContext = require('express-http-context');
 
 
-const getLots = async (req, res) => {
+const getInventory = async (req, res) => {
   apiLogger.debug('User requesting all lot records by company', {
     params: req.params || '',
     query: req.query || '',
@@ -18,48 +19,67 @@ const getLots = async (req, res) => {
   let searchRegex = searchArray !== '' && searchArray.join('|') || '';
 
   try {
-    
-    let queryStartTime = new Date();
-    apiLogger.info('Searching db for lots by company', {collection: 'lots',operation: 'read'})
 
-    let lots = await Lot.find({company: req.user.company})
-    .sort(sort)
-    .skip(page * limit)
-    .limit(limit);
+    let products = await Product.find({company: req.user.company});
+    console.log('products: ', products);
     
-    if (!lots) {
-      apiLogger.debug('No lot records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
+    let formatData = () => {
+        const promises = products.map(async (product) => {
+            console.log('product: ', product);
+            let queryStartTime = new Date();
+            apiLogger.info('Searching db for inventory by company', {collection: 'inventory',operation: 'read'})
+        
+            let inventory = await Inventory.countDocuments({company: req.user.company, product: product._id, status: 'sellable'})
+            console.log('inventory: ', inventory);
 
-      return res
-      .status(400)
-      .json({msg: { title: 'Error', description: 'No lots found.'}})
+            if (!inventory) {
+            apiLogger.debug('No inventory records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
+        
+            return res
+            .status(400)
+            .json({msg: { title: 'Error', description: 'No inventory found.'}})
+            }
+
+            apiLogger.debug('Inventory records found', {documents: inventory, responseTime: `${new Date() - queryStartTime}ms`})
+            return {
+                _id: product._id,
+                sku: product.sku,
+                sellable: inventory
+            }
+        })
+        return Promise.all(promises)
     }
-    apiLogger.debug('Lot records found', {documents: lots.length, responseTime: `${new Date() - queryStartTime}ms`})
+
+    const formattedInventoryData = await formatData();
+
+    console.log('formatted: ', formattedInventoryData);
 
     queryStartTime = new Date();
-    apiLogger.info('Searching db for count of lots by company', {collection: 'lots',operation: 'read'})
+    apiLogger.info('Searching db for count of products by company', {collection: 'products',operation: 'read'})
 
-    let total = await Lot.countDocuments({$and: [{company: req.user.company}, {$or: [{name: {$regex: searchRegex, $options: 'i'}}, {sku: {$regex: searchRegex, $options: 'i'}}]}]}).sort(sort);
+    let total = await Product.countDocuments({company: req.user.company});
 
     if (!total) {
-      apiLogger.debug('No lot records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
+      apiLogger.debug('No product records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
 
       return res
       .status(400)
-      .json({msg: { title: 'Error', description: 'No lots found.'}})
+      .json({msg: { title: 'Error', description: 'No product found.'}})
     }
 
-    apiLogger.debug('Lot records counted', {documents: total, responseTime: `${new Date() - queryStartTime}ms`})
+    apiLogger.debug('Product records counted', {documents: total, responseTime: `${new Date() - queryStartTime}ms`})
     
-    httpContext.set('resDocs', lots.length);
-    apiLogger.debug('Sending lot records by company', {documents: lots.length})
+    httpContext.set('resDocs', products);
+    apiLogger.debug('Sending product records by company', {documents: products})
 
-    return res.send({
-      total,
-      page,
-      limit,
-      lots
-    });
+    const returnItem = {
+        total,
+        page,
+        limit,
+        inventory: formattedInventoryData
+    }
+    console.log('returnItem: ', returnItem);
+    return res.send(returnItem);
     
     } catch (error) {
       console.log(error);
@@ -67,7 +87,7 @@ const getLots = async (req, res) => {
   }
 }
 
-const getLotById = async (req, res) => {
+const getInventoryById = async (req, res) => {
   apiLogger.debug('User requesting lot record by lot id', {
     params: req.params || '',
     query: req.query || '',
@@ -78,9 +98,9 @@ const getLotById = async (req, res) => {
   try {
    
     let queryStartTime = new Date();
-    apiLogger.info('Searching db for lot by lot id', {collection: 'lots',operation: 'read'})
+    apiLogger.info('Searching db for lot by lot id', {collection: 'inventory',operation: 'read'})
 
-    let lot = await Lot.findOne({company: req.user.company, _id: req.params.lotId})
+    let lot = await Inventory.findOne({company: req.user.company, _id: req.params.lotId})
 
     if (!lot) {
       apiLogger.debug('No lot record found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
@@ -109,7 +129,7 @@ const getLotById = async (req, res) => {
   }
 }
 
-const createLot = async (req,res) => {
+const createInventory = async (req,res) => {
   
   apiLogger.debug('User requesting to create new lot record', {
     params: req.params || '',
@@ -117,43 +137,45 @@ const createLot = async (req,res) => {
     body: req.body || ''
   })
   
-  const { lots } = req.body;
+  const { inventory } = req.body;
 
   try {
 
-    for (let lot of lots) {
+    for (let unit of inventory) {
 
       // Check for existing lot by lot code
       let queryStartTime = new Date();
-      apiLogger.debug('Searching DB for existing lot code', {collection: 'lots',operation: 'read'})
+      apiLogger.debug('Searching DB for existing lot code', {collection: 'inventory',operation: 'read'})
 
-      let existingLot = await Lot.findOne({lotCode: lot.lotCode})
+      let existingUnit = await Inventory.findOne({serial: unit.serial})
       
-      if (existingLot) {
-        apiLogger.debug('Existing lot record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+      if (existingUnit) {
+        apiLogger.debug('Existing inventory record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
 
         return res
         .status(400)
-        .json({errors: [{ msg: {title: 'Error', description: 'Lot code is already in use.'}}]})
+        .json({errors: [{ msg: {title: 'Error', description: 'Serial code is already in use.'}}]})
       }
 
       // Create
       queryStartTime = new Date();
-      apiLogger.info('Creating new lot record in db', {collection: 'lots',operation: 'create'})
+      apiLogger.info('Creating new inventory record in db', {collection: 'inventory',operation: 'create'})
 
-      const newLot = new Lot({
+      const newUnit = new Inventory({
         company: req.user.company,
         createdBy: req.user._id,
-        ...lot
+        lastEdited: new Date(),
+        lastEditedBy: req.user._id,
+        ...unit
       })
-      console.log('newLot: ', newLot)
-      await newLot.save();
+      console.log('newUnit: ', newUnit)
+      await newUnit.save();
 
-      apiLogger.info('Lot record created', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+      apiLogger.info('Inventory record created', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
 
     }
     
-    return res.status(200).json({msg: { title: 'Success', description: `${lots.length} new lot records created.`} })
+    return res.status(200).json({msg: { title: 'Success', description: `${inventory.length} new inventory records created.`} })
     
   } catch (err) {
     console.log(err);
@@ -164,7 +186,7 @@ const createLot = async (req,res) => {
 
 }
 
-const editLot = async (req,res) => {
+const editInventory = async (req,res) => {
   
   apiLogger.debug('User requesting to update lot record', {
     params: req.params || '',
@@ -173,17 +195,17 @@ const editLot = async (req,res) => {
   })
   
   const { 
-    lots
+    inventory
   } = req.body;
     
     try {
 
-    for (let lot of lots) {
+    for (let lot of inventory) {
       // Check if lot exists
       let queryStartTime = new Date();
-      apiLogger.debug('Searching for lot record in db', {collection: 'lots',operation: 'findOne'})
+      apiLogger.debug('Searching for lot record in db', {collection: 'inventory',operation: 'findOne'})
       
-      let currentLot = await Lot.findOne({
+      let currentLot = await Inventory.findOne({
         company: req.user.company,
         lotCode: lot.currentLotCode
       });
@@ -197,9 +219,9 @@ const editLot = async (req,res) => {
       
       // Check if new lotCode already exists
       queryStartTime = new Date();
-      apiLogger.debug('Searching for existing lot record in db', {collection: 'lots',operation: 'findOne'})
+      apiLogger.debug('Searching for existing lot record in db', {collection: 'inventory',operation: 'findOne'})
   
-      let secondLot = await Lot.findOne({
+      let secondLot = await Inventory.findOne({
         company: req.user.company,
         lotCode: lot.newLotCode
       });
@@ -213,7 +235,7 @@ const editLot = async (req,res) => {
       apiLogger.debug('Lot code is available to use', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
   
       queryStartTime = new Date();
-      apiLogger.info('Updating Lot record in db', {collection: 'lots',operation: 'save'})
+      apiLogger.info('Updating Lot record in db', {collection: 'inventory',operation: 'save'})
   
       currentLot.lotCode = lot.newLotCode;
       currentLot.cost = lot.cost;
@@ -244,8 +266,8 @@ const editLot = async (req,res) => {
 }
 
 module.exports = {
-    getLots,
-    getLotById,
-    createLot,
-    editLot
+    getInventory,
+    getInventoryById,
+    createInventory,
+    editInventory
 }

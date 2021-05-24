@@ -10,8 +10,6 @@ const setHttpContext = require('./middleware/setHttpContext');
 const apiEndLog = require('./middleware/apiEndLog');
 const cors = require('cors');
 
-
-
 require('dotenv').config();
 
 const app = express();
@@ -65,6 +63,7 @@ app.use('/api/roles', require('./routes/api/roles'));
 app.use('/api/invitation', require('./routes/api/invitation'));
 app.use('/api/products', require('./routes/api/products'));
 app.use('/api/lots', require('./routes/api/lots'));
+app.use('/api/inventory', require('./routes/api/inventory'));
 
 const PORT = process.env.BACKEND_PORT || 5000;
 const HOST = '0.0.0.0';

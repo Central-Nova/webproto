@@ -248,7 +248,7 @@ describe('API Lot Route', () => {
       expect(res.status.calledWith(errorCode)).to.be.true;
     })
   })
-  describe.only('Put request to /', () => {
+  describe('Put request to /', () => {
     const mockRequest = () => {
       const req = {};
       req.params = {

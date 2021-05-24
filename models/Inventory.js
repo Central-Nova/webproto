@@ -1,22 +1,37 @@
 const mongoose = require('mongoose');
 
 const InventorySchema = new mongoose.Schema({
-  item: {
+  company: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'company'
+  },
+  product: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'product'
   },
-  totalQuantity: {
-    type: Number
+  lot: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'lot'
   },
-  availableQuantity: {
-    type: Number
+  serial: {
+    type: String
   },
-  outboundQuantity: {
-    type: Number
+  status: {
+    type: String
   },
-  inboundQuantity: {
-    type: Number
-  }
+  created: {
+    type: Date,
+    default: Date.now
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user'
+  },
+  lastEdited: Date,
+  lastEditedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user'
+  },
 });
 
-module.export = Inventory;
+module.exports = Inventory = mongoose.model('inventory', InventorySchema);
