@@ -21,7 +21,7 @@ const getInventory = async (req, res) => {
   try {
 
     let queryStartTime = new Date();
-    apiLogger.info('Searching db for inventory by company', {collection: 'products',operation: 'read'})
+    apiLogger.info('Searching db for products by company', {collection: 'products',operation: 'read'})
 
     let products = await Product.find({company: req.user.company});
     apiLogger.debug('Product records found', {documents: products.length, responseTime: `${new Date() - queryStartTime}ms`})
@@ -55,6 +55,7 @@ const getInventory = async (req, res) => {
     }
 
     const formattedInventoryData = await formatData();
+    console.log('formattedInventoryData: ', formattedInventoryData)
 
     queryStartTime = new Date();
     apiLogger.info('Searching db for count of products by company', {collection: 'products',operation: 'read'})
@@ -79,6 +80,67 @@ const getInventory = async (req, res) => {
         page,
         limit,
         inventory: formattedInventoryData
+    }
+    console.log('returnItem: ', returnItem);
+    return res.send(returnItem);
+    
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send('Server Error');
+  }
+}
+
+const getInventoryByProduct = async (req, res) => {
+  apiLogger.debug('User requesting all lot records by company', {
+    params: req.params || '',
+    query: req.query || '',
+    body: req.body || ''
+  })
+
+  let page = parseInt(req.query.page) || 0;
+  let limit = parseInt(req.query.limit) || 0;
+  let sort = req.query.sort || '';
+  let searchArray = req.query.search !== undefined && req.query.search.split(',') || '';
+  let searchRegex = searchArray !== '' && searchArray.join('|') || '';
+
+  try {
+
+    let queryStartTime = new Date();
+    apiLogger.info('Searching db for inventory by company', {collection: 'products',operation: 'read'})
+
+    let inventory = await Inventory.find({company: req.user.company, product: req.params.product}).select('serial lot status');
+    apiLogger.debug('Inventory records found', {documents: inventory.length, responseTime: `${new Date() - queryStartTime}ms`})
+
+    if (inventory.length === 0) {
+      apiLogger.debug('No inventory records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
+      return res
+      .status(400)
+      .json({msg: { title: 'Error', description: 'No inventory records found.'}})
+    }
+
+    queryStartTime = new Date();
+    apiLogger.info('Searching db for count of inventory records by company and product id', {collection: 'products',operation: 'read'})
+
+    let total = await Inventory.countDocuments({company: req.user.company, product: req.params.productId});
+
+    if (!total) {
+      apiLogger.debug('No inventory records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
+
+      return res
+      .status(400)
+      .json({msg: { title: 'Error', description: 'No inventory records found.'}})
+    }
+
+    apiLogger.debug('Inventory records counted', {documents: total, responseTime: `${new Date() - queryStartTime}ms`})
+    
+    httpContext.set('resDocs', inventory.length);
+    apiLogger.debug('Sending inventory records by company and product id', {documents: inventory.length})
+
+    const returnItem = {
+        total,
+        page,
+        limit,
+        inventory
     }
     console.log('returnItem: ', returnItem);
     return res.send(returnItem);
@@ -269,6 +331,7 @@ const editInventory = async (req,res) => {
 
 module.exports = {
     getInventory,
+    getInventoryByProduct,
     getInventoryById,
     createInventory,
     editInventory

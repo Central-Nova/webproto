@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
 const Inventory = require('../models/Inventory');
-const { getInventory, getInventoryById, createInventory, editInventory } = require('../routes/api/controllers/inventory');
+const { getInventory, getInventoryByProduct, getInventoryById, createInventory, editInventory } = require('../routes/api/controllers/inventory');
 
 describe('API Inventory Route', () => {
   const mockResponse = () => {
@@ -146,26 +146,151 @@ describe('API Inventory Route', () => {
 
     it('should handle error when db inventory countDocuments throws error', async () => {
       let req = mockRequest();
-      let fakeInventory = mockInventory();
-      let dbProductCall = sandbox.stub(Product, 'find').throws()
-      let dbProductCount = sandbox.stub(Product, 'countDocuments').returns(3);
+      let fakeProducts = mockProducts();
+      let formattedInventory = returnedInventory();
+      let dbProductCall = sandbox.stub(Product, 'find').returns(fakeProducts)
       let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').throws();
+      let dbProductCount = sandbox.stub(Product, 'countDocuments').returns(3);
   
       await getInventory(req, res);
 
       expect(dbProductCall.calledOnce).to.be.true;
-      expect(dbInventoryCount.callCount).to.equal(0);
+      expect(dbInventoryCount.callCount).to.equal(fakeProducts.length);
       expect(dbProductCount.callCount).to.equal(0);
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true;
+
     })
 
+    it('should handle error when db product countDocuments throws error', async () => {
+      let req = mockRequest();
+      let fakeProducts = mockProducts();
+      let formattedInventory = returnedInventory();
+      let dbProductCall = sandbox.stub(Product, 'find').returns(fakeProducts)
+      let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').returns(formattedInventory);
+      let dbProductCount = sandbox.stub(Product, 'countDocuments').throws();
+  
+      await getInventory(req, res);
+
+      expect(dbProductCall.calledOnce).to.be.true;
+      expect(dbInventoryCount.callCount).to.equal(fakeProducts.length);
+      expect(dbProductCount.calledOnce).to.be.true;
+      expect(res.status.calledOnce).to.be.true;
+      expect(res.status.calledWith(errorCode)).to.be.true;
+    })
   })
-  describe('Get request to /lot/:lotId', () => {
+
+  describe('Get request to /product/:productId', () => {
     const mockRequest = () => {
       const req = {};
+      req.query = {
+        page: '',
+        limit: '',
+        sort: '',
+        search: ''
+      }
+      req.user = {
+        company: 'fakecompany492384902'
+      }
       req.params = {
-        lotId: 'fakelot1912312'
+        productId: '60858de105a244cd7564abd7'
+      }
+      return req;
+    }
+
+    let mockInventory = () => {
+      return [
+        {
+            serial: "serial102931",
+            lot: "60ab917b18dac4006dacd9dc",
+            product: "60858de105a244cd7564abd7",
+            status: "sellable",
+            },           
+            {
+            serial: "serial102932",
+            lot: "60ab917b18dac4006dacd9dc",
+            product: "60858de105a244cd7564abd7",
+            status: "sellable",
+            },            
+            {
+            serial: "serial102933",
+            lot: "60ab917b18dac4006dacd9dc",
+            product: "60858de105a244cd7564abd7",
+            status: "sellable",
+            },
+      ]
+    }
+    
+    it('should call res.send with all inventory by company ID and productId and meta data', async () => {
+      let req = mockRequest();
+      let fakeInventory = mockInventory();
+      let dbInventoryCall = sandbox.stub(Inventory, 'find').returns({select: sandbox.stub().returns(fakeInventory)});
+      let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').returns(fakeInventory.length);
+  
+      await getInventoryByProduct(req, res);
+
+      expect(dbInventoryCall.callCount).to.equal(1);
+      expect(dbInventoryCount.callCount).to.equal(1);
+      expect(res.send.calledOnce).to.be.true;
+      expect(res.send.calledWith({
+        total: fakeInventory.length,
+        page: 0,
+        limit: 0,
+        inventory: fakeInventory
+      })).to.be.true;
+    })
+
+    it('should handle error when db inventory call returns 0 inventory records', async () => {
+      let req = mockRequest();
+      let dbInventoryCall = sandbox.stub(Inventory, 'find').returns({select: sandbox.stub().returns([])});
+      let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').returns(0);
+  
+      await getInventoryByProduct(req, res);
+
+      expect(dbInventoryCall.callCount).to.equal(1);
+      expect(dbInventoryCount.callCount).to.equal(0);
+      expect(res.status.calledOnce).to.be.true;
+      expect(res.status.calledWith(badCode)).to.be.true;
+      expect(res.json.calledOnce).to.be.true;
+
+      })
+
+    it('should handle error when db inventory call throws error', async () => {
+      let req = mockRequest();
+      let dbInventoryCall = sandbox.stub(Inventory, 'find').returns({select: sandbox.stub().throws()});
+      let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').returns(0);
+  
+      await getInventoryByProduct(req, res);
+
+      expect(dbInventoryCall.callCount).to.equal(1);
+      expect(dbInventoryCount.callCount).to.equal(0);
+      expect(res.status.calledOnce).to.be.true;
+      expect(res.status.calledWith(errorCode)).to.be.true;
+      })
+
+    it('should handle error when db inventory countDocument throws error', async () => {
+      let req = mockRequest();
+      let dbInventoryCall = sandbox.stub(Inventory, 'find').returns({select: sandbox.stub().throws()});
+      let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').throws();
+  
+      await getInventoryByProduct(req, res);
+
+      expect(dbInventoryCall.callCount).to.equal(1);
+      expect(dbInventoryCount.callCount).to.equal(0);
+      expect(res.status.calledOnce).to.be.true;
+      expect(res.status.calledWith(errorCode)).to.be.true;
+      })
+
+  })
+
+  describe('Get request to /inventory/:inventoryId', () => {
+    const mockRequest = () => {
+      const req = {};
+      req.query = {
+        page: '',
+        limit: '',
+        sort: '',
+        search: ''
       }
       req.user = {
         company: 'fakecompany492384902'
@@ -173,27 +298,61 @@ describe('API Inventory Route', () => {
       return req;
     }
 
-    let mockLot = () => {
-      return {name: 'fake'}
-      
+    let mockInventory = () => {
+      return [
+        {
+            serial: "serial102931",
+            lot: "60ab917b18dac4006dacd9dc",
+            product: "60858de105a244cd7564abd7",
+            status: "sellable",
+            },           
+            {
+            serial: "serial102932",
+            lot: "60ab917b18dac4006dacd9dc",
+            product: "60858de105a244cd7564abd8",
+            status: "sellable",
+            },            
+            {
+            serial: "serial102932",
+            lot: "60ab917b18dac4006dacd9dc",
+            product: "60858de105a244cd7564abd9",
+            status: "sellable",
+            },
+      ]
+    }
+
+    let mockProducts = () => {
+        return [
+            {_id: '60858de105a244cd7564abd7', sku: 'sku-1234-1'},
+            {_id: '60858de105a244cd7564abd8', sku: 'sku-1234-2'},
+            {_id: '60858de105a244cd7564abd9', sku: 'sku-1234-3'},
+        ]
+    }
+
+    let returnedInventory = () => {
+        return [
+            {_id: '60858de105a244cd7564abd7', sku: 'sku-1234-1', sellable: 1},
+            {_id: '60858de105a244cd7564abd8', sku: 'sku-1234-2', sellable: 1},
+            {_id: '60858de105a244cd7564abd9', sku: 'sku-1234-3', sellable: 1},
+        ]
     }
     
-    it('should call res.send with lot data', async () => {
+    it('should call res.send with inventory data', async () => {
       let req = mockRequest();
-      let fakeLot = mockLot();
-      let dbLotCall = sandbox.stub(Lot, 'findOne').returns(fakeLot);
+      let fakeInventory = mockInventory();
+      let dbInventoryCall = sandbox.stub(Inventory, 'findOne').returns(fakeInventory);
  
       await getInventoryById(req, res);
-      expect(dbLotCall.calledOnce).to.be.true;
+      expect(dbInventoryCall.calledOnce).to.be.true;
       expect(res.send.calledOnce).to.be.true;
-      expect(res.send.calledWith(fakeLot)).to.be.true;
+      expect(res.send.calledWith(fakeInventory)).to.be.true;
     })
     it('should handle error when db inventory call returns undefined', async () => {
       let req = mockRequest();
-      let dbLotCall = sandbox.stub(Lot, 'findOne').returns(undefined);
+      let dbInventoryCall = sandbox.stub(Inventory, 'findOne').returns(undefined);
  
       await getInventoryById(req, res);
-      expect(dbLotCall.calledOnce).to.be.true;
+      expect(dbInventoryCall.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
       expect(res.json.calledOnce).to.be.true;
@@ -201,10 +360,10 @@ describe('API Inventory Route', () => {
     })
     it('should handle error when db inventory call throws error', async () => {
       let req = mockRequest();
-      let dbLotCall = sandbox.stub(Lot, 'findOne').throws();
+      let dbInventoryCall = sandbox.stub(Inventory, 'findOne').throws();
  
       await getInventoryById(req, res);
-      expect(dbLotCall.calledOnce).to.be.true;
+      expect(dbInventoryCall.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true;
     })

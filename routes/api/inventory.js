@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getInventory, getInventoryById, createInventory, editInventory } = require('./controllers/inventory');
+const { getInventory, getInventoryByProduct, getInventoryById, createInventory, editInventory } = require('./controllers/inventory');
 
 // Middleware
 const { check } = require('express-validator');
@@ -15,7 +15,13 @@ const sanitizeBody = require('../../middleware/sanitizeBody');
 
 router.get('/',[userAuth,companyAuth], getInventory);
 
-// @route   GET api/inventory/:lotId
+// @route   GET api/inventory/product/:productId
+// @desc    Get Inventory by id
+// @access  private
+
+router.get('/product/:productId', [userAuth,companyAuth], getInventoryByProduct);
+
+// @route   GET api/inventory/inventory/:inventoryId
 // @desc    Get Inventory by id
 // @access  private
 
