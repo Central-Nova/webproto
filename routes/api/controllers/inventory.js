@@ -20,24 +20,28 @@ const getInventory = async (req, res) => {
 
   try {
 
+    let queryStartTime = new Date();
+    apiLogger.info('Searching db for inventory by company', {collection: 'products',operation: 'read'})
+
     let products = await Product.find({company: req.user.company});
-    console.log('products: ', products);
+    apiLogger.debug('Product records found', {documents: products.length, responseTime: `${new Date() - queryStartTime}ms`})
+
+    if (products.length === 0) {
+      apiLogger.debug('No product records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
+      return res
+      .status(400)
+      .json({msg: { title: 'Error', description: 'No products found.'}})
+    }
     
     let formatData = () => {
         const promises = products.map(async (product) => {
-            console.log('product: ', product);
-            let queryStartTime = new Date();
+            queryStartTime = new Date();
             apiLogger.info('Searching db for inventory by company', {collection: 'inventory',operation: 'read'})
         
             let inventory = await Inventory.countDocuments({company: req.user.company, product: product._id, status: 'sellable'})
-            console.log('inventory: ', inventory);
 
             if (!inventory) {
             apiLogger.debug('No inventory records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
-        
-            return res
-            .status(400)
-            .json({msg: { title: 'Error', description: 'No inventory found.'}})
             }
 
             apiLogger.debug('Inventory records found', {documents: inventory, responseTime: `${new Date() - queryStartTime}ms`})
@@ -52,8 +56,6 @@ const getInventory = async (req, res) => {
 
     const formattedInventoryData = await formatData();
 
-    console.log('formatted: ', formattedInventoryData);
-
     queryStartTime = new Date();
     apiLogger.info('Searching db for count of products by company', {collection: 'products',operation: 'read'})
 
@@ -64,7 +66,7 @@ const getInventory = async (req, res) => {
 
       return res
       .status(400)
-      .json({msg: { title: 'Error', description: 'No product found.'}})
+      .json({msg: { title: 'Error', description: 'No products found.'}})
     }
 
     apiLogger.debug('Product records counted', {documents: total, responseTime: `${new Date() - queryStartTime}ms`})
