@@ -295,46 +295,21 @@ describe('API Inventory Route', () => {
       req.user = {
         company: 'fakecompany492384902'
       }
+      req.params = {
+        productId: '60b38f90463513003a794998'
+      }
       return req;
     }
 
     let mockInventory = () => {
-      return [
-        {
-            serial: "serial102931",
-            lot: "60ab917b18dac4006dacd9dc",
-            product: "60858de105a244cd7564abd7",
-            status: "sellable",
-            },           
-            {
-            serial: "serial102932",
-            lot: "60ab917b18dac4006dacd9dc",
-            product: "60858de105a244cd7564abd8",
-            status: "sellable",
-            },            
-            {
-            serial: "serial102932",
-            lot: "60ab917b18dac4006dacd9dc",
-            product: "60858de105a244cd7564abd9",
-            status: "sellable",
-            },
-      ]
-    }
-
-    let mockProducts = () => {
-        return [
-            {_id: '60858de105a244cd7564abd7', sku: 'sku-1234-1'},
-            {_id: '60858de105a244cd7564abd8', sku: 'sku-1234-2'},
-            {_id: '60858de105a244cd7564abd9', sku: 'sku-1234-3'},
-        ]
-    }
-
-    let returnedInventory = () => {
-        return [
-            {_id: '60858de105a244cd7564abd7', sku: 'sku-1234-1', sellable: 1},
-            {_id: '60858de105a244cd7564abd8', sku: 'sku-1234-2', sellable: 1},
-            {_id: '60858de105a244cd7564abd9', sku: 'sku-1234-3', sellable: 1},
-        ]
+      return {
+        _id: "60b38f90463513003a794998",
+        company: "607da9ab78caf50039e60be2",
+        serial: "serial102921",
+        lot: "60b38eb03ead17002ccd2ebd",
+        product: "6081cb3a72f96229a6261d53",
+        status: "sellable",
+      }
     }
     
     it('should call res.send with inventory data', async () => {
@@ -358,14 +333,15 @@ describe('API Inventory Route', () => {
       expect(res.json.calledOnce).to.be.true;
 
     })
-    it('should handle error when db inventory call throws error', async () => {
+    it('should handle error when db inventory call throws objectId error', async () => {
       let req = mockRequest();
-      let dbInventoryCall = sandbox.stub(Inventory, 'findOne').throws();
+      let dbInventoryCall = sandbox.stub(Inventory, 'findOne').throws({kind: 'ObjectId'});
  
       await getInventoryById(req, res);
       expect(dbInventoryCall.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
-      expect(res.status.calledWith(errorCode)).to.be.true;
+      expect(res.status.calledWith(badCode)).to.be.true;
+      expect(res.json.calledOnce).to.be.true;
     })
   })
   describe('Post request to /', () => {
@@ -420,11 +396,11 @@ describe('API Inventory Route', () => {
       expect(res.status.calledWith(errorCode)).to.be.true;
     })
   })
-  describe('Put request to /', () => {
+  describe('Put request to /inventory/:inventoryId', () => {
     const mockRequest = () => {
       const req = {};
       req.params = {
-        lotId:'fake0198123'
+        inventoryId:'fake0198123'
       }
       req.body = {
         lots: [

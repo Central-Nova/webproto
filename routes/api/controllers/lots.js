@@ -39,7 +39,7 @@ const getLots = async (req, res) => {
     queryStartTime = new Date();
     apiLogger.info('Searching db for count of lots by company', {collection: 'lots',operation: 'read'})
 
-    let total = await Lot.countDocuments({$and: [{company: req.user.company}, {$or: [{name: {$regex: searchRegex, $options: 'i'}}, {sku: {$regex: searchRegex, $options: 'i'}}]}]}).sort(sort);
+    let total = await Lot.countDocuments({company: req.user.company}).sort(sort);
 
     if (!total) {
       apiLogger.debug('No lot records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})

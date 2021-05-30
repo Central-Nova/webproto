@@ -108,7 +108,7 @@ const getInventoryByProduct = async (req, res) => {
     let queryStartTime = new Date();
     apiLogger.info('Searching db for inventory by company', {collection: 'products',operation: 'read'})
 
-    let inventory = await Inventory.find({company: req.user.company, product: req.params.product}).select('serial lot status');
+    let inventory = await Inventory.find({company: req.user.company, product: req.params.productId}).select('serial lot status');
     apiLogger.debug('Inventory records found', {documents: inventory.length, responseTime: `${new Date() - queryStartTime}ms`})
 
     if (inventory.length === 0) {
@@ -152,7 +152,7 @@ const getInventoryByProduct = async (req, res) => {
 }
 
 const getInventoryById = async (req, res) => {
-  apiLogger.debug('User requesting lot record by lot id', {
+  apiLogger.debug('User requesting inventory record by inventory id', {
     params: req.params || '',
     query: req.query || '',
     body: req.body || ''
@@ -162,30 +162,29 @@ const getInventoryById = async (req, res) => {
   try {
    
     let queryStartTime = new Date();
-    apiLogger.info('Searching db for lot by lot id', {collection: 'inventory',operation: 'read'})
+    apiLogger.info('Searching db for inventory by inventory id', {collection: 'inventory',operation: 'read'})
 
-    let lot = await Inventory.findOne({company: req.user.company, _id: req.params.lotId})
+    let inventory = await Inventory.findOne({company: req.user.company, _id: req.params.inventoryId})
 
-    if (!lot) {
-      apiLogger.debug('No lot record found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
+    if (!inventory) {
+      apiLogger.debug('No inventory record found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
 
       return res
       .status(400)
-      .json({msg: { title: 'Error', description: 'Lot not found.'}})
+      .json({msg: { title: 'Error', description: 'Inventory record not found.'}})
     }
-    apiLogger.debug('Lot record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+    apiLogger.debug('Inventory record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
 
     httpContext.set('resDocs', 1);
-    apiLogger.info('Sending lot record by id', {documents: 1})
-    console.log('end');
-    return res.send(lot);
+    apiLogger.info('Sending inventory record by id', {documents: 1})
+    return res.send(inventory);
     } catch (error) {
-
       if (error.kind === 'ObjectId') {
-        apiLogger.warn('Invalid lot id requested by user')
+        console.log('wrong')
+        apiLogger.warn('Invalid inventory id requested by user')
         return res
         .status(400)
-        .json({msg: { title: 'Error', description: 'Lot not found.'}})      
+        .json({msg: { title: 'Error', description: 'Inventory record not found.'}})      
       }
 
       apiLogger.error('Caught error');
