@@ -400,25 +400,12 @@ describe('API Inventory Route', () => {
     const mockRequest = () => {
       const req = {};
       req.params = {
-        inventoryId:'fake0198123'
+        inventoryId:'60b38f90463513003a794998'
       }
       req.body = {
-        lots: [
-          {
-            currentLotCode: "lot1093812",
-            newLotCode: "lot1093812",
-            cost: "9999",
-            dateExpiration: "2021-05-07T16:20:35.984Z",
-            dateManufacture: "2021-05-07T16:20:35.984Z",
-          },
-          {
-            currentLotCode: "lot1093813",
-            newLotCode: "lot1093813",
-            cost: "9999",
-            dateExpiration: "2021-05-07T16:20:35.984Z",
-            dateManufacture: "2021-05-07T16:20:35.984Z",
-          },
-        ]
+          lotCode: "lot1093812",
+          serial: 'serial90321123',
+          status: 'sellable'
       }
       req.user = {
         _id: 'fake1908239021',
@@ -427,59 +414,60 @@ describe('API Inventory Route', () => {
       return req;
     }
 
-    let mockLot = () => {
+    let mockInventory = () => {
       return {
         _id: 'fake1908239041',
-        lotCode: "lot1093812",
-        cost: "9999",
-        dateExpiration: "2021-05-07T16:20:35.984Z",
-        dateManufacture: "2021-05-07T16:20:35.984Z",
+        lot: "lot1093812",
+        serial: "serial102938",
+        status: 'sellable',
         save: sandbox.stub()
       }
     }
 
-    let secondMockLot = () => {
+    let secondMockInventory = () => {
       return {
-        _id: 'fake1908239051',
-        name: 'fake',
+        _id: 'different9012832',
+        lot: "lot1093812",
+        serial: "serial102938",
+        status: 'sellable',
         save: sandbox.stub()
       }
     }
 
-    it('should update the lots', async () => {
+    it('should update the inventory', async () => {
       let req = mockRequest();
-      let fakeLot = mockLot();
-      let dbLotFind = sandbox.stub(Lot, 'findOne').returns(fakeLot);
+      let fakeInventory = mockInventory();
+      let dbInventoryFind = sandbox.stub(Inventory, 'findOne').returns(fakeInventory);
 
       await editInventory(req,res)
-      expect(dbLotFind.callCount).to.equal(req.body.lots.length * 2);
-      expect(fakeLot.save.callCount).to.equal(req.body.lots.length);
+      expect(dbInventoryFind.calledTwice).to.be.true;
+      expect(fakeInventory.save.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(goodCode)).to.be.true;
     })
 
-    it('should handle error if new lot code is already in use', async () => {
+    it('should handle error if new inventory code is already in use', async () => {
       let req = mockRequest();
-      let fakeLot = mockLot();
-      let secondLot = secondMockLot();
-      let dbLotFind = sandbox.stub(Lot, 'findOne')
-      dbLotFind.onFirstCall().returns(fakeLot);
-      dbLotFind.onSecondCall().returns(secondLot)
+      let fakeInventory = mockInventory();
+      let secondInventory = secondMockInventory();
+      let dbInventoryFind = sandbox.stub(Inventory, 'findOne')
+      dbInventoryFind.onFirstCall().returns(fakeInventory);
+      dbInventoryFind.onSecondCall().returns(secondInventory)
 
 
       await editInventory(req,res)
-      expect(dbLotFind.calledTwice).to.be.true;
-      expect(fakeLot.save.callCount).to.equal(0);
+      expect(dbInventoryFind.calledTwice).to.be.true;
+      expect(fakeInventory.save.callCount).to.equal(0);
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
     })
 
     it('should handle error if wrong object id is given', async () => {
       let req = mockRequest();
-      let dbLotFind = sandbox.stub(Lot, 'findOne').throws({kind: 'ObjectId'})
+      let dbInventoryFind = sandbox.stub(Inventory, 'findOne').throws({kind: 'ObjectId'})
 
       await editInventory(req,res)
-      expect(dbLotFind.calledOnce).to.be.true;
+      expect(dbInventoryFind.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
       expect(res.json.calledOnce).to.be.true;    
@@ -487,10 +475,10 @@ describe('API Inventory Route', () => {
 
     it('should handle error if db lot find call returns undefined', async () => {
       let req = mockRequest();
-      let dbLotFind = sandbox.stub(Lot, 'findOne').returns(undefined);
+      let dbInventoryFind = sandbox.stub(Inventory, 'findOne').returns(undefined);
 
       await editInventory(req,res)
-      expect(dbLotFind.calledOnce).to.be.true;
+      expect(dbInventoryFind.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
       expect(res.json.calledOnce).to.be.true;
@@ -498,23 +486,23 @@ describe('API Inventory Route', () => {
 
     it('should handle error if db inventory call throws', async () => {
       let req = mockRequest();
-      let dbLotFind = sandbox.stub(Lot, 'findOne').throws();
+      let dbInventoryFind = sandbox.stub(Inventory, 'findOne').throws();
 
       await editInventory(req,res)
-      expect(dbLotFind.calledOnce).to.be.true;
+      expect(dbInventoryFind.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true;
     })
 
-    it('should handle error if lot save call throws', async () => {
+    it('should handle error if inventory save call throws', async () => {
       let req = mockRequest();
-      let fakeLot = mockLot();
-      let dbLotFind = sandbox.stub(Lot, 'findOne').returns(fakeLot);
-      fakeLot.save = sandbox.stub().throws();
+      let fakeInventory = mockInventory();
+      let dbInventoryFind = sandbox.stub(Inventory, 'findOne').returns(fakeInventory);
+      fakeInventory.save = sandbox.stub().throws();
 
       await editInventory(req,res)
-      expect(dbLotFind.calledTwice).to.be.true;
-      expect(fakeLot.save.callCount).to.equal(1);
+      expect(dbInventoryFind.calledTwice).to.be.true;
+      expect(fakeInventory.save.callCount).to.equal(1);
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true;
     })

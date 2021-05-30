@@ -258,61 +258,65 @@ const editInventory = async (req,res) => {
   })
   
   const { 
-    inventory
+    lot,
+    serial,
+    status
   } = req.body;
     
     try {
 
-    for (let lot of inventory) {
-      // Check if lot exists
-      let queryStartTime = new Date();
-      apiLogger.debug('Searching for lot record in db', {collection: 'inventory',operation: 'findOne'})
-      
-      let currentLot = await Inventory.findOne({
-        company: req.user.company,
-        lotCode: lot.currentLotCode
-      });
-      if (!currentLot) {
-        apiLogger.warn('No lot record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
-        return res
-        .status(400)
-        .json({errors: [{msg: {title: 'Error', description: 'Lot does not exist.'}}]})
-      }
-      apiLogger.debug('Lot record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
-      
-      // Check if new lotCode already exists
-      queryStartTime = new Date();
-      apiLogger.debug('Searching for existing lot record in db', {collection: 'inventory',operation: 'findOne'})
-  
-      let secondLot = await Inventory.findOne({
-        company: req.user.company,
-        lotCode: lot.newLotCode
-      });
-  
-      if (secondLot._id.toString() !== currentLot._id.toString()) {
-        apiLogger.warn('Existing lot code found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
-        return res
-        .status(400)
-        .json({errors: [{msg: {title: 'Error', description: 'Lot code is already in use.'}}]})
-      }
-      apiLogger.debug('Lot code is available to use', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
-  
-      queryStartTime = new Date();
-      apiLogger.info('Updating Lot record in db', {collection: 'inventory',operation: 'save'})
-  
-      currentLot.lotCode = lot.newLotCode;
-      currentLot.cost = lot.cost;
-      currentLot.dateExpiration = lot.dateExpiration;
-      currentLot.dateManufacture = lot.dateManufacture;
-      currentLot.save();
-  
-      apiLogger.info('Lot record updated', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+    // Check if lot exists
+    let queryStartTime = new Date();
+    apiLogger.debug('Searching for lot record in db', {collection: 'inventory',operation: 'findOne'})
+    
+    let currentInventory = await Inventory.findOne({
+      company: req.user.company,
+      _id: req.params.inventoryId
+    });
+    console.log('currentInventory: ', currentInventory)
+
+    if (!currentInventory) {
+      apiLogger.warn('No inventory record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+      return res
+      .status(400)
+      .json({errors: [{msg: {title: 'Error', description: 'Inventory does not exist.'}}]})
     }
+    apiLogger.debug('Lot record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+    
+    // Check if new lotCode already exists
+    queryStartTime = new Date();
+    apiLogger.debug('Searching for existing lot record in db', {collection: 'inventory',operation: 'findOne'})
+
+    let secondInventory = await Inventory.findOne({
+      company: req.user.company,
+      serial: req.body.serial
+    });
+
+    if (secondInventory._id.toString() !== currentInventory._id.toString()) {
+      apiLogger.warn('Existing serial code found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+      return res
+      .status(400)
+      .json({errors: [{msg: {title: 'Error', description: 'Serial code is already in use.'}}]})
+    }
+    apiLogger.debug('Serial code is available to use', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+
+    queryStartTime = new Date();
+    apiLogger.info('Updating Lot record in db', {collection: 'inventory',operation: 'save'})
+
+    currentInventory.lot = lot;
+    currentInventory.serial = serial;
+    currentInventory.status = status;
+    currentInventory.lastEdited = new Date();
+    currentInventory.lastEditedBy = req.user._id;
+    currentInventory.save();
+
+    apiLogger.info('Inventory record updated', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+    
       
 
     return res
     .status(200)
-    .json({msg: {title: 'Success', description: 'Lot details have been updated!'}})
+    .json({msg: {title: 'Success', description: 'Inventory details have been updated!'}})
     
   } catch (error) {
     console.log(error);
@@ -320,7 +324,7 @@ const editInventory = async (req,res) => {
       console.log(error.kind);
       return res
       .status(400)
-      .json({msg: { title: 'Error', description: 'Lot not found.'}})      
+      .json({msg: { title: 'Error', description: 'Inventory not found.'}})      
     }
     return res.status(500).send('Server Error');
    
