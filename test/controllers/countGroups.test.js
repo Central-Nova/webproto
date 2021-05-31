@@ -2,7 +2,7 @@ const expect = require('chai').expect;
 const sinon = require('sinon');
 const Inventory = require('../../models/inventory/Inventory');
 const CountGroup = require('../../models/inventory/CountGroup');
-const { getCountGroups, getCountGroupsByProduct, getCountGroupById, createCountGroup, editCountGroup } = require('../../routes/api/controllers/countGroups');
+const { getCountGroups, getCountGroupById, createCountGroup, editCountGroup } = require('../../routes/api/controllers/countGroups');
 
 describe('API CountGroups Route', () => {
   const mockResponse = () => {
@@ -99,7 +99,7 @@ describe('API CountGroups Route', () => {
       expect(res.status.calledWith(errorCode)).to.be.true;
     })
   })
-  describe.only('Get request to /countGroup/:countGroupId', () => {
+  describe('Get request to /countGroup/:countGroupId', () => {
     const mockRequest = () => {
       const req = {};
       req.query = {
@@ -117,44 +117,40 @@ describe('API CountGroups Route', () => {
       return req;
     }
 
-    let mockInventory = () => {
+    let mockCountGroup = () => {
       return {
-        _id: "60b38f90463513003a794998",
-        company: "607da9ab78caf50039e60be2",
-        serial: "serial102921",
-        lot: "60b38eb03ead17002ccd2ebd",
-        product: "6081cb3a72f96229a6261d53",
-        status: "sellable",
+        name: 'fake901823',
+        products: ['product1', 'product2']
       }
     }
     
-    it('should call res.send with inventory data', async () => {
+    it('should call res.send with count group', async () => {
       let req = mockRequest();
-      let fakeInventory = mockInventory();
-      let dbInventoryCall = sandbox.stub(Inventory, 'findOne').returns(fakeInventory);
+      let fakeCountGroup = mockCountGroup();
+      let dbCountGroupCall = sandbox.stub(CountGroup, 'findOne').returns(fakeCountGroup);
  
       await getCountGroupById(req, res);
-      expect(dbInventoryCall.calledOnce).to.be.true;
+      expect(dbCountGroupCall.calledOnce).to.be.true;
       expect(res.send.calledOnce).to.be.true;
-      expect(res.send.calledWith(fakeInventory)).to.be.true;
+      expect(res.send.calledWith(fakeCountGroup)).to.be.true;
     })
-    it('should handle error when db inventory call returns undefined', async () => {
+    it('should handle error when db CountGroup call returns undefined', async () => {
       let req = mockRequest();
-      let dbInventoryCall = sandbox.stub(Inventory, 'findOne').returns(undefined);
+      let dbCountGroupCall = sandbox.stub(CountGroup, 'findOne').returns(undefined);
  
       await getCountGroupById(req, res);
-      expect(dbInventoryCall.calledOnce).to.be.true;
+      expect(dbCountGroupCall.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
       expect(res.json.calledOnce).to.be.true;
 
     })
-    it('should handle error when db inventory call throws objectId error', async () => {
+    it('should handle error when db CountGroup call throws objectId error', async () => {
       let req = mockRequest();
-      let dbInventoryCall = sandbox.stub(Inventory, 'findOne').throws({kind: 'ObjectId'});
+      let dbCountGroupCall = sandbox.stub(CountGroup, 'findOne').throws({kind: 'ObjectId'});
  
       await getCountGroupById(req, res);
-      expect(dbInventoryCall.calledOnce).to.be.true;
+      expect(dbCountGroupCall.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
       expect(res.json.calledOnce).to.be.true;
