@@ -12,77 +12,29 @@ const getCountGroups = async (req, res) => {
     body: req.body || ''
   })
 
-  let page = parseInt(req.query.page) || 0;
-  let limit = parseInt(req.query.limit) || 0;
-
   try {
 
-    // Query products by company id
+    // Query count groups by company id
     let queryStartTime = new Date();
-    apiLogger.info('Searching db for products by company', {collection: 'products',operation: 'read'})
+    apiLogger.info('Searching db for count groups by company', {collection: 'countGroups', operation: 'read'})
   
-    let products = await Product.find({company: req.user.company});
-    apiLogger.debug('Product records found', {documents: products.length, responseTime: `${new Date() - queryStartTime}ms`})
-
-    // If there are no products for this company, handle error
-    if (products.length === 0) {
-      apiLogger.debug('No product records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
+    let countGroups = await CountGroup.find({company: req.user.company});
+    
+    // If there are no count groups for this company, handle error
+    if (!countGroups) {
+      console.log('no counts')
+      apiLogger.debug('No count groups found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
       return res
       .status(400)
-      .json({msg: { title: 'Error', description: 'No products found.'}})
+      .json({msg: { title: 'Error', description: 'No count groups found.'}})
     }
     
-    // Check inventory records for each product
-    let formatData = () => {
-      const promises = products.map(async (product) => {
-        queryStartTime = new Date();
-        apiLogger.info('Searching db for inventory by company', {collection: 'inventory', operation: 'read'})
+    apiLogger.debug('Count groups found', {documents: countGroups.length, responseTime: `${new Date() - queryStartTime}ms`})
+   
+    httpContext.set('resDocs', countGroups);
+    apiLogger.debug('Sending product records by company', {documents: countGroups.length})
 
-        // CountGroup all inventory records that have a sellable status
-        let inventory = await Inventory.countGroupDocuments({company: req.user.company, product: product._id, status: 'sellable'})
-
-        apiLogger.debug('Inventory records counted', {documents: inventory, responseTime: `${new Date() - queryStartTime}ms`})
-        // Return an object containing data formatted for table row
-        return {
-            _id: product._id,
-            sku: product.sku,
-            sellable: inventory
-        }
-      })
-      // Resolve all promises to get the return object.
-      return Promise.all(promises)
-    }
-
-    const formattedInventoryData = await formatData();
-
-    queryStartTime = new Date();
-    apiLogger.info('Searching db for countGroup of products by company', {collection: 'products',operation: 'read'})
-
-    // CountGroup total products for metadata
-    let total = await Product.countGroupDocuments({company: req.user.company});
-
-    if (!total) {
-      apiLogger.debug('No product records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
-
-      return res
-      .status(400)
-      .json({msg: { title: 'Error', description: 'No products found.'}})
-    }
-
-    apiLogger.debug('Product records counted', {documents: total, responseTime: `${new Date() - queryStartTime}ms`})
-    
-    httpContext.set('resDocs', products);
-    apiLogger.debug('Sending product records by company', {documents: products})
-
-    // return formatted data and metadata
-    const returnItem = {
-        total,
-        page,
-        limit,
-        inventory: formattedInventoryData
-    }
-    console.log('returnItem: ', returnItem);
-    return res.send(returnItem);
+    return res.send(countGroups);
     
     } catch (error) {
       console.log(error);

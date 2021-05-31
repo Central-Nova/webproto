@@ -51,259 +51,55 @@ describe('API CountGroups Route', () => {
       return req;
     }
 
-    let mockInventory = () => {
+    let mockCountGroups = () => {
       return [
         {
-            serial: "serial102931",
-            lot: "60ab917b18dac4006dacd9dc",
-            product: "60858de105a244cd7564abd7",
-            status: "sellable",
-            },           
-            {
-            serial: "serial102932",
-            lot: "60ab917b18dac4006dacd9dc",
-            product: "60858de105a244cd7564abd8",
-            status: "sellable",
-            },            
-            {
-            serial: "serial102932",
-            lot: "60ab917b18dac4006dacd9dc",
-            product: "60858de105a244cd7564abd9",
-            status: "sellable",
-            },
-      ]
-    }
-
-    let mockProducts = () => {
-        return [
-            {_id: '60858de105a244cd7564abd7', sku: 'sku-1234-1'},
-            {_id: '60858de105a244cd7564abd8', sku: 'sku-1234-2'},
-            {_id: '60858de105a244cd7564abd9', sku: 'sku-1234-3'},
-        ]
-    }
-
-    let returnedInventory = () => {
-        return [
-            {_id: '60858de105a244cd7564abd7', sku: 'sku-1234-1', sellable: 1},
-            {_id: '60858de105a244cd7564abd8', sku: 'sku-1234-2', sellable: 1},
-            {_id: '60858de105a244cd7564abd9', sku: 'sku-1234-3', sellable: 1},
-        ]
-    }
-    
-    it('should call res.send with all inventory by company ID and meta data', async () => {
-      let req = mockRequest();
-      let fakeProducts = mockProducts();
-      let formattedInventory = returnedInventory();
-      let dbProductCall = sandbox.stub(Product, 'find').returns(fakeProducts)
-      let dbProductCountGroups = sandbox.stub(Product, 'countGroupsDocuments').returns(3);
-      let dbInventoryCountGroups = sandbox.stub(Inventory, 'countGroupsDocuments').returns(1);
-  
-      await getCountGroups(req, res);
-
-      expect(dbProductCall.calledOnce).to.be.true;
-      expect(dbInventoryCountGroups.callCountGroups).to.equal(fakeProducts.length);
-      expect(dbProductCountGroups.calledOnce).to.be.true;
-      expect(res.send.calledOnce).to.be.true;
-      expect(res.send.calledWith({
-        total: fakeProducts.length,
-        page: 0,
-        limit: 0,
-        inventory: formattedInventory
-      })).to.be.true;
-    })
-
-    it('should handle error when db products call returns 0 products', async () => {
-        let req = mockRequest();
-        let dbProductCall = sandbox.stub(Product, 'find').returns([])
-        let dbProductCountGroups = sandbox.stub(Product, 'countGroupsDocuments').returns(3);
-        let dbInventoryCountGroups = sandbox.stub(Inventory, 'countGroupsDocuments').returns(undefined);
-    
-        await getCountGroups(req, res);
-  
-        expect(dbProductCall.calledOnce).to.be.true;
-        expect(dbInventoryCountGroups.callCountGroups).to.equal(0);
-        expect(dbProductCountGroups.callCountGroups).to.equal(0);
-        expect(res.status.calledOnce).to.be.true;
-        expect(res.status.calledWith(badCode)).to.be.true;
-        expect(res.json.calledOnce).to.be.true;
-      })
-
-
-    it('should handle error when db products call throws error', async () => {
-      let req = mockRequest();
-      let fakeInventory = mockInventory();
-      let dbProductCall = sandbox.stub(Product, 'find').throws()
-      let dbProductCountGroups = sandbox.stub(Product, 'countGroupsDocuments').returns(3);
-      let dbInventoryCountGroups = sandbox.stub(Inventory, 'countGroupsDocuments').returns(fakeInventory.length)
-  
-      await getCountGroups(req, res);
-
-      expect(dbProductCall.calledOnce).to.be.true;
-      expect(dbInventoryCountGroups.callCountGroups).to.equal(0);
-      expect(dbProductCountGroups.callCountGroups).to.equal(0);
-      expect(res.status.calledOnce).to.be.true;
-      expect(res.status.calledWith(errorCode)).to.be.true;
-    })
-
-    it('should handle error when db inventory countGroupsDocuments throws error', async () => {
-      let req = mockRequest();
-      let fakeProducts = mockProducts();
-      let formattedInventory = returnedInventory();
-      let dbProductCall = sandbox.stub(Product, 'find').returns(fakeProducts)
-      let dbInventoryCountGroups = sandbox.stub(Inventory, 'countGroupsDocuments').throws();
-      let dbProductCountGroups = sandbox.stub(Product, 'countGroupsDocuments').returns(3);
-  
-      await getCountGroups(req, res);
-
-      expect(dbProductCall.calledOnce).to.be.true;
-      expect(dbInventoryCountGroups.callCountGroups).to.equal(fakeProducts.length);
-      expect(dbProductCountGroups.callCountGroups).to.equal(0);
-      expect(res.status.calledOnce).to.be.true;
-      expect(res.status.calledWith(errorCode)).to.be.true;
-
-    })
-
-    it('should handle error when db product countGroupsDocuments throws error', async () => {
-      let req = mockRequest();
-      let fakeProducts = mockProducts();
-      let formattedInventory = returnedInventory();
-      let dbProductCall = sandbox.stub(Product, 'find').returns(fakeProducts)
-      let dbInventoryCountGroups = sandbox.stub(Inventory, 'countGroupsDocuments').returns(formattedInventory);
-      let dbProductCountGroups = sandbox.stub(Product, 'countGroupsDocuments').throws();
-  
-      await getCountGroups(req, res);
-
-      expect(dbProductCall.calledOnce).to.be.true;
-      expect(dbInventoryCountGroups.callCountGroups).to.equal(fakeProducts.length);
-      expect(dbProductCountGroups.calledOnce).to.be.true;
-      expect(res.status.calledOnce).to.be.true;
-      expect(res.status.calledWith(errorCode)).to.be.true;
-    })
-  })
-  describe('Get request to /product/:productId', () => {
-    const mockRequest = () => {
-      const req = {};
-      req.query = {
-        page: '',
-        limit: '',
-        sort: '',
-        search: ''
-      }
-      req.user = {
-        company: 'fakecompany492384902'
-      }
-      req.params = {
-        productId: '60858de105a244cd7564abd7'
-      }
-      return req;
-    }
-
-    let mockInventory = () => {
-      return [
+        name: "fake901283",
+        products: ['product1', 'product2'],
+        },
         {
-            serial: "serial102931",
-            lot: "60ab917b18dac4006dacd9dc",
-            product: "60858de105a244cd7564abd7",
-            status: "sellable",
-            },           
-            {
-            serial: "serial102932",
-            lot: "60ab917b18dac4006dacd9dc",
-            product: "60858de105a244cd7564abd7",
-            status: "sellable",
-            },            
-            {
-            serial: "serial102933",
-            lot: "60ab917b18dac4006dacd9dc",
-            product: "60858de105a244cd7564abd7",
-            status: "sellable",
-            },
+        name: "fake901283",
+        products: ['product1', 'product2'],
+        },             
       ]
     }
     
-    it('should call res.send with all inventory by company ID and productId and meta data', async () => {
+    it('should call res.send with all count groups by company ID', async () => {
       let req = mockRequest();
-      let fakeInventory = mockInventory();
-      let dbInventoryCall = sandbox.stub(Inventory, 'find')
-      .returns({select: sandbox.stub()
-      .returns({sort: sandbox.stub()
-      .returns({skip: sandbox.stub()
-      .returns({limit: sandbox.stub()
-      .returns(fakeInventory)})})})});
-
-      let dbInventoryCountGroups = sandbox.stub(Inventory, 'countGroupsDocuments').returns(fakeInventory.length);
+      let fakeCountGroups = mockCountGroups();
+      let dbCountGroupCall = sandbox.stub(CountGroup, 'find').returns(fakeCountGroups)
   
-      await getCountGroupsByProduct(req, res);
+      await getCountGroups(req, res);
 
-      expect(dbInventoryCall.callCountGroups).to.equal(1);
-      expect(dbInventoryCountGroups.callCountGroups).to.equal(1);
+      expect(dbCountGroupCall.calledOnce).to.be.true;
       expect(res.send.calledOnce).to.be.true;
-      expect(res.send.calledWith({
-        total: fakeInventory.length,
-        page: 0,
-        limit: 0,
-        inventory: fakeInventory
-      })).to.be.true;
+      expect(res.send.calledWith(fakeCountGroups)).to.be.true;
     })
 
-    it('should handle error when db inventory call returns 0 inventory records', async () => {
+    it('should handle error when db count groups call returns 0 products', async () => {
       let req = mockRequest();
-      let dbInventoryCall = sandbox.stub(Inventory, 'find')
-      .returns({select: sandbox.stub()
-      .returns({sort: sandbox.stub()
-      .returns({skip: sandbox.stub()
-      .returns({limit: sandbox.stub()
-      .returns([])})})})});
-      let dbInventoryCountGroups = sandbox.stub(Inventory, 'countGroupsDocuments').returns(0);
+      let dbCountGroupCall = sandbox.stub(CountGroup, 'find').returns(undefined)
   
-      await getCountGroupsByProduct(req, res);
+      await getCountGroups(req, res);
 
-      expect(dbInventoryCall.callCountGroups).to.equal(1);
-      expect(dbInventoryCountGroups.callCountGroups).to.equal(0);
+      expect(dbCountGroupCall.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
       expect(res.json.calledOnce).to.be.true;
+    })
 
-      })
-
-    it('should handle error when db inventory call throws error', async () => {
+    it('should handle error when db count groups call throws error', async () => {
       let req = mockRequest();
-      let dbInventoryCall = sandbox.stub(Inventory, 'find')
-      .returns({select: sandbox.stub()
-      .returns({sort: sandbox.stub()
-      .returns({skip: sandbox.stub()
-      .returns({limit: sandbox.stub()
-      .throws()})})})});      
-      let dbInventoryCountGroups = sandbox.stub(Inventory, 'countGroupsDocuments').returns(0);
+      let dbCountGroupCall = sandbox.stub(CountGroup, 'find').throws()
   
-      await getCountGroupsByProduct(req, res);
+      await getCountGroups(req, res);
 
-      expect(dbInventoryCall.callCountGroups).to.equal(1);
-      expect(dbInventoryCountGroups.callCountGroups).to.equal(0);
+      expect(dbCountGroupCall.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true;
-      })
-
-    it('should handle error when db inventory countGroupsDocument throws error', async () => {
-      let req = mockRequest();
-      let dbInventoryCall = sandbox.stub(Inventory, 'find')
-      .returns({select: sandbox.stub()
-      .returns({sort: sandbox.stub()
-      .returns({skip: sandbox.stub()
-      .returns({limit: sandbox.stub()
-      .throws()})})})});      
-      let dbInventoryCountGroups = sandbox.stub(Inventory, 'countGroupsDocuments').throws();
-  
-      await getCountGroupsByProduct(req, res);
-
-      expect(dbInventoryCall.callCountGroups).to.equal(1);
-      expect(dbInventoryCountGroups.callCountGroups).to.equal(0);
-      expect(res.status.calledOnce).to.be.true;
-      expect(res.status.calledWith(errorCode)).to.be.true;
-      })
-
+    })
   })
-  describe('Get request to /inventory/:inventoryId', () => {
+  describe.only('Get request to /countGroup/:countGroupId', () => {
     const mockRequest = () => {
       const req = {};
       req.query = {
@@ -364,7 +160,7 @@ describe('API CountGroups Route', () => {
       expect(res.json.calledOnce).to.be.true;
     })
   })
-  describe.only('Post request to /', () => {
+  describe('Post request to /', () => {
     const mockRequest = () => {
       const req = {};
       req.body = {
