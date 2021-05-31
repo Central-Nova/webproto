@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../models/users/User');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const validPassword = require('../lib/passwordUtils').validPassword;
@@ -72,6 +72,9 @@ module.exports = function (passport) {
             {
               department: 'Products',
               role: 'Worker'
+            },            {
+              department: 'Inventory',
+              role: 'Worker'
             },
             {
               department: 'Warehouse',
@@ -83,6 +86,9 @@ module.exports = function (passport) {
             },
             {
               department: 'Payments',
+              role: 'Worker'
+            },            {
+              department: 'Admin',
               role: 'Worker'
             },
           ]

@@ -1,10 +1,10 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
 const Inventory = require('../../models/inventory/Inventory');
-const Count = require('../../models/inventory/Count');
-const { getCount, getCountByProduct, getCountById, createCount, editCount } = require('../../routes/api/controllers/count');
+const CountGroup = require('../../models/inventory/CountGroup');
+const { getCountGroups, getCountGroupsByProduct, getCountGroupById, createCountGroup, editCountGroup } = require('../../routes/api/controllers/countGroups');
 
-describe('API Count Route', () => {
+describe('API CountGroups Route', () => {
   const mockResponse = () => {
     const res = {};
     res.statusCode = '';
@@ -95,14 +95,14 @@ describe('API Count Route', () => {
       let fakeProducts = mockProducts();
       let formattedInventory = returnedInventory();
       let dbProductCall = sandbox.stub(Product, 'find').returns(fakeProducts)
-      let dbProductCount = sandbox.stub(Product, 'countDocuments').returns(3);
-      let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').returns(1);
+      let dbProductCountGroups = sandbox.stub(Product, 'countGroupsDocuments').returns(3);
+      let dbInventoryCountGroups = sandbox.stub(Inventory, 'countGroupsDocuments').returns(1);
   
-      await getCount(req, res);
+      await getCountGroups(req, res);
 
       expect(dbProductCall.calledOnce).to.be.true;
-      expect(dbInventoryCount.callCount).to.equal(fakeProducts.length);
-      expect(dbProductCount.calledOnce).to.be.true;
+      expect(dbInventoryCountGroups.callCountGroups).to.equal(fakeProducts.length);
+      expect(dbProductCountGroups.calledOnce).to.be.true;
       expect(res.send.calledOnce).to.be.true;
       expect(res.send.calledWith({
         total: fakeProducts.length,
@@ -115,14 +115,14 @@ describe('API Count Route', () => {
     it('should handle error when db products call returns 0 products', async () => {
         let req = mockRequest();
         let dbProductCall = sandbox.stub(Product, 'find').returns([])
-        let dbProductCount = sandbox.stub(Product, 'countDocuments').returns(3);
-        let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').returns(undefined);
+        let dbProductCountGroups = sandbox.stub(Product, 'countGroupsDocuments').returns(3);
+        let dbInventoryCountGroups = sandbox.stub(Inventory, 'countGroupsDocuments').returns(undefined);
     
-        await getCount(req, res);
+        await getCountGroups(req, res);
   
         expect(dbProductCall.calledOnce).to.be.true;
-        expect(dbInventoryCount.callCount).to.equal(0);
-        expect(dbProductCount.callCount).to.equal(0);
+        expect(dbInventoryCountGroups.callCountGroups).to.equal(0);
+        expect(dbProductCountGroups.callCountGroups).to.equal(0);
         expect(res.status.calledOnce).to.be.true;
         expect(res.status.calledWith(badCode)).to.be.true;
         expect(res.json.calledOnce).to.be.true;
@@ -133,49 +133,49 @@ describe('API Count Route', () => {
       let req = mockRequest();
       let fakeInventory = mockInventory();
       let dbProductCall = sandbox.stub(Product, 'find').throws()
-      let dbProductCount = sandbox.stub(Product, 'countDocuments').returns(3);
-      let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').returns(fakeInventory.length)
+      let dbProductCountGroups = sandbox.stub(Product, 'countGroupsDocuments').returns(3);
+      let dbInventoryCountGroups = sandbox.stub(Inventory, 'countGroupsDocuments').returns(fakeInventory.length)
   
-      await getCount(req, res);
+      await getCountGroups(req, res);
 
       expect(dbProductCall.calledOnce).to.be.true;
-      expect(dbInventoryCount.callCount).to.equal(0);
-      expect(dbProductCount.callCount).to.equal(0);
+      expect(dbInventoryCountGroups.callCountGroups).to.equal(0);
+      expect(dbProductCountGroups.callCountGroups).to.equal(0);
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true;
     })
 
-    it('should handle error when db inventory countDocuments throws error', async () => {
+    it('should handle error when db inventory countGroupsDocuments throws error', async () => {
       let req = mockRequest();
       let fakeProducts = mockProducts();
       let formattedInventory = returnedInventory();
       let dbProductCall = sandbox.stub(Product, 'find').returns(fakeProducts)
-      let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').throws();
-      let dbProductCount = sandbox.stub(Product, 'countDocuments').returns(3);
+      let dbInventoryCountGroups = sandbox.stub(Inventory, 'countGroupsDocuments').throws();
+      let dbProductCountGroups = sandbox.stub(Product, 'countGroupsDocuments').returns(3);
   
-      await getCount(req, res);
+      await getCountGroups(req, res);
 
       expect(dbProductCall.calledOnce).to.be.true;
-      expect(dbInventoryCount.callCount).to.equal(fakeProducts.length);
-      expect(dbProductCount.callCount).to.equal(0);
+      expect(dbInventoryCountGroups.callCountGroups).to.equal(fakeProducts.length);
+      expect(dbProductCountGroups.callCountGroups).to.equal(0);
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true;
 
     })
 
-    it('should handle error when db product countDocuments throws error', async () => {
+    it('should handle error when db product countGroupsDocuments throws error', async () => {
       let req = mockRequest();
       let fakeProducts = mockProducts();
       let formattedInventory = returnedInventory();
       let dbProductCall = sandbox.stub(Product, 'find').returns(fakeProducts)
-      let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').returns(formattedInventory);
-      let dbProductCount = sandbox.stub(Product, 'countDocuments').throws();
+      let dbInventoryCountGroups = sandbox.stub(Inventory, 'countGroupsDocuments').returns(formattedInventory);
+      let dbProductCountGroups = sandbox.stub(Product, 'countGroupsDocuments').throws();
   
-      await getCount(req, res);
+      await getCountGroups(req, res);
 
       expect(dbProductCall.calledOnce).to.be.true;
-      expect(dbInventoryCount.callCount).to.equal(fakeProducts.length);
-      expect(dbProductCount.calledOnce).to.be.true;
+      expect(dbInventoryCountGroups.callCountGroups).to.equal(fakeProducts.length);
+      expect(dbProductCountGroups.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true;
     })
@@ -231,12 +231,12 @@ describe('API Count Route', () => {
       .returns({limit: sandbox.stub()
       .returns(fakeInventory)})})})});
 
-      let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').returns(fakeInventory.length);
+      let dbInventoryCountGroups = sandbox.stub(Inventory, 'countGroupsDocuments').returns(fakeInventory.length);
   
-      await getCountByProduct(req, res);
+      await getCountGroupsByProduct(req, res);
 
-      expect(dbInventoryCall.callCount).to.equal(1);
-      expect(dbInventoryCount.callCount).to.equal(1);
+      expect(dbInventoryCall.callCountGroups).to.equal(1);
+      expect(dbInventoryCountGroups.callCountGroups).to.equal(1);
       expect(res.send.calledOnce).to.be.true;
       expect(res.send.calledWith({
         total: fakeInventory.length,
@@ -254,12 +254,12 @@ describe('API Count Route', () => {
       .returns({skip: sandbox.stub()
       .returns({limit: sandbox.stub()
       .returns([])})})})});
-      let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').returns(0);
+      let dbInventoryCountGroups = sandbox.stub(Inventory, 'countGroupsDocuments').returns(0);
   
-      await getCountByProduct(req, res);
+      await getCountGroupsByProduct(req, res);
 
-      expect(dbInventoryCall.callCount).to.equal(1);
-      expect(dbInventoryCount.callCount).to.equal(0);
+      expect(dbInventoryCall.callCountGroups).to.equal(1);
+      expect(dbInventoryCountGroups.callCountGroups).to.equal(0);
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
       expect(res.json.calledOnce).to.be.true;
@@ -274,17 +274,17 @@ describe('API Count Route', () => {
       .returns({skip: sandbox.stub()
       .returns({limit: sandbox.stub()
       .throws()})})})});      
-      let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').returns(0);
+      let dbInventoryCountGroups = sandbox.stub(Inventory, 'countGroupsDocuments').returns(0);
   
-      await getCountByProduct(req, res);
+      await getCountGroupsByProduct(req, res);
 
-      expect(dbInventoryCall.callCount).to.equal(1);
-      expect(dbInventoryCount.callCount).to.equal(0);
+      expect(dbInventoryCall.callCountGroups).to.equal(1);
+      expect(dbInventoryCountGroups.callCountGroups).to.equal(0);
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true;
       })
 
-    it('should handle error when db inventory countDocument throws error', async () => {
+    it('should handle error when db inventory countGroupsDocument throws error', async () => {
       let req = mockRequest();
       let dbInventoryCall = sandbox.stub(Inventory, 'find')
       .returns({select: sandbox.stub()
@@ -292,12 +292,12 @@ describe('API Count Route', () => {
       .returns({skip: sandbox.stub()
       .returns({limit: sandbox.stub()
       .throws()})})})});      
-      let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').throws();
+      let dbInventoryCountGroups = sandbox.stub(Inventory, 'countGroupsDocuments').throws();
   
-      await getCountByProduct(req, res);
+      await getCountGroupsByProduct(req, res);
 
-      expect(dbInventoryCall.callCount).to.equal(1);
-      expect(dbInventoryCount.callCount).to.equal(0);
+      expect(dbInventoryCall.callCountGroups).to.equal(1);
+      expect(dbInventoryCountGroups.callCountGroups).to.equal(0);
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true;
       })
@@ -337,7 +337,7 @@ describe('API Count Route', () => {
       let fakeInventory = mockInventory();
       let dbInventoryCall = sandbox.stub(Inventory, 'findOne').returns(fakeInventory);
  
-      await getCountById(req, res);
+      await getCountGroupById(req, res);
       expect(dbInventoryCall.calledOnce).to.be.true;
       expect(res.send.calledOnce).to.be.true;
       expect(res.send.calledWith(fakeInventory)).to.be.true;
@@ -346,7 +346,7 @@ describe('API Count Route', () => {
       let req = mockRequest();
       let dbInventoryCall = sandbox.stub(Inventory, 'findOne').returns(undefined);
  
-      await getCountById(req, res);
+      await getCountGroupById(req, res);
       expect(dbInventoryCall.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
@@ -357,14 +357,14 @@ describe('API Count Route', () => {
       let req = mockRequest();
       let dbInventoryCall = sandbox.stub(Inventory, 'findOne').throws({kind: 'ObjectId'});
  
-      await getCountById(req, res);
+      await getCountGroupById(req, res);
       expect(dbInventoryCall.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
       expect(res.json.calledOnce).to.be.true;
     })
   })
-  describe('Post request to /', () => {
+  describe.only('Post request to /', () => {
     const mockRequest = () => {
       const req = {};
       req.body = {
@@ -394,11 +394,11 @@ describe('API Count Route', () => {
     it('should create a unit for each inventory object in req.body.inventory', async () => {
       let req = mockRequest();
       let dbInventoryCall = sandbox.stub(Inventory, 'find')
-      let save = sandbox.stub(Count.prototype, 'save').callsFake(() => Promise.resolve(this))
+      let save = sandbox.stub(CountGroups.prototype, 'save').callsFake(() => Promise.resolve(this))
 
-      await createCount(req,res);
-      expect(dbInventoryCall.callCount).to.equal(req.body.inventory.length);
-      expect(save.callCount).to.equal(req.body.inventory.length)
+      await createCountGroup(req,res);
+      expect(dbInventoryCall.callCountGroups).to.equal(req.body.inventory.length);
+      expect(save.callCountGroups).to.equal(req.body.inventory.length)
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(goodCode)).to.be.true;
     })
@@ -407,10 +407,10 @@ describe('API Count Route', () => {
       let dbInventoryCall = sandbox.stub(Inventory, 'findOne')
       dbInventoryCall.onCall(0).throws();
       let save = sandbox.stub(Inventory.prototype, 'save').callsFake(()=> Promise.resolve(this));
-      await createCount(req,res);
+      await createCountGroup(req,res);
 
-      expect(dbInventoryCall.callCount).to.equal(1);
-      expect(save.callCount).to.equal(0);
+      expect(dbInventoryCall.callCountGroups).to.equal(1);
+      expect(save.callCountGroups).to.equal(0);
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true;
     })
@@ -458,7 +458,7 @@ describe('API Count Route', () => {
       let fakeInventory = mockInventory();
       let dbInventoryFind = sandbox.stub(Inventory, 'findOne').returns(fakeInventory);
 
-      await editCount(req,res)
+      await editCountGroup(req,res)
       expect(dbInventoryFind.calledTwice).to.be.true;
       expect(fakeInventory.save.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
@@ -474,9 +474,9 @@ describe('API Count Route', () => {
       dbInventoryFind.onSecondCall().returns(secondInventory)
 
 
-      await editCount(req,res)
+      await editCountGroup(req,res)
       expect(dbInventoryFind.calledTwice).to.be.true;
-      expect(fakeInventory.save.callCount).to.equal(0);
+      expect(fakeInventory.save.callCountGroups).to.equal(0);
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
     })
@@ -485,7 +485,7 @@ describe('API Count Route', () => {
       let req = mockRequest();
       let dbInventoryFind = sandbox.stub(Inventory, 'findOne').throws({kind: 'ObjectId'})
 
-      await editCount(req,res)
+      await editCountGroup(req,res)
       expect(dbInventoryFind.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
@@ -496,7 +496,7 @@ describe('API Count Route', () => {
       let req = mockRequest();
       let dbInventoryFind = sandbox.stub(Inventory, 'findOne').returns(undefined);
 
-      await editCount(req,res)
+      await editCountGroup(req,res)
       expect(dbInventoryFind.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
@@ -507,7 +507,7 @@ describe('API Count Route', () => {
       let req = mockRequest();
       let dbInventoryFind = sandbox.stub(Inventory, 'findOne').throws();
 
-      await editCount(req,res)
+      await editCountGroup(req,res)
       expect(dbInventoryFind.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true;
@@ -519,9 +519,9 @@ describe('API Count Route', () => {
       let dbInventoryFind = sandbox.stub(Inventory, 'findOne').returns(fakeInventory);
       fakeInventory.save = sandbox.stub().throws();
 
-      await editCount(req,res)
+      await editCountGroup(req,res)
       expect(dbInventoryFind.calledTwice).to.be.true;
-      expect(fakeInventory.save.callCount).to.equal(1);
+      expect(fakeInventory.save.callCountGroups).to.equal(1);
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true;
     })

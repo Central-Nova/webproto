@@ -65,6 +65,7 @@ app.use('/api/products', require('./routes/api/products'));
 app.use('/api/lots', require('./routes/api/lots'));
 app.use('/api/inventory', require('./routes/api/inventory'));
 app.use('/api/count', require('./routes/api/count'));
+app.use('/api/countGroups', require('./routes/api/countGroups'));
 
 const PORT = process.env.BACKEND_PORT || 5000;
 const HOST = '0.0.0.0';

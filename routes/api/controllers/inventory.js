@@ -34,23 +34,23 @@ const getInventory = async (req, res) => {
     
     // Check inventory records for each product
     let formatData = () => {
-        const promises = products.map(async (product) => {
-            queryStartTime = new Date();
-            apiLogger.info('Searching db for inventory by company', {collection: 'inventory', operation: 'read'})
+      const promises = products.map(async (product) => {
+        queryStartTime = new Date();
+        apiLogger.info('Searching db for inventory by company', {collection: 'inventory', operation: 'read'})
 
-            // Count all inventory records that have a sellable status
-            let inventory = await Inventory.countDocuments({company: req.user.company, product: product._id, status: 'sellable'})
+        // Count all inventory records that have a sellable status
+        let inventory = await Inventory.countDocuments({company: req.user.company, product: product._id, status: 'sellable'})
 
-            apiLogger.debug('Inventory records counted', {documents: inventory, responseTime: `${new Date() - queryStartTime}ms`})
-            // Return an object containing data formatted for table row
-            return {
-                _id: product._id,
-                sku: product.sku,
-                sellable: inventory
-            }
-        })
-        // Resolve all promises to get the return object.
-        return Promise.all(promises)
+        apiLogger.debug('Inventory records counted', {documents: inventory, responseTime: `${new Date() - queryStartTime}ms`})
+        // Return an object containing data formatted for table row
+        return {
+            _id: product._id,
+            sku: product.sku,
+            sellable: inventory
+        }
+      })
+      // Resolve all promises to get the return object.
+      return Promise.all(promises)
     }
 
     const formattedInventoryData = await formatData();

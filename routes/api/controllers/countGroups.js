@@ -1,11 +1,11 @@
-const Count = require('../../../models/inventory/Count');
+const CountGroup = require('../../../models/inventory/CountGroup');
 const Product = require('../../../models/products/Product')
 const uniqueKeyHasValue = require('../../../lib/uniqueKeyHasValue');
 const apiLogger = require('../../../config/loggers');
 const httpContext = require('express-http-context');
 
 
-const getCount = async (req, res) => {
+const getCountGroups = async (req, res) => {
   apiLogger.debug('User requesting all inventory records by company', {
     params: req.params || '',
     query: req.query || '',
@@ -38,8 +38,8 @@ const getCount = async (req, res) => {
         queryStartTime = new Date();
         apiLogger.info('Searching db for inventory by company', {collection: 'inventory', operation: 'read'})
 
-        // Count all inventory records that have a sellable status
-        let inventory = await Inventory.countDocuments({company: req.user.company, product: product._id, status: 'sellable'})
+        // CountGroup all inventory records that have a sellable status
+        let inventory = await Inventory.countGroupDocuments({company: req.user.company, product: product._id, status: 'sellable'})
 
         apiLogger.debug('Inventory records counted', {documents: inventory, responseTime: `${new Date() - queryStartTime}ms`})
         // Return an object containing data formatted for table row
@@ -56,10 +56,10 @@ const getCount = async (req, res) => {
     const formattedInventoryData = await formatData();
 
     queryStartTime = new Date();
-    apiLogger.info('Searching db for count of products by company', {collection: 'products',operation: 'read'})
+    apiLogger.info('Searching db for countGroup of products by company', {collection: 'products',operation: 'read'})
 
-    // Count total products for metadata
-    let total = await Product.countDocuments({company: req.user.company});
+    // CountGroup total products for metadata
+    let total = await Product.countGroupDocuments({company: req.user.company});
 
     if (!total) {
       apiLogger.debug('No product records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
@@ -90,7 +90,7 @@ const getCount = async (req, res) => {
   }
 }
 
-const getCountByProduct = async (req, res) => {
+const getCountGroupsByProduct = async (req, res) => {
   apiLogger.debug('User requesting all inventory records by company and product', {
     params: req.params || '',
     query: req.query || '',
@@ -119,10 +119,10 @@ const getCountByProduct = async (req, res) => {
     }
 
     queryStartTime = new Date();
-    apiLogger.info('Searching db for count of inventory records by company and product id', {collection: 'products',operation: 'read'})
+    apiLogger.info('Searching db for countGroup of inventory records by company and product id', {collection: 'products',operation: 'read'})
 
-    // Count total inventory documents for the product for metadata
-    let total = await Inventory.countDocuments({company: req.user.company, product: req.params.productId});
+    // CountGroup total inventory documents for the product for metadata
+    let total = await Inventory.countGroupDocuments({company: req.user.company, product: req.params.productId});
 
     if (!total) {
       apiLogger.debug('No inventory records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
@@ -153,7 +153,7 @@ const getCountByProduct = async (req, res) => {
   }
 }
 
-const getCountById = async (req, res) => {
+const getCountGroupById = async (req, res) => {
   apiLogger.debug('User requesting inventory record by inventory id', {
     params: req.params || '',
     query: req.query || '',
@@ -196,7 +196,7 @@ const getCountById = async (req, res) => {
   }
 }
 
-const createCount = async (req,res) => {
+const createCountGroup = async (req,res) => {
   
   apiLogger.debug('User requesting to create new inventory record', {
     params: req.params || '',
@@ -253,7 +253,7 @@ const createCount = async (req,res) => {
   }
 }
 
-const editCount = async (req,res) => {
+const editCountGroup = async (req,res) => {
   
   apiLogger.debug('User requesting to update inventory record', {
     params: req.params || '',
@@ -337,9 +337,9 @@ const editCount = async (req,res) => {
 }
 
 module.exports = {
-    getCount,
-    getCountByProduct,
-    getCountById,
-    createCount,
-    editCount
+    getCountGroups,
+    getCountGroupsByProduct,
+    getCountGroupById,
+    createCountGroup,
+    editCountGroup
 }
