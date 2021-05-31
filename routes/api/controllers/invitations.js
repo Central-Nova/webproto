@@ -1,4 +1,4 @@
-const Invitation = require('../../../models/Invitation');
+const Invitation = require('../../../models/companies/Invitation');
 const { generateCode } = require('../../../lib/generateCode');
 
 const createInvitations = async (req,res) => {

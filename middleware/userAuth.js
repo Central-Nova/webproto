@@ -1,5 +1,5 @@
 const apiLogger = require('../config/loggers');
-const User = require('../models/User');
+const User = require('../models/users/User');
 
 module.exports = async (req, res, next) => {
  

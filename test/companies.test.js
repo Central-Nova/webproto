@@ -1,7 +1,7 @@
 const { getCompany, createCompany, editCompany, addUserToCompany } = require('../routes/api/controllers/companies');
 const expect = require('chai').expect;
 const sinon = require('sinon');
-const Company = require('../models/Company');
+const Company = require('../models/companies/Company');
 
 describe('API Company Route', () => {
   const mockResponse = () => {

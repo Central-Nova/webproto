@@ -2,7 +2,7 @@ const actionsBuyer = require('../../../lib/actionsBuyer.json');
 const actionsSupplier = require('../../../lib/actionsSupplier.json');
 const httpContext = require('express-http-context');
 
-const Role = require('../../../models/Role');
+const Role = require('../../../models/companies/Role');
 
 const getRoles =  async (req, res) => {
   apiLogger.debug('Requesting company roles data', {

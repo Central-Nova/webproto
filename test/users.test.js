@@ -1,9 +1,9 @@
 const { getUsersByCompany, getUsersByDepartment, getUsersByRole, getUsersByDepartmentAndRole, registerUser ,registerUserWithLink, addCompanyToUser, addCompanyToUserWithCode, editUserRoles } = require('../routes/api/controllers/users');
 const expect = require('chai').expect;
 const sinon = require('sinon');
-const User = require('../models/User');
-const Company = require('../models/Company');
-const Invitation = require('../models/Invitation');
+const User = require('../models/users/User');
+const Company = require('../models/companies/Company');
+const Invitation = require('../models/companies/Invitation');
 
 
 describe('API: User Route', () => {

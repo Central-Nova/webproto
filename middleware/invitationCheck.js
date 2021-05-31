@@ -1,4 +1,4 @@
-const Invitation = require('../models/Invitation');
+const Invitation = require('../models/companies/Invitation');
 
 module.exports = async (req, res, next) => {
 

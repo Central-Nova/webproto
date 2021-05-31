@@ -1,7 +1,7 @@
 const sinon = require('sinon');
 const expect = require('chai').expect;
 const companyAuth = require('../middleware/companyAuth');
-const Company = require('../models/Company');
+const Company = require('../models/companies/Company');
 
 describe('Middleware: companyAuth', () => {
   const mockResponse = () => {

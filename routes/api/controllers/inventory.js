@@ -1,5 +1,5 @@
-const Inventory = require('../../../models/Inventory');
-const Product = require('../../../models/Product')
+const Inventory = require('../../../models/inventory/Inventory');
+const Product = require('../../../models/products/Product')
 const uniqueKeyHasValue = require('../../../lib/uniqueKeyHasValue');
 const apiLogger = require('../../../config/loggers');
 const httpContext = require('express-http-context');

@@ -1,4 +1,4 @@
-const Lot = require('../../../models/Lot');
+const Lot = require('../../../models/inventory/Lot');
 const uniqueKeyHasValue = require('../../../lib/uniqueKeyHasValue');
 const apiLogger = require('../../../config/loggers');
 const httpContext = require('express-http-context');

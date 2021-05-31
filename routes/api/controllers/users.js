@@ -1,9 +1,9 @@
 const httpContext = require('express-http-context');
 const apiLogger = require('../../../config/loggers');
 const { genPassword } = require('../../../lib/passwordUtils')
-const User = require('../../../models/User');
-const Company = require('../../../models/Company');
-const Invitation = require('../../../models/Invitation');
+const User = require('../../../models/users/User');
+const Company = require('../../../models/companies/Company');
+const Invitation = require('../../../models/companies/Invitation');
 
 // Register User
 const registerUser = async (req, res) => {

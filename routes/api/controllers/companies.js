@@ -1,4 +1,4 @@
-const Company = require('../../../models/Company');
+const Company = require('../../../models/companies/Company');
 const apiLogger = require('../../../config/loggers');
 const httpContext = require('express-http-context');
 

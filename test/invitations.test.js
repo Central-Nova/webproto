@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
-const Invitation = require('../models/Invitation');
+const Invitation = require('../models/companies/Invitation');
 const { createInvitations } = require('../routes/api/controllers/invitations');
 
 describe('API Invitation Route', () => {

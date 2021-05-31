@@ -1,5 +1,5 @@
-const User = require('../models/User')
-const Role = require('../models/Role');
+const User = require('../models/users/User')
+const Role = require('../models/companies/Role');
 
 module.exports = (department, document, action) => async (req, res, next) =>{
   try {
