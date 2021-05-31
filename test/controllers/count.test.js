@@ -2,7 +2,7 @@ const expect = require('chai').expect;
 const sinon = require('sinon');
 const Inventory = require('../../models/inventory/Inventory');
 const Count = require('../../models/inventory/Count');
-const { getCount, getCountByProduct, getCountById, createCount, editCount } = require('../../routes/api/controllers/counts');
+const { getCounts, getCountByProduct, getCountById, createCount, editCount } = require('../../routes/api/controllers/counts');
 
 describe('API Count Route', () => {
   const mockResponse = () => {
@@ -36,7 +36,7 @@ describe('API Count Route', () => {
   })
 
 
-  describe('Get request to /', () => {
+  describe.only('Get request to /', () => {
     const mockRequest = () => {
       const req = {};
       req.query = {
@@ -74,11 +74,11 @@ describe('API Count Route', () => {
       ]
     }
 
-    let mockProducts = () => {
+    let mockCounts = () => {
         return [
-            {_id: '60858de105a244cd7564abd7', sku: 'sku-1234-1'},
-            {_id: '60858de105a244cd7564abd8', sku: 'sku-1234-2'},
-            {_id: '60858de105a244cd7564abd9', sku: 'sku-1234-3'},
+            {_id: '60858de105a244cd7564abd7', name: 'Count-1234-1'},
+            {_id: '60858de105a244cd7564abd8', name: 'Count-1234-2'},
+            {_id: '60858de105a244cd7564abd9', name: 'Count-1234-3'},
         ]
     }
 
@@ -90,92 +90,86 @@ describe('API Count Route', () => {
         ]
     }
     
-    it('should call res.send with all inventory by company ID and meta data', async () => {
+    it('should call res.send with all counts by company ID and meta data', async () => {
       let req = mockRequest();
-      let fakeProducts = mockProducts();
-      let formattedInventory = returnedInventory();
-      let dbProductCall = sandbox.stub(Product, 'find').returns(fakeProducts)
-      let dbProductCount = sandbox.stub(Product, 'countDocuments').returns(3);
-      let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').returns(1);
-  
-      await getCount(req, res);
+      let fakeCounts = mockCounts();
+      let dbCountCall = sandbox.stub(Count, 'find')
+      .returns({sort: sandbox.stub()
+        .returns({skip: sandbox.stub()
+          .returns({limit: sandbox.stub()
+            .returns(fakeCounts)
+      })})})
 
-      expect(dbProductCall.calledOnce).to.be.true;
-      expect(dbInventoryCount.callCount).to.equal(fakeProducts.length);
-      expect(dbProductCount.calledOnce).to.be.true;
+      let dbCountTotalDocuments = sandbox.stub(Count, 'countDocuments').returns(3);
+  
+      await getCounts(req, res);
+
+      expect(dbCountCall.calledOnce).to.be.true;
+      expect(dbCountTotalDocuments.calledOnce).to.be.true;
       expect(res.send.calledOnce).to.be.true;
       expect(res.send.calledWith({
-        total: fakeProducts.length,
+        total: fakeCounts.length,
         page: 0,
         limit: 0,
-        inventory: formattedInventory
+        counts: fakeCounts
       })).to.be.true;
     })
 
-    it('should handle error when db products call returns 0 products', async () => {
-        let req = mockRequest();
-        let dbProductCall = sandbox.stub(Product, 'find').returns([])
-        let dbProductCount = sandbox.stub(Product, 'countDocuments').returns(3);
-        let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').returns(undefined);
-    
-        await getCount(req, res);
-  
-        expect(dbProductCall.calledOnce).to.be.true;
-        expect(dbInventoryCount.callCount).to.equal(0);
-        expect(dbProductCount.callCount).to.equal(0);
-        expect(res.status.calledOnce).to.be.true;
-        expect(res.status.calledWith(badCode)).to.be.true;
-        expect(res.json.calledOnce).to.be.true;
-      })
-
-
-    it('should handle error when db products call throws error', async () => {
+    it('should handle error when db counts call returns 0 counts', async () => {
       let req = mockRequest();
-      let fakeInventory = mockInventory();
-      let dbProductCall = sandbox.stub(Product, 'find').throws()
-      let dbProductCount = sandbox.stub(Product, 'countDocuments').returns(3);
-      let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').returns(fakeInventory.length)
-  
-      await getCount(req, res);
+      let dbCountCall = sandbox.stub(Count, 'find')
+      .returns({sort: sandbox.stub()
+        .returns({skip: sandbox.stub()
+          .returns({limit: sandbox.stub()
+            .returns([])
+      })})})
 
-      expect(dbProductCall.calledOnce).to.be.true;
-      expect(dbInventoryCount.callCount).to.equal(0);
-      expect(dbProductCount.callCount).to.equal(0);
+      let dbCountTotalDocuments = sandbox.stub(Count, 'countDocuments').returns(3);
+  
+      await getCounts(req, res);
+
+      expect(dbCountCall.calledOnce).to.be.true;
+      expect(dbCountTotalDocuments.callCount).to.equal(0);
       expect(res.status.calledOnce).to.be.true;
-      expect(res.status.calledWith(errorCode)).to.be.true;
+      expect(res.status.calledWith(badCode)).to.be.true;
+      expect(res.json.calledOnce).to.be.true;
     })
 
-    it('should handle error when db inventory countDocuments throws error', async () => {
+    it('should handle error when db counts call receives wrong object id', async () => {
       let req = mockRequest();
-      let fakeProducts = mockProducts();
-      let formattedInventory = returnedInventory();
-      let dbProductCall = sandbox.stub(Product, 'find').returns(fakeProducts)
-      let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').throws();
-      let dbProductCount = sandbox.stub(Product, 'countDocuments').returns(3);
+      let dbCountCall = sandbox.stub(Count, 'find')
+      .returns({sort: sandbox.stub()
+        .returns({skip: sandbox.stub()
+          .returns({limit: sandbox.stub()
+            .throws({kind: 'ObjectId'})
+      })})})
+
+      let dbCountTotalDocuments = sandbox.stub(Count, 'countDocuments').returns(3);
   
-      await getCount(req, res);
+      await getCounts(req, res);
 
-      expect(dbProductCall.calledOnce).to.be.true;
-      expect(dbInventoryCount.callCount).to.equal(fakeProducts.length);
-      expect(dbProductCount.callCount).to.equal(0);
+      expect(dbCountCall.calledOnce).to.be.true;
+      expect(dbCountTotalDocuments.callCount).to.equal(0);
       expect(res.status.calledOnce).to.be.true;
-      expect(res.status.calledWith(errorCode)).to.be.true;
-
+      expect(res.status.calledWith(badCode)).to.be.true;
+      expect(res.json.calledOnce).to.be.true;
     })
 
-    it('should handle error when db product countDocuments throws error', async () => {
+    it('should handle error when db count countDocuments throws error', async () => {
       let req = mockRequest();
-      let fakeProducts = mockProducts();
-      let formattedInventory = returnedInventory();
-      let dbProductCall = sandbox.stub(Product, 'find').returns(fakeProducts)
-      let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').returns(formattedInventory);
-      let dbProductCount = sandbox.stub(Product, 'countDocuments').throws();
+      let fakeCounts = mockCounts();
+      let dbCountCall = sandbox.stub(Count, 'find')
+      .returns({sort: sandbox.stub()
+        .returns({skip: sandbox.stub()
+          .returns({limit: sandbox.stub()
+            .returns(fakeCounts)
+      })})})
+      let dbCountTotalDocuments = sandbox.stub(Count, 'countDocuments').throws();
   
-      await getCount(req, res);
+      await getCounts(req, res);
 
-      expect(dbProductCall.calledOnce).to.be.true;
-      expect(dbInventoryCount.callCount).to.equal(fakeProducts.length);
-      expect(dbProductCount.calledOnce).to.be.true;
+      expect(dbCountCall.calledOnce).to.be.true;
+      expect(dbCountTotalDocuments.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true;
     })
@@ -364,7 +358,7 @@ describe('API Count Route', () => {
       expect(res.json.calledOnce).to.be.true;
     })
   })
-  describe.only('Post request to /', () => {
+  describe('Post request to /', () => {
     const mockRequest = () => {
       const req = {};
       req.body = {

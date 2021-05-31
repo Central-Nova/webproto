@@ -5,7 +5,7 @@ const apiLogger = require('../../../config/loggers');
 const httpContext = require('express-http-context');
 
 
-const getCount = async (req, res) => {
+const getCounts = async (req, res) => {
   apiLogger.debug('User requesting all inventory records by company', {
     params: req.params || '',
     query: req.query || '',
@@ -14,79 +14,67 @@ const getCount = async (req, res) => {
 
   let page = parseInt(req.query.page) || 0;
   let limit = parseInt(req.query.limit) || 0;
+  let sort = req.query.sort || '';
 
   try {
 
-    // Query products by company id
+    // Query count by company id
     let queryStartTime = new Date();
-    apiLogger.info('Searching db for products by company', {collection: 'products',operation: 'read'})
+    apiLogger.info('Searching db for counts by company', {collection: 'count',operation: 'read'})
   
-    let products = await Product.find({company: req.user.company});
-    apiLogger.debug('Product records found', {documents: products.length, responseTime: `${new Date() - queryStartTime}ms`})
+    let counts = await Count.find({company: req.user.company})
+    .sort(sort)
+      .skip(page * limit)
+        .limit(limit);
 
-    // If there are no products for this company, handle error
-    if (products.length === 0) {
-      apiLogger.debug('No product records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
+    apiLogger.debug('Count records found', {documents: counts.length, responseTime: `${new Date() - queryStartTime}ms`})
+
+    // If there are no counts for this company, handle error
+    if (counts.length === 0) {
+      apiLogger.debug('No count records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
       return res
       .status(400)
-      .json({msg: { title: 'Error', description: 'No products found.'}})
+      .json({msg: { title: 'Error', description: 'No counts found.'}})
     }
-    
-    // Check inventory records for each product
-    let formatData = () => {
-      const promises = products.map(async (product) => {
-        queryStartTime = new Date();
-        apiLogger.info('Searching db for inventory by company', {collection: 'inventory', operation: 'read'})
-
-        // Count all inventory records that have a sellable status
-        let inventory = await Inventory.countDocuments({company: req.user.company, product: product._id, status: 'sellable'})
-
-        apiLogger.debug('Inventory records counted', {documents: inventory, responseTime: `${new Date() - queryStartTime}ms`})
-        // Return an object containing data formatted for table row
-        return {
-            _id: product._id,
-            sku: product.sku,
-            sellable: inventory
-        }
-      })
-      // Resolve all promises to get the return object.
-      return Promise.all(promises)
-    }
-
-    const formattedInventoryData = await formatData();
 
     queryStartTime = new Date();
-    apiLogger.info('Searching db for count of products by company', {collection: 'products',operation: 'read'})
+    apiLogger.info('Searching db for count of count records by company', {collection: 'count',operation: 'read'})
 
-    // Count total products for metadata
-    let total = await Product.countDocuments({company: req.user.company});
+    // Count total counts for metadata
+    let total = await Count.countDocuments({company: req.user.company});
 
     if (!total) {
-      apiLogger.debug('No product records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
+      apiLogger.debug('No count records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
 
       return res
       .status(400)
-      .json({msg: { title: 'Error', description: 'No products found.'}})
+      .json({msg: { title: 'Error', description: 'No counts found.'}})
     }
 
-    apiLogger.debug('Product records counted', {documents: total, responseTime: `${new Date() - queryStartTime}ms`})
+    apiLogger.debug('Count records counted', {documents: total, responseTime: `${new Date() - queryStartTime}ms`})
     
-    httpContext.set('resDocs', products);
-    apiLogger.debug('Sending product records by company', {documents: products})
+    httpContext.set('resDocs', counts);
+    apiLogger.debug('Sending product records by company', {documents: counts.length})
 
     // return formatted data and metadata
     const returnItem = {
         total,
         page,
         limit,
-        inventory: formattedInventoryData
+        counts
     }
     console.log('returnItem: ', returnItem);
     return res.send(returnItem);
     
     } catch (error) {
-      console.log(error);
-      return res.status(500).send('Server Error');
+    console.log(error);
+    if (error.kind === 'ObjectId') {
+      console.log(error.kind);
+      return res
+      .status(400)
+      .json({msg: { title: 'Error', description: 'One or more products could not be found.'}})      
+    }
+    return res.status(500).send('Server Error');
   }
 }
 
@@ -351,7 +339,7 @@ const editCount = async (req,res) => {
 }
 
 module.exports = {
-    getCount,
+    getCounts,
     getCountByProduct,
     getCountById,
     createCount,
