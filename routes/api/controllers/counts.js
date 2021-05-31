@@ -203,51 +203,65 @@ const createCount = async (req,res) => {
     query: req.query || '',
     body: req.body || ''
   })
-  
-  const { inventory } = req.body;
 
+  const { name, type, method, scheduled, products } = req.body
+  
   try {
 
-    // loop through inventory data
-    for (let unit of inventory) {
+  // Check for existing products 
+  let queryStartTime = new Date();
+  apiLogger.debug('Searching DB to verify products', {collection: 'products',operation: 'read'})
 
-      // Check for existing inventory by serial
-      let queryStartTime = new Date();
-      apiLogger.debug('Searching DB for existing serial', {collection: 'inventory',operation: 'read'})
+  let productIds = await Product.find({company: req.user.company, _id: products}).select('_id')
+  
+  // Handle error if products are not found
+  if (!productIds || productIds.length !== products.length) {
+    apiLogger.debug('Products not found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
 
-      let existingUnit = await Inventory.findOne({serial: unit.serial})
-      
-      // Handle error if serial already exists
-      if (existingUnit) {
-        apiLogger.debug('Existing inventory record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+    return res
+    .status(400)
+    .json({errors: [{ msg: {title: 'Error', description: 'One or more products not found.'}}]})
+  }
 
-        return res
-        .status(400)
-        .json({errors: [{ msg: {title: 'Error', description: 'Serial code is already in use.'}}]})
-      }
+  // Query inventory data
+  let inventory = await Inventory.find({company: req.user.company, product: products}).populate('product', '_id sku').select('product lot serial status')
 
-      // Create
-      queryStartTime = new Date();
-      apiLogger.info('Creating new inventory record in db', {collection: 'inventory',operation: 'create'})
+  // Format inventory data
+  let inventoryData = inventory.map(record => ({record, counts: []}))
 
-      const newUnit = new Inventory({
-        company: req.user.company,
-        createdBy: req.user._id,
-        lastEdited: new Date(),
-        lastEditedBy: req.user._id,
-        ...unit
-      })
-      console.log('newUnit: ', newUnit)
-      await newUnit.save();
+  // Create
+  queryStartTime = new Date();
+  apiLogger.info('Creating new count in db', {collection: 'count',operation: 'create'})
 
-      apiLogger.info('Inventory record created', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+  const newCount = new Count({
+    company: req.user.company,
+    name,
+    type,
+    method,
+    scheduled,
+    inventoryData,
+    createdBy: req.user._id,
+    lastEdited: new Date(),
+    lastEditedBy: req.user._id,
+  })
+  console.log('newCount: ', newCount)
+  console.log('newCount: ', newCount.inventoryData[0].record)
+  console.log('newCount: ', newCount.inventoryData[1].record)
+  await newCount.save();
 
+  apiLogger.info('Count record created', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+  
+    
+    return res.status(200).json({msg: { title: 'Success', description: 'New count record created.'}})
+    
+  } catch (error) {
+    console.log(error);
+    if (error.kind === 'ObjectId') {
+      console.log(error.kind);
+      return res
+      .status(400)
+      .json({msg: { title: 'Error', description: 'One or more products could not be found.'}})      
     }
-    
-    return res.status(200).json({msg: { title: 'Success', description: `${inventory.length} new inventory records created.`} })
-    
-  } catch (err) {
-    console.log(err);
     apiLogger.error('Caught error');
     return res.status(500).send('Server Error');
   }

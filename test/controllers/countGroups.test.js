@@ -229,7 +229,7 @@ describe('API CountGroups Route', () => {
       expect(res.status.calledWith(errorCode)).to.be.true;
     })
   })
-  describe.only('Put request to /countGroup/:countGroupId', () => {
+  describe('Put request to /countGroup/:countGroupId', () => {
     const mockRequest = () => {
       const req = {};
       req.body = {
@@ -256,7 +256,6 @@ describe('API CountGroups Route', () => {
         save: sandbox.stub()
       }
     }
-      
     it('should update count group with fields in req.body', async () => {
       let req = mockRequest();
       let fakeCountGroup = mockCountGroup();

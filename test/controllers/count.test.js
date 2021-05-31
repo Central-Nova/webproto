@@ -2,7 +2,7 @@ const expect = require('chai').expect;
 const sinon = require('sinon');
 const Inventory = require('../../models/inventory/Inventory');
 const Count = require('../../models/inventory/Count');
-const { getCount, getCountByProduct, getCountById, createCount, editCount } = require('../../routes/api/controllers/count');
+const { getCount, getCountByProduct, getCountById, createCount, editCount } = require('../../routes/api/controllers/counts');
 
 describe('API Count Route', () => {
   const mockResponse = () => {
@@ -364,55 +364,97 @@ describe('API Count Route', () => {
       expect(res.json.calledOnce).to.be.true;
     })
   })
-  describe('Post request to /', () => {
+  describe.only('Post request to /', () => {
     const mockRequest = () => {
       const req = {};
       req.body = {
-        inventory: [
-            {
-                serial: 'serial1903214',
-                product: 'product12093801',
-                lot: 'lot1903214',
-                status: 'sellable'
-            },            
-            {
-                serial: 'serial1903215',
-                product: 'product12093812',
-                lot: 'lot1903214',
-                status: 'sellable'
-            },
-        ]
+        products: [
+          '6081cb3a72f96229a6261d53',
+          '6081cb3a72f96229a6261d55'
+        ],
+        name: 'New Test Count', 
+        type: 'Cycle', 
+        method: 'Blind', 
+        scheduled: new Date(),
       }
       req.user = {
-        _id: 'fake1908239021',
-        company: 'fakecompany492384902'
+        _id: '6081cb3a72f96229a6261d21',
+        company: '6081cb3a72f96229a6261d14'
       }
       return req;
     }
 
+    const mockProducts = () => {
+      return [
+        {_id: '6081cb3a72f96229a6261d53'},
+        {_id: '6081cb3a72f96229a6261d55'},
+      ]
+    }
+
+    const mockInventory = () => {
+      return [
+        {
+          _id: '6081cb3a72f96229a6261d33',
+          lot: '321cb3a7123229a6261d33',
+          serial: 'serial190238',
+          status: 'sellable'
+        },
+        {
+          _id: '6081cb3a72f96229a6261d34',
+          lot: '321cb3a7123229a6261d34',
+          serial: 'serial190239',
+          status: 'sellable'
+        },
+      ]
+    }
+
       
-    it('should create a unit for each inventory object in req.body.inventory', async () => {
+    it('should create a count record with inventory of products in req.body.products', async () => {
       let req = mockRequest();
-      let dbInventoryCall = sandbox.stub(Inventory, 'find')
+      let fakeProducts = mockProducts()
+      let fakeInventory = mockInventory();
+      let dbProductCall = sandbox.stub(Product, 'find').returns({select: sandbox.stub().returns(fakeProducts)});
+      let dbInventoryCall = sandbox.stub(Inventory, 'find').returns({populate: sandbox.stub().returns({select: sandbox.stub().returns(fakeInventory)})});
       let save = sandbox.stub(Count.prototype, 'save').callsFake(() => Promise.resolve(this))
 
       await createCount(req,res);
-      expect(dbInventoryCall.callCount).to.equal(req.body.inventory.length);
-      expect(save.callCount).to.equal(req.body.inventory.length)
+      expect(dbProductCall.calledOnce).to.be.true;
+      expect(dbInventoryCall.calledOnce).to.be.true;
+      expect(save.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(goodCode)).to.be.true;
-    })
-    it('should handle error when db inventory call throws error', async () => {
-      let req = mockRequest();
-      let dbInventoryCall = sandbox.stub(Inventory, 'findOne')
-      dbInventoryCall.onCall(0).throws();
-      let save = sandbox.stub(Inventory.prototype, 'save').callsFake(()=> Promise.resolve(this));
-      await createCount(req,res);
+      expect(res.json.calledOnce).to.be.true;
 
-      expect(dbInventoryCall.callCount).to.equal(1);
+    })
+    it('should handle error when db product call gets wrong object id', async () => {
+      let req = mockRequest();
+      let fakeInventory = mockInventory();
+      let dbProductCall = sandbox.stub(Product, 'find').returns({select: sandbox.stub().throws({kind: 'ObjectId'})});
+      let dbInventoryCall = sandbox.stub(Inventory, 'find').returns({populate: sandbox.stub().returns({select: sandbox.stub().returns(fakeInventory)})});
+      let save = sandbox.stub(Count.prototype, 'save').callsFake(() => Promise.resolve(this))
+
+      await createCount(req,res);
+      expect(dbProductCall.calledOnce).to.be.true;
+      expect(dbInventoryCall.callCount).to.equal(0);
       expect(save.callCount).to.equal(0);
       expect(res.status.calledOnce).to.be.true;
-      expect(res.status.calledWith(errorCode)).to.be.true;
+      expect(res.status.calledWith(badCode)).to.be.true;
+      expect(res.json.calledOnce).to.be.true;    
+    })
+    it('should handle error when db inventory call gets wrong object id', async () => {
+      let req = mockRequest();
+      let fakeProducts = mockProducts();
+      let dbProductCall = sandbox.stub(Product, 'find').returns({select: sandbox.stub().returns(fakeProducts)});
+      let dbInventoryCall = sandbox.stub(Inventory, 'find').returns({populate: sandbox.stub().returns({select: sandbox.stub().throws({kind: 'ObjectId'})})});
+      let save = sandbox.stub(Count.prototype, 'save').callsFake(() => Promise.resolve(this))
+
+      await createCount(req,res);
+      expect(dbProductCall.calledOnce).to.be.true;
+      expect(dbInventoryCall.calledOnce).to.be.true;
+      expect(save.callCount).to.equal(0);
+      expect(res.status.calledOnce).to.be.true;
+      expect(res.status.calledWith(badCode)).to.be.true;
+      expect(res.json.calledOnce).to.be.true;    
     })
   })
   describe('Put request to /inventory/:inventoryId', () => {

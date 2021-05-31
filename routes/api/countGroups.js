@@ -19,11 +19,6 @@ router.get('/',[userAuth,companyAuth], getCountGroups);
 // @desc    Get countGroup by id
 // @access  private
 
-router.get('/product/:productId', [userAuth,companyAuth], getCountGroupsByProduct);
-
-// @route   GET api/countGroup/countGroup/:countGroupId
-// @desc    Get countGroup by id
-// @access  private
 
 router.get('/countGroup/:countGroupId', [userAuth,companyAuth], getCountGroupById);
 

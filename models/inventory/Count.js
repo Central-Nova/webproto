@@ -12,8 +12,7 @@ const CountSchema = new mongoose.Schema({
   inventoryData: [
     {
       record: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'inventory'
+        
       },
       counts: [
         {
@@ -22,10 +21,7 @@ const CountSchema = new mongoose.Schema({
             ref: 'users'
           },
           countedOn: Date,
-          result: {
-            type: Boolean,
-            required: true
-          }
+          result: Boolean
         }
       ] 
     }

@@ -106,7 +106,7 @@ const createCountGroup = async (req,res) => {
     console.log('productIds: ', productIds)
     
     // Handle error if serial already exists
-    if (!productIds) {
+    if (!productIds || productIds.length !== products.length) {
       apiLogger.debug('No existing products found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
 
       return res

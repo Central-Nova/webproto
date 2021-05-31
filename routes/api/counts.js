@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getCount, getCountByProduct, getCountById, createCount, editCount } = require('./controllers/count');
+const { getCount, getCountByProduct, getCountById, createCount, editCount } = require('./controllers/counts');
 
 // Middleware
 const { check } = require('express-validator');
@@ -32,8 +32,7 @@ router.get('/count/:countId', [userAuth,companyAuth], getCountById);
 // @access  private
 
 router.post('/', [userAuth, sanitizeBody, [
-        check('Count.*.serial', {title:'Error', description:'Lot code is required.'}).not().isEmpty(),
-        check('Count.*.status', {title:'Error', description:'Cost is required.'}).not().isEmpty(),
+        check('products.*', {title:'Error', description:'Select at least one product.'}).not().isEmpty(),
         ], validationHandler], 
         createCount);
 
