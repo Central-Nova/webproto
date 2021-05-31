@@ -1,4 +1,4 @@
-const { genPassword, validPassword} = require('../lib/passwordUtils');
+const { genPassword, validPassword} = require('../../lib/passwordUtils');
 const expect = require('chai').expect;
 
 const passwordFromForm = '123456';

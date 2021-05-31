@@ -1,6 +1,6 @@
 const sinon = require('sinon');
 const expect = require('chai').expect
-const sanitizeBody = require('../middleware/sanitizeBody');
+const sanitizeBody = require('../../middleware/sanitizeBody');
 
 describe('Middleware: sanitizeBody', () => {
   const mockResponse = () => {

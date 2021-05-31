@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
-const Role = require('../models/companies/Role');
-const { getRoles, getRolesByDocument, editRoles } = require('../routes/api/controllers/roles');
+const Role = require('../../models/companies/Role');
+const { getRoles, getRolesByDocument, editRoles } = require('../../routes/api/controllers/roles');
 
 describe('API Role Route', () => {
   const mockResponse = () => {

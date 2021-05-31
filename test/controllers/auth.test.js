@@ -1,4 +1,4 @@
-const { getAuthUser, loginUser, passportUtils } = require('../routes/api/controllers/auth');
+const { getAuthUser, loginUser, passportUtils } = require('../../routes/api/controllers/auth');
 const expect = require('chai').expect;
 const sinon = require('sinon');
 const passport = require('passport');

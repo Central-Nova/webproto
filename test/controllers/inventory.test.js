@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
-const Inventory = require('../models/inventory/Inventory');
-const { getInventory, getInventoryByProduct, getInventoryById, createInventory, editInventory } = require('../routes/api/controllers/inventory');
+const Inventory = require('../../models/inventory/Inventory');
+const { getInventory, getInventoryByProduct, getInventoryById, createInventory, editInventory } = require('../../routes/api/controllers/inventory');
 
 describe('API Inventory Route', () => {
   const mockResponse = () => {

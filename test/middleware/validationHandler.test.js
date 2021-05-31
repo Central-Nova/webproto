@@ -1,4 +1,4 @@
-const validationHandler = require('../middleware/validationHandler');
+const validationHandler = require('../../middleware/validationHandler');
 const expect = require('chai').expect;
 const sinon = require('sinon');
 const { Result } = require('express-validator');

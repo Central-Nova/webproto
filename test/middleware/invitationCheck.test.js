@@ -1,7 +1,7 @@
 const sinon = require('sinon');
 const expect = require('chai').expect;
-const invitationCheck = require('../middleware/invitationCheck')
-const Invitation = require('../models/companies/Invitation');
+const invitationCheck = require('../../middleware/invitationCheck')
+const Invitation = require('../../models/companies/Invitation');
 
 describe('Middleware: invitationCheck', () => {
   const mockResponse = () => {

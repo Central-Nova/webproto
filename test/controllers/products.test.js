@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
-const Product = require('../models/products/Product');
-const { getProducts, getProductById, createProduct, editProduct } = require('../routes/api/controllers/products');
+const Product = require('../../models/products/Product');
+const { getProducts, getProductById, createProduct, editProduct } = require('../../routes/api/controllers/products');
 
 describe('API Product Route', () => {
   const mockResponse = () => {

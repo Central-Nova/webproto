@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
-const { generateCode } = require('../lib/generateCode');
+const { generateCode } = require('../../lib/generateCode');
 
 describe('Lib: generateCode', () => {
   it('should generate a unique code for any given length', () => {

@@ -1,8 +1,8 @@
 const sinon = require('sinon');
 const expect = require('chai').expect
-const Role = require('../models/companies/Role');
-const User = require('../models/users/User');
-const authorize = require('../middleware/authorize');
+const Role = require('../../models/companies/Role');
+const User = require('../../models/users/User');
+const authorize = require('../../middleware/authorize');
 
 describe('Middleware: authorize', () => {
   const mockResponse = () => {

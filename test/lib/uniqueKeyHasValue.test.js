@@ -1,4 +1,4 @@
-const uniqueKeyHasValue = require('../lib/uniqueKeyHasValue');
+const uniqueKeyHasValue = require('../../lib/uniqueKeyHasValue');
 const expect = require('chai').expect;
 
 

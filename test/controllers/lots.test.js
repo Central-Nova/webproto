@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
-const Lot = require('../models/inventory/Lot');
-const { getLots, getLotById, createLot, editLot } = require('../routes/api/controllers/lots');
+const Lot = require('../../models/inventory/Lot');
+const { getLots, getLotById, createLot, editLot } = require('../../routes/api/controllers/lots');
 
 describe('API Lot Route', () => {
   const mockResponse = () => {
