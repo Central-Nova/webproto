@@ -368,49 +368,71 @@ describe('API CountGroups Route', () => {
     const mockRequest = () => {
       const req = {};
       req.body = {
-        inventory: [
-            {
-                serial: 'serial1903214',
-                product: 'product12093801',
-                lot: 'lot1903214',
-                status: 'sellable'
-            },            
-            {
-                serial: 'serial1903215',
-                product: 'product12093812',
-                lot: 'lot1903214',
-                status: 'sellable'
-            },
-        ]
+        products: [
+          '6081cb3a72f96229a6261d53',
+          '6081cb3a72f96229a6261d55'
+        ],
+        name: 'Group 1'
       }
       req.user = {
-        _id: 'fake1908239021',
-        company: 'fakecompany492384902'
+        _id: '6081cb3a72f96229a6261d53',
+        company: '6081cb3a72f96229a6261d55'
       }
       return req;
     }
 
+    const mockProducts = () => {
+      return [
+        {_id: '6081cb3a72f96229a6261d21'},
+        {_id: '6081cb3a72f96229a6261d22'},
+      ]
+    }
       
-    it('should create a unit for each inventory object in req.body.inventory', async () => {
+    it('should create a count group with each product in req.body.products', async () => {
       let req = mockRequest();
-      let dbInventoryCall = sandbox.stub(Inventory, 'find')
-      let save = sandbox.stub(CountGroups.prototype, 'save').callsFake(() => Promise.resolve(this))
+      let fakeProducts = mockProducts();
+      let dbProductCall = sandbox.stub(Product, 'find').returns({select: sandbox.stub().returns(fakeProducts)});
+      let save = sandbox.stub(CountGroup.prototype, 'save').callsFake(() => Promise.resolve(this))
 
       await createCountGroup(req,res);
-      expect(dbInventoryCall.callCountGroups).to.equal(req.body.inventory.length);
-      expect(save.callCountGroups).to.equal(req.body.inventory.length)
+      expect(dbProductCall.calledOnce).to.be.true;
+      expect(save.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(goodCode)).to.be.true;
+      expect(res.json.calledOnce).to.be.true;
     })
-    it('should handle error when db inventory call throws error', async () => {
+    it('should handle error when db product call returns undefined', async () => {
       let req = mockRequest();
-      let dbInventoryCall = sandbox.stub(Inventory, 'findOne')
-      dbInventoryCall.onCall(0).throws();
-      let save = sandbox.stub(Inventory.prototype, 'save').callsFake(()=> Promise.resolve(this));
-      await createCountGroup(req,res);
+      let dbProductCall = sandbox.stub(Product, 'find').returns({select: sandbox.stub().returns(undefined)});
+      let save = sandbox.stub(CountGroup.prototype, 'save').callsFake(() => Promise.resolve(this))
 
-      expect(dbInventoryCall.callCountGroups).to.equal(1);
-      expect(save.callCountGroups).to.equal(0);
+      await createCountGroup(req,res);
+      expect(dbProductCall.calledOnce).to.be.true;
+      expect(save.callCount).to.equal(0);
+      expect(res.status.calledOnce).to.be.true;
+      expect(res.status.calledWith(badCode)).to.be.true;
+      expect(res.json.calledOnce).to.be.true;
+    })
+    it('should handle error when db product call throws error', async () => {
+      let req = mockRequest();
+      let dbProductCall = sandbox.stub(Product, 'find').returns({select: sandbox.stub().throws()});
+      let save = sandbox.stub(CountGroup.prototype, 'save').callsFake(() => Promise.resolve(this))
+
+      await createCountGroup(req,res);
+      expect(dbProductCall.calledOnce).to.be.true;
+      expect(save.callCount).to.equal(0);
+      expect(res.status.calledOnce).to.be.true;
+      expect(res.status.calledWith(errorCode)).to.be.true;
+    })
+    it('should handle error when db product call throws error', async () => {
+      let req = mockRequest();
+      let fakeProducts = mockProducts();
+      let dbProductCall = sandbox.stub(Product, 'find').returns({select: sandbox.stub().returns(fakeProducts)});
+      let save = sandbox.stub(CountGroup.prototype, 'save').throws();
+
+      await createCountGroup(req,res);
+      expect(dbProductCall.calledOnce).to.be.true;
+      expect(save.callCount).to.equal(1);
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true;
     })

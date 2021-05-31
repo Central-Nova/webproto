@@ -204,47 +204,47 @@ const createCountGroup = async (req,res) => {
     body: req.body || ''
   })
   
-  const { inventory } = req.body;
+  const { products, name } = req.body;
 
   try {
 
-    // loop through inventory data
-    for (let unit of inventory) {
 
-      // Check for existing inventory by serial
-      let queryStartTime = new Date();
-      apiLogger.debug('Searching DB for existing serial', {collection: 'inventory',operation: 'read'})
+    // Check if products
+    let queryStartTime = new Date();
+    apiLogger.debug('Searching DB for existing serial', {collection: 'inventory',operation: 'read'})
 
-      let existingUnit = await Inventory.findOne({serial: unit.serial})
-      
-      // Handle error if serial already exists
-      if (existingUnit) {
-        apiLogger.debug('Existing inventory record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
-
-        return res
-        .status(400)
-        .json({errors: [{ msg: {title: 'Error', description: 'Serial code is already in use.'}}]})
-      }
-
-      // Create
-      queryStartTime = new Date();
-      apiLogger.info('Creating new inventory record in db', {collection: 'inventory',operation: 'create'})
-
-      const newUnit = new Inventory({
-        company: req.user.company,
-        createdBy: req.user._id,
-        lastEdited: new Date(),
-        lastEditedBy: req.user._id,
-        ...unit
-      })
-      console.log('newUnit: ', newUnit)
-      await newUnit.save();
-
-      apiLogger.info('Inventory record created', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
-
-    }
+    let productIds = await Product.find({company: req.user.company, _id: products }).select('_id')
+    console.log('productIds: ', productIds)
     
-    return res.status(200).json({msg: { title: 'Success', description: `${inventory.length} new inventory records created.`} })
+    // Handle error if serial already exists
+    if (!productIds) {
+      apiLogger.debug('No existing products found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
+
+      return res
+      .status(400)
+      .json({errors: [{ msg: {title: 'Error', description: 'Products not found.'}}]})
+    }
+    apiLogger.debug('Existing products found', {documents: productIds.length, responseTime: `${new Date() - queryStartTime}ms`})
+
+    // Create
+    queryStartTime = new Date();
+    apiLogger.info('Creating new inventory record in db', {collection: 'inventory',operation: 'create'})
+
+    const newCountGroup = new CountGroup({
+      company: req.user.company,
+      createdBy: req.user._id,
+      lastEdited: new Date(),
+      lastEditedBy: req.user._id,
+      products: productIds.map(object => (object._id)),
+      name
+    })
+    console.log('newCountGroup: ', newCountGroup)
+    await newCountGroup.save();
+
+    apiLogger.info('Count group created', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+
+    
+    return res.status(200).json({msg: { title: 'Success', description: 'New count group created.'}})
     
   } catch (err) {
     console.log(err);

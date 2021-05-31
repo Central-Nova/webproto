@@ -12,6 +12,7 @@ const CountGroupSchema = new mongoose.Schema({
     ref: 'product'
     }
   ],
+  lastCount: Date,
   created: {
     type: Date,
     default: Date.now

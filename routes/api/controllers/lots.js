@@ -204,6 +204,7 @@ const editLot = async (req,res) => {
         lotCode: lot.newLotCode
       });
   
+      // Use toString to work around mismatch mongoose objectId type
       if (secondLot._id.toString() !== currentLot._id.toString()) {
         apiLogger.warn('Existing lot code found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
         return res

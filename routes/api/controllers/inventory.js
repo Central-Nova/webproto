@@ -225,6 +225,8 @@ const createInventory = async (req,res) => {
         .status(400)
         .json({errors: [{ msg: {title: 'Error', description: 'Serial code is already in use.'}}]})
       }
+      apiLogger.debug('No existing inventory record found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
+
 
       // Create
       queryStartTime = new Date();
@@ -297,7 +299,7 @@ const editInventory = async (req,res) => {
       serial: req.body.serial
     });
 
-    // Handle error if serial already exists
+      // Use toString to work around mismatch mongoose objectId type
     if (secondInventory._id.toString() !== currentInventory._id.toString()) {
       apiLogger.warn('Existing serial code found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
       return res

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getCountGroup, getCountGroupByProduct, getCountGroupById, createCountGroup, editCountGroup } = require('./controllers/countGroups');
+const { getCountGroups, getCountGroupsByProduct, getCountGroupById, createCountGroup, editCountGroup } = require('./controllers/countGroups');
 
 // Middleware
 const { check } = require('express-validator');
@@ -13,13 +13,13 @@ const sanitizeBody = require('../../middleware/sanitizeBody');
 // @desc    Get countGroup
 // @access  private
 
-router.get('/',[userAuth,companyAuth], getCountGroup);
+router.get('/',[userAuth,companyAuth], getCountGroups);
 
 // @route   GET api/countGroup/product/:productId
 // @desc    Get countGroup by id
 // @access  private
 
-router.get('/product/:productId', [userAuth,companyAuth], getCountGroupByProduct);
+router.get('/product/:productId', [userAuth,companyAuth], getCountGroupsByProduct);
 
 // @route   GET api/countGroup/countGroup/:countGroupId
 // @desc    Get countGroup by id
