@@ -151,65 +151,43 @@ const editCountGroup = async (req,res) => {
   })
   
   const { 
-    lot,
-    serial,
-    status
+    name,
+    products
   } = req.body;
     
     try {
 
-    // Check if inventory exists
+    // Check if count group exists
     let queryStartTime = new Date();
-    apiLogger.debug('Searching for inventory  record in db', {collection: 'inventory',operation: 'findOne'})
+    apiLogger.debug('Searching for count group record in db', {collection: 'countGroup',operation: 'findOne'})
     
-    let currentInventory = await Inventory.findOne({
+    let countGroup = await CountGroup.findOne({
       company: req.user.company,
-      _id: req.params.inventoryId
-    });
-    console.log('currentInventory: ', currentInventory)
-
-    // Handle error if inventory record isn't found
-    if (!currentInventory) {
-      apiLogger.warn('No inventory record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
-      return res
-      .status(400)
-      .json({errors: [{msg: {title: 'Error', description: 'Inventory does not exist.'}}]})
-    }
-    apiLogger.debug('Inventory  record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
-    
-    // Check if new serial already exists
-    queryStartTime = new Date();
-    apiLogger.debug('Searching for existing inventory  record in db', {collection: 'inventory',operation: 'findOne'})
-
-    let secondInventory = await Inventory.findOne({
-      company: req.user.company,
-      serial: req.body.serial
+      _id: req.params.countGroupId
     });
 
-    // Handle error if serial already exists
-    if (secondInventory._id.toString() !== currentInventory._id.toString()) {
-      apiLogger.warn('Existing serial code found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+    // Handle error if count group record isn't found
+    if (!countGroup) {
+      apiLogger.warn('No Count group record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
       return res
       .status(400)
-      .json({errors: [{msg: {title: 'Error', description: 'Serial code is already in use.'}}]})
+      .json({errors: [{msg: {title: 'Error', description: 'Count group does not exist.'}}]})
     }
-    apiLogger.debug('Serial code is available to use', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+    apiLogger.debug('Count group  record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+    
 
     queryStartTime = new Date();
-    apiLogger.info('Updating Inventory record in db', {collection: 'inventory',operation: 'save'})
+    apiLogger.info('Updating count group record in db', {collection: 'countGroup',operation: 'save'})
 
-    currentInventory.lot = lot;
-    currentInventory.serial = serial;
-    currentInventory.status = status;
-    currentInventory.lastEdited = new Date();
-    currentInventory.lastEditedBy = req.user._id;
-    currentInventory.save();
+    countGroup.name = name;
+    countGroup.products = products;
+    countGroup.save();
 
-    apiLogger.info('Inventory record updated', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+    apiLogger.info('Count group updated', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
     
     return res
     .status(200)
-    .json({msg: {title: 'Success', description: 'Inventory details have been updated!'}})
+    .json({msg: {title: 'Success', description: 'Count group details have been updated!'}})
     
   } catch (error) {
     console.log(error);
@@ -217,7 +195,7 @@ const editCountGroup = async (req,res) => {
       console.log(error.kind);
       return res
       .status(400)
-      .json({msg: { title: 'Error', description: 'Inventory not found.'}})      
+      .json({msg: { title: 'Error', description: 'Count group not found.'}})      
     }
     return res.status(500).send('Server Error');
    

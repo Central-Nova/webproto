@@ -229,115 +229,80 @@ describe('API CountGroups Route', () => {
       expect(res.status.calledWith(errorCode)).to.be.true;
     })
   })
-  describe('Put request to /inventory/:inventoryId', () => {
+  describe.only('Put request to /countGroup/:countGroupId', () => {
     const mockRequest = () => {
       const req = {};
-      req.params = {
-        inventoryId:'60b38f90463513003a794998'
-      }
       req.body = {
-          lotCode: "lot1093812",
-          serial: 'serial90321123',
-          status: 'sellable'
+        products: [
+          '6081cb3a72f96229a6261d53',
+          '6081cb3a72f96229a6261d55'
+        ],
+        name: 'Group 1'
       }
       req.user = {
-        _id: 'fake1908239021',
-        company: 'fakecompany492384902'
+        _id: '6081cb3a72f96229a6261d53',
+        company: '6081cb3a72f96229a6261d55'
+      }
+      req.params = {
+        productId: '60b38f90463513003a794998'
       }
       return req;
     }
 
-    let mockInventory = () => {
+    let mockCountGroup = () => {
       return {
-        _id: 'fake1908239041',
-        lot: "lot1093812",
-        serial: "serial102938",
-        status: 'sellable',
+        name: 'fake901823',
+        products: ['product1', 'product2'],
         save: sandbox.stub()
       }
     }
-
-    let secondMockInventory = () => {
-      return {
-        _id: 'different9012832',
-        lot: "lot1093812",
-        serial: "serial102938",
-        status: 'sellable',
-        save: sandbox.stub()
-      }
-    }
-
-    it('should update the inventory', async () => {
+      
+    it('should update count group with fields in req.body', async () => {
       let req = mockRequest();
-      let fakeInventory = mockInventory();
-      let dbInventoryFind = sandbox.stub(Inventory, 'findOne').returns(fakeInventory);
+      let fakeCountGroup = mockCountGroup();
+      let dbCountGroupCall = sandbox.stub(CountGroup, 'findOne').returns(fakeCountGroup);
 
-      await editCountGroup(req,res)
-      expect(dbInventoryFind.calledTwice).to.be.true;
-      expect(fakeInventory.save.calledOnce).to.be.true;
+      await editCountGroup(req,res);
+      expect(dbCountGroupCall.calledOnce).to.be.true;
+      expect(fakeCountGroup.save.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(goodCode)).to.be.true;
+      expect(res.json.calledOnce).to.be.true;
     })
-
-    it('should handle error if new inventory code is already in use', async () => {
+    it('should handle error when db count group call returns undefined', async () => {
       let req = mockRequest();
-      let fakeInventory = mockInventory();
-      let secondInventory = secondMockInventory();
-      let dbInventoryFind = sandbox.stub(Inventory, 'findOne')
-      dbInventoryFind.onFirstCall().returns(fakeInventory);
-      dbInventoryFind.onSecondCall().returns(secondInventory)
+      let fakeCountGroup = mockCountGroup();
+      let dbCountGroupCall = sandbox.stub(CountGroup, 'findOne').returns(undefined);
 
-
-      await editCountGroup(req,res)
-      expect(dbInventoryFind.calledTwice).to.be.true;
-      expect(fakeInventory.save.callCountGroups).to.equal(0);
-      expect(res.status.calledOnce).to.be.true;
-      expect(res.status.calledWith(badCode)).to.be.true;
-    })
-
-    it('should handle error if wrong object id is given', async () => {
-      let req = mockRequest();
-      let dbInventoryFind = sandbox.stub(Inventory, 'findOne').throws({kind: 'ObjectId'})
-
-      await editCountGroup(req,res)
-      expect(dbInventoryFind.calledOnce).to.be.true;
-      expect(res.status.calledOnce).to.be.true;
-      expect(res.status.calledWith(badCode)).to.be.true;
-      expect(res.json.calledOnce).to.be.true;    
-    })
-
-    it('should handle error if db lot find call returns undefined', async () => {
-      let req = mockRequest();
-      let dbInventoryFind = sandbox.stub(Inventory, 'findOne').returns(undefined);
-
-      await editCountGroup(req,res)
-      expect(dbInventoryFind.calledOnce).to.be.true;
+      await editCountGroup(req,res);
+      expect(dbCountGroupCall.calledOnce).to.be.true;
+      expect(fakeCountGroup.save.callCount).to.equal(0);
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
       expect(res.json.calledOnce).to.be.true;
     })
-
-    it('should handle error if db inventory call throws', async () => {
+    it('should handle error when wrong object id is given in req.params.countGroupId', async () => {
       let req = mockRequest();
-      let dbInventoryFind = sandbox.stub(Inventory, 'findOne').throws();
+      let fakeCountGroup = mockCountGroup();
+      let dbCountGroupCall = sandbox.stub(CountGroup, 'findOne').throws({kind: 'ObjectId'});
 
-      await editCountGroup(req,res)
-      expect(dbInventoryFind.calledOnce).to.be.true;
+      await editCountGroup(req,res);
+      expect(dbCountGroupCall.calledOnce).to.be.true;
+      expect(fakeCountGroup.save.callCount).to.equal(0);
       expect(res.status.calledOnce).to.be.true;
-      expect(res.status.calledWith(errorCode)).to.be.true;
+      expect(res.status.calledWith(badCode)).to.be.true;
     })
-
-    it('should handle error if inventory save call throws', async () => {
+    it('should handle error when db count group call throws error', async () => {
       let req = mockRequest();
-      let fakeInventory = mockInventory();
-      let dbInventoryFind = sandbox.stub(Inventory, 'findOne').returns(fakeInventory);
-      fakeInventory.save = sandbox.stub().throws();
+      let fakeCountGroup = mockCountGroup();
+      let dbCountGroupCall = sandbox.stub(CountGroup, 'findOne').throws();
 
-      await editCountGroup(req,res)
-      expect(dbInventoryFind.calledTwice).to.be.true;
-      expect(fakeInventory.save.callCountGroups).to.equal(1);
+      await editCountGroup(req,res);
+      expect(dbCountGroupCall.calledOnce).to.be.true;
+      expect(fakeCountGroup.save.callCount).to.equal(0);
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true;
     })
   })
 })
+
