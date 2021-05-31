@@ -42,7 +42,7 @@ router.post('/', [userAuth, sanitizeBody, [
 // @desc    Edit Inventory
 // @access  Has company and has 'Account Information':'Edit' permission
 
-router.put('/', [userAuth, companyAuth, sanitizeBody, [
+router.put('/inventory/:inventoryId', [userAuth, companyAuth, sanitizeBody, [
         check('inventory.*.serial', {title:'Error', description:'Lot code is required.'}).not().isEmpty(),
         check('inventory.*.status', {title:'Error', description:'Cost is required.'}).not().isEmpty(),
     ], validationHandler],

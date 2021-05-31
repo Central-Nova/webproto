@@ -179,7 +179,6 @@ describe('API Inventory Route', () => {
       expect(res.status.calledWith(errorCode)).to.be.true;
     })
   })
-
   describe('Get request to /product/:productId', () => {
     const mockRequest = () => {
       const req = {};
@@ -224,7 +223,13 @@ describe('API Inventory Route', () => {
     it('should call res.send with all inventory by company ID and productId and meta data', async () => {
       let req = mockRequest();
       let fakeInventory = mockInventory();
-      let dbInventoryCall = sandbox.stub(Inventory, 'find').returns({select: sandbox.stub().returns(fakeInventory)});
+      let dbInventoryCall = sandbox.stub(Inventory, 'find')
+      .returns({select: sandbox.stub()
+      .returns({sort: sandbox.stub()
+      .returns({skip: sandbox.stub()
+      .returns({limit: sandbox.stub()
+      .returns(fakeInventory)})})})});
+
       let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').returns(fakeInventory.length);
   
       await getInventoryByProduct(req, res);
@@ -242,7 +247,12 @@ describe('API Inventory Route', () => {
 
     it('should handle error when db inventory call returns 0 inventory records', async () => {
       let req = mockRequest();
-      let dbInventoryCall = sandbox.stub(Inventory, 'find').returns({select: sandbox.stub().returns([])});
+      let dbInventoryCall = sandbox.stub(Inventory, 'find')
+      .returns({select: sandbox.stub()
+      .returns({sort: sandbox.stub()
+      .returns({skip: sandbox.stub()
+      .returns({limit: sandbox.stub()
+      .returns([])})})})});
       let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').returns(0);
   
       await getInventoryByProduct(req, res);
@@ -257,7 +267,12 @@ describe('API Inventory Route', () => {
 
     it('should handle error when db inventory call throws error', async () => {
       let req = mockRequest();
-      let dbInventoryCall = sandbox.stub(Inventory, 'find').returns({select: sandbox.stub().throws()});
+      let dbInventoryCall = sandbox.stub(Inventory, 'find')
+      .returns({select: sandbox.stub()
+      .returns({sort: sandbox.stub()
+      .returns({skip: sandbox.stub()
+      .returns({limit: sandbox.stub()
+      .throws()})})})});      
       let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').returns(0);
   
       await getInventoryByProduct(req, res);
@@ -270,7 +285,12 @@ describe('API Inventory Route', () => {
 
     it('should handle error when db inventory countDocument throws error', async () => {
       let req = mockRequest();
-      let dbInventoryCall = sandbox.stub(Inventory, 'find').returns({select: sandbox.stub().throws()});
+      let dbInventoryCall = sandbox.stub(Inventory, 'find')
+      .returns({select: sandbox.stub()
+      .returns({sort: sandbox.stub()
+      .returns({skip: sandbox.stub()
+      .returns({limit: sandbox.stub()
+      .throws()})})})});      
       let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').throws();
   
       await getInventoryByProduct(req, res);
@@ -282,7 +302,6 @@ describe('API Inventory Route', () => {
       })
 
   })
-
   describe('Get request to /inventory/:inventoryId', () => {
     const mockRequest = () => {
       const req = {};
