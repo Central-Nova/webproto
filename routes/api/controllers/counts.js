@@ -212,7 +212,7 @@ const createCount = async (req,res) => {
   }
 
   // Query inventory data
-  let inventory = await Inventory.find({company: req.user.company, product: products}).populate('product', '_id sku').select('product lot serial status')
+  let inventory = await Inventory.find({company: req.user.company, product: products}).populate({path:'product', select: '_id sku'}).select('product lot serial status')
 
   // Format inventory data
   let inventoryData = inventory.map(record => ({record, counts: []}))

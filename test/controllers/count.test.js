@@ -36,7 +36,7 @@ describe('API Count Route', () => {
   })
 
 
-  describe.only('Get request to /', () => {
+  describe('Get request to /', () => {
     const mockRequest = () => {
       const req = {};
       req.query = {
@@ -51,29 +51,6 @@ describe('API Count Route', () => {
       return req;
     }
 
-    let mockInventory = () => {
-      return [
-        {
-            serial: "serial102931",
-            lot: "60ab917b18dac4006dacd9dc",
-            product: "60858de105a244cd7564abd7",
-            status: "sellable",
-            },           
-            {
-            serial: "serial102932",
-            lot: "60ab917b18dac4006dacd9dc",
-            product: "60858de105a244cd7564abd8",
-            status: "sellable",
-            },            
-            {
-            serial: "serial102932",
-            lot: "60ab917b18dac4006dacd9dc",
-            product: "60858de105a244cd7564abd9",
-            status: "sellable",
-            },
-      ]
-    }
-
     let mockCounts = () => {
         return [
             {_id: '60858de105a244cd7564abd7', name: 'Count-1234-1'},
@@ -82,13 +59,6 @@ describe('API Count Route', () => {
         ]
     }
 
-    let returnedInventory = () => {
-        return [
-            {_id: '60858de105a244cd7564abd7', sku: 'sku-1234-1', sellable: 1},
-            {_id: '60858de105a244cd7564abd8', sku: 'sku-1234-2', sellable: 1},
-            {_id: '60858de105a244cd7564abd9', sku: 'sku-1234-3', sellable: 1},
-        ]
-    }
     
     it('should call res.send with all counts by company ID and meta data', async () => {
       let req = mockRequest();
@@ -174,130 +144,7 @@ describe('API Count Route', () => {
       expect(res.status.calledWith(errorCode)).to.be.true;
     })
   })
-  describe('Get request to /product/:productId', () => {
-    const mockRequest = () => {
-      const req = {};
-      req.query = {
-        page: '',
-        limit: '',
-        sort: '',
-        search: ''
-      }
-      req.user = {
-        company: 'fakecompany492384902'
-      }
-      req.params = {
-        productId: '60858de105a244cd7564abd7'
-      }
-      return req;
-    }
-
-    let mockInventory = () => {
-      return [
-        {
-            serial: "serial102931",
-            lot: "60ab917b18dac4006dacd9dc",
-            product: "60858de105a244cd7564abd7",
-            status: "sellable",
-            },           
-            {
-            serial: "serial102932",
-            lot: "60ab917b18dac4006dacd9dc",
-            product: "60858de105a244cd7564abd7",
-            status: "sellable",
-            },            
-            {
-            serial: "serial102933",
-            lot: "60ab917b18dac4006dacd9dc",
-            product: "60858de105a244cd7564abd7",
-            status: "sellable",
-            },
-      ]
-    }
-    
-    it('should call res.send with all inventory by company ID and productId and meta data', async () => {
-      let req = mockRequest();
-      let fakeInventory = mockInventory();
-      let dbInventoryCall = sandbox.stub(Inventory, 'find')
-      .returns({select: sandbox.stub()
-      .returns({sort: sandbox.stub()
-      .returns({skip: sandbox.stub()
-      .returns({limit: sandbox.stub()
-      .returns(fakeInventory)})})})});
-
-      let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').returns(fakeInventory.length);
-  
-      await getCountByProduct(req, res);
-
-      expect(dbInventoryCall.callCount).to.equal(1);
-      expect(dbInventoryCount.callCount).to.equal(1);
-      expect(res.send.calledOnce).to.be.true;
-      expect(res.send.calledWith({
-        total: fakeInventory.length,
-        page: 0,
-        limit: 0,
-        inventory: fakeInventory
-      })).to.be.true;
-    })
-
-    it('should handle error when db inventory call returns 0 inventory records', async () => {
-      let req = mockRequest();
-      let dbInventoryCall = sandbox.stub(Inventory, 'find')
-      .returns({select: sandbox.stub()
-      .returns({sort: sandbox.stub()
-      .returns({skip: sandbox.stub()
-      .returns({limit: sandbox.stub()
-      .returns([])})})})});
-      let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').returns(0);
-  
-      await getCountByProduct(req, res);
-
-      expect(dbInventoryCall.callCount).to.equal(1);
-      expect(dbInventoryCount.callCount).to.equal(0);
-      expect(res.status.calledOnce).to.be.true;
-      expect(res.status.calledWith(badCode)).to.be.true;
-      expect(res.json.calledOnce).to.be.true;
-
-      })
-
-    it('should handle error when db inventory call throws error', async () => {
-      let req = mockRequest();
-      let dbInventoryCall = sandbox.stub(Inventory, 'find')
-      .returns({select: sandbox.stub()
-      .returns({sort: sandbox.stub()
-      .returns({skip: sandbox.stub()
-      .returns({limit: sandbox.stub()
-      .throws()})})})});      
-      let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').returns(0);
-  
-      await getCountByProduct(req, res);
-
-      expect(dbInventoryCall.callCount).to.equal(1);
-      expect(dbInventoryCount.callCount).to.equal(0);
-      expect(res.status.calledOnce).to.be.true;
-      expect(res.status.calledWith(errorCode)).to.be.true;
-      })
-
-    it('should handle error when db inventory countDocument throws error', async () => {
-      let req = mockRequest();
-      let dbInventoryCall = sandbox.stub(Inventory, 'find')
-      .returns({select: sandbox.stub()
-      .returns({sort: sandbox.stub()
-      .returns({skip: sandbox.stub()
-      .returns({limit: sandbox.stub()
-      .throws()})})})});      
-      let dbInventoryCount = sandbox.stub(Inventory, 'countDocuments').throws();
-  
-      await getCountByProduct(req, res);
-
-      expect(dbInventoryCall.callCount).to.equal(1);
-      expect(dbInventoryCount.callCount).to.equal(0);
-      expect(res.status.calledOnce).to.be.true;
-      expect(res.status.calledWith(errorCode)).to.be.true;
-      })
-
-  })
-  describe('Get request to /inventory/:inventoryId', () => {
+  describe('Get request to /count/:countId', () => {
     const mockRequest = () => {
       const req = {};
       req.query = {
@@ -451,7 +298,7 @@ describe('API Count Route', () => {
       expect(res.json.calledOnce).to.be.true;    
     })
   })
-  describe('Put request to /inventory/:inventoryId', () => {
+  describe('Put request to /count/:countId', () => {
     const mockRequest = () => {
       const req = {};
       req.params = {

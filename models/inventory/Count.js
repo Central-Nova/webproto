@@ -12,7 +12,19 @@ const CountSchema = new mongoose.Schema({
   inventoryData: [
     {
       record: {
-        
+        product: {
+          _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'product'
+          },
+          sku: String
+        },
+        lot: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'lot'
+        },
+        serial: String,
+        status: String
       },
       counts: [
         {
