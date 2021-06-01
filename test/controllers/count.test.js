@@ -144,7 +144,7 @@ describe('API Count Route', () => {
       expect(res.status.calledWith(errorCode)).to.be.true;
     })
   })
-  describe.only('Get request to /count/:countId', () => {
+  describe('Get request to /count/:countId', () => {
     const mockRequest = () => {
       const req = {};
       req.query = {
@@ -329,12 +329,13 @@ describe('API Count Route', () => {
     const mockRequest = () => {
       const req = {};
       req.params = {
-        inventoryId:'60b38f90463513003a794998'
+        countId: '60b583b74e0e93008551c179'
       }
       req.body = {
-          lotCode: "lot1093812",
-          serial: 'serial90321123',
-          status: 'sellable'
+        name:'Brand New Name',
+        type: 'Cycle',
+        method: 'Blind',
+        scheduled: "2021-05-31T14:36:11.579Z",
       }
       req.user = {
         _id: 'fake1908239021',
@@ -343,95 +344,108 @@ describe('API Count Route', () => {
       return req;
     }
 
-    let mockInventory = () => {
+    let mockCount = () => {
       return {
-        _id: 'fake1908239041',
-        lot: "lot1093812",
-        serial: "serial102938",
-        status: 'sellable',
+        completed: false,
+        _id: "60b583b74e0e93008551c179",
+        company: "607da9ab78caf50039e60be2",
+        name: "Sixth Test Count",
+        type: "Cycle",
+        method: "Blind",
+        scheduled: "2021-05-31T14:36:11.579Z",
+        inventoryData: [
+            {
+              record: {
+                  product: {
+                      _id: "6081cb3a72f96229a6261d53",
+                      sku: "TSH-MED-WHI-COT-6"
+                  },
+                  serial: "serial102921",
+                  lot: "60b38eb03ead17002ccd2ebd",
+                  status: "sellable"
+              },
+              _id: "60b583b74e0e93008551c17a",
+              counts: []
+            },
+            {
+              record: {
+                  product: {
+                      _id: "6081cb3a72f96229a6261d53",
+                      sku: "TSH-MED-WHI-COT-6"
+                  },
+                  serial: "serial102922",
+                  lot: "60b38eb03ead17002ccd2ebd",
+                  status: "sellable"
+              },
+              _id: "60b583b74e0e93008551c17b",
+              counts: []
+            }
+        ],
         save: sandbox.stub()
       }
     }
 
-    let secondMockInventory = () => {
-      return {
-        _id: 'different9012832',
-        lot: "lot1093812",
-        serial: "serial102938",
-        status: 'sellable',
-        save: sandbox.stub()
-      }
-    }
-
-    it('should update the inventory', async () => {
+    it('should update the count record', async () => {
       let req = mockRequest();
-      let fakeInventory = mockInventory();
-      let dbInventoryFind = sandbox.stub(Inventory, 'findOne').returns(fakeInventory);
+      let fakeCount = mockCount();
+      let dbCountFind = sandbox.stub(Count, 'findOne').returns(fakeCount);
 
+      expect(fakeCount.name === req.body.name).to.be.false;
       await editCount(req,res)
-      expect(dbInventoryFind.calledTwice).to.be.true;
-      expect(fakeInventory.save.calledOnce).to.be.true;
+      expect(dbCountFind.calledOnce).to.be.true;
+      expect(fakeCount.save.calledOnce).to.be.true;
+      expect(fakeCount.name).to.equal(req.body.name)
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(goodCode)).to.be.true;
     })
-
-    it('should handle error if new inventory code is already in use', async () => {
-      let req = mockRequest();
-      let fakeInventory = mockInventory();
-      let secondInventory = secondMockInventory();
-      let dbInventoryFind = sandbox.stub(Inventory, 'findOne')
-      dbInventoryFind.onFirstCall().returns(fakeInventory);
-      dbInventoryFind.onSecondCall().returns(secondInventory)
-
-
-      await editCount(req,res)
-      expect(dbInventoryFind.calledTwice).to.be.true;
-      expect(fakeInventory.save.callCount).to.equal(0);
-      expect(res.status.calledOnce).to.be.true;
-      expect(res.status.calledWith(badCode)).to.be.true;
-    })
-
     it('should handle error if wrong object id is given', async () => {
       let req = mockRequest();
-      let dbInventoryFind = sandbox.stub(Inventory, 'findOne').throws({kind: 'ObjectId'})
+      let fakeCount = mockCount();
+      let dbCountFind = sandbox.stub(Count, 'findOne').throws({kind: 'ObjectId'});
 
       await editCount(req,res)
-      expect(dbInventoryFind.calledOnce).to.be.true;
-      expect(res.status.calledOnce).to.be.true;
-      expect(res.status.calledWith(badCode)).to.be.true;
-      expect(res.json.calledOnce).to.be.true;    
-    })
-
-    it('should handle error if db lot find call returns undefined', async () => {
-      let req = mockRequest();
-      let dbInventoryFind = sandbox.stub(Inventory, 'findOne').returns(undefined);
-
-      await editCount(req,res)
-      expect(dbInventoryFind.calledOnce).to.be.true;
+      expect(dbCountFind.calledOnce).to.be.true;
+      expect(fakeCount.save.callCount).to.equal(0);
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
       expect(res.json.calledOnce).to.be.true;
     })
-
-    it('should handle error if db inventory call throws', async () => {
+    it('should handle error if db count call returns undefined', async () => {
       let req = mockRequest();
-      let dbInventoryFind = sandbox.stub(Inventory, 'findOne').throws();
+      let fakeCount = mockCount();
+      let dbCountFind = sandbox.stub(Count, 'findOne').returns(undefined);
 
       await editCount(req,res)
-      expect(dbInventoryFind.calledOnce).to.be.true;
+      expect(dbCountFind.calledOnce).to.be.true;
+      expect(fakeCount.save.callCount).to.equal(0);
       expect(res.status.calledOnce).to.be.true;
-      expect(res.status.calledWith(errorCode)).to.be.true;
+      expect(res.status.calledWith(badCode)).to.be.true;
+      expect(res.json.calledOnce).to.be.true;
     })
-
-    it('should handle error if inventory save call throws', async () => {
+    it('should handle error if db count call throws', async () => {
       let req = mockRequest();
-      let fakeInventory = mockInventory();
-      let dbInventoryFind = sandbox.stub(Inventory, 'findOne').returns(fakeInventory);
-      fakeInventory.save = sandbox.stub().throws();
+      let fakeCount = mockCount();
+      let dbCountFind = sandbox.stub(Count, 'findOne').throws({kind: 'ObjectId'});
 
       await editCount(req,res)
-      expect(dbInventoryFind.calledTwice).to.be.true;
-      expect(fakeInventory.save.callCount).to.equal(1);
+      expect(dbCountFind.calledOnce).to.be.true;
+      expect(fakeCount.save.callCount).to.equal(0);
+      expect(res.status.calledOnce).to.be.true;
+      expect(res.status.calledWith(badCode)).to.be.true;
+      expect(res.json.calledOnce).to.be.true;
+    })
+    it('should handle error if count save call throws', async () => {
+      let req = mockRequest();
+      let fakeCount = mockCount();
+      let dbCountFind = sandbox.stub(Count, 'findOne').returns(fakeCount);
+      fakeCount.save = sandbox.stub().throws();
+
+
+      expect(fakeCount.name === req.body.name).to.be.false;
+      await editCount(req,res)
+      expect(dbCountFind.calledOnce).to.be.true;
+      expect(fakeCount.save.calledOnce).to.be.true;
+      expect(fakeCount.name).to.equal(req.body.name)
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true;
     })

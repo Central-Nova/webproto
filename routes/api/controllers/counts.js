@@ -194,72 +194,53 @@ const createCount = async (req,res) => {
 
 const editCount = async (req,res) => {
   
-  apiLogger.debug('User requesting to update inventory record', {
+  apiLogger.debug('User requesting to update count record', {
     params: req.params || '',
     query: req.query || '',
     body: req.body || ''
   })
   
   const { 
-    lot,
-    serial,
-    status
+    name,
+    type,
+    method,
+    scheduled
   } = req.body;
     
     try {
 
-    // Check if inventory exists
+    // Check if count exists
     let queryStartTime = new Date();
-    apiLogger.debug('Searching for inventory  record in db', {collection: 'inventory',operation: 'findOne'})
+    apiLogger.debug('Searching for count  record in db', {collection: 'count',operation: 'findOne'})
     
-    let currentInventory = await Inventory.findOne({
+    let count = await Count.findOne({
       company: req.user.company,
-      _id: req.params.inventoryId
+      _id: req.params.countId
     });
-    console.log('currentInventory: ', currentInventory)
 
     // Handle error if inventory record isn't found
-    if (!currentInventory) {
-      apiLogger.warn('No inventory record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+    if (!count) {
+      apiLogger.warn('No count record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
       return res
       .status(400)
-      .json({errors: [{msg: {title: 'Error', description: 'Inventory does not exist.'}}]})
+      .json({errors: [{msg: {title: 'Error', description: 'Count does not exist.'}}]})
     }
-    apiLogger.debug('Inventory  record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
-    
-    // Check if new serial already exists
-    queryStartTime = new Date();
-    apiLogger.debug('Searching for existing inventory  record in db', {collection: 'inventory',operation: 'findOne'})
-
-    let secondInventory = await Inventory.findOne({
-      company: req.user.company,
-      serial: req.body.serial
-    });
-
-    // Handle error if serial already exists
-    if (secondInventory._id.toString() !== currentInventory._id.toString()) {
-      apiLogger.warn('Existing serial code found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
-      return res
-      .status(400)
-      .json({errors: [{msg: {title: 'Error', description: 'Serial code is already in use.'}}]})
-    }
-    apiLogger.debug('Serial code is available to use', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+    apiLogger.debug('Count  record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
 
     queryStartTime = new Date();
     apiLogger.info('Updating Inventory record in db', {collection: 'inventory',operation: 'save'})
 
-    currentInventory.lot = lot;
-    currentInventory.serial = serial;
-    currentInventory.status = status;
-    currentInventory.lastEdited = new Date();
-    currentInventory.lastEditedBy = req.user._id;
-    currentInventory.save();
+    count.name = name;
+    count.type = type;
+    count.method = method;
+    count.scheduled = scheduled
+    count.save();
 
-    apiLogger.info('Inventory record updated', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+    apiLogger.info('Count record updated', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
     
     return res
     .status(200)
-    .json({msg: {title: 'Success', description: 'Inventory details have been updated!'}})
+    .json({msg: {title: 'Success', description: 'Count details have been updated!'}})
     
   } catch (error) {
     console.log(error);
@@ -267,7 +248,7 @@ const editCount = async (req,res) => {
       console.log(error.kind);
       return res
       .status(400)
-      .json({msg: { title: 'Error', description: 'Inventory not found.'}})      
+      .json({msg: { title: 'Error', description: 'Count not found.'}})      
     }
     return res.status(500).send('Server Error');
    
