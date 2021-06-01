@@ -508,6 +508,49 @@ describe('API Count Route', () => {
       }
     }
 
+    let mockCountNoRecord = () => {
+      return {
+        completed: false,
+        _id: "60b583b74e0e93008551c179",
+        company: "607da9ab78caf50039e60be2",
+        name: "Sixth Test Count",
+        type: "Cycle",
+        method: "Blind",
+        scheduled: "2021-05-31T14:36:11.579Z",
+        inventoryData: [
+            {
+              record: {
+                  product: {
+                      _id: "6081cb3a72f96229a6261d53",
+                      sku: "TSH-MED-WHI-COT-6"
+                  },
+                  serial: "serial102921",
+                  lot: "60b38eb03ead17002ccd2ebd",
+                  status: "sellable"
+              },
+              _id: "60b583b74e0e93008551c18a",
+              counts: []
+            },
+            {
+              record: {
+                  product: {
+                      _id: "6081cb3a72f96229a6261d53",
+                      sku: "TSH-MED-WHI-COT-6"
+                  },
+                  serial: "serial102922",
+                  lot: "60b38eb03ead17002ccd2ebd",
+                  status: "sellable"
+              },
+              _id: "60b583b74e0e93008551c18b",
+              counts: []
+            }
+        ],
+        save: sandbox.stub()
+      }
+    }
+
+
+
     it('should update the count record', async () => {
       let req = mockRequest();
       let fakeCount = mockCount();
@@ -521,6 +564,19 @@ describe('API Count Route', () => {
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(goodCode)).to.be.true;
     })
+    it('should handle error inventoryData record doesnt exist', async () => {
+      let req = mockRequest();
+      let fakeCountNoRecord = mockCountNoRecord();
+      let dbCountFind = sandbox.stub(Count, 'findOne').returns(fakeCountNoRecord);
+
+      expect(fakeCountNoRecord.inventoryData[0].counts.length).to.equal(0);
+      await editCountInventoryData(req,res)
+      expect(dbCountFind.calledOnce).to.be.true;
+      expect(fakeCountNoRecord.save.callCount).to.equal(0);
+      expect(res.status.calledOnce).to.be.true;
+      expect(res.status.calledWith(badCode)).to.be.true;
+      expect(res.json.calledOnce).to.be.true;
+    })
     it('should handle error if wrong object id is given', async () => {
       let req = mockRequest();
       let fakeCount = mockCount();
@@ -533,7 +589,6 @@ describe('API Count Route', () => {
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
       expect(res.json.calledOnce).to.be.true;
-
     })
     it('should handle error if db count call returns undefined', async () => {
       let req = mockRequest();

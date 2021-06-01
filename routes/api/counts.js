@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getCounts, getCountById, createCount, editCount } = require('./controllers/counts');
+const { getCounts, getCountById, createCount, editCount, editCountInventoryData } = require('./controllers/counts');
 
 // Middleware
 const { check } = require('express-validator');
@@ -50,11 +50,8 @@ router.put('/count/:countId', [userAuth, companyAuth, sanitizeBody, [
 // @access  Has company and has 'Account Information':'Edit' permission
 
 router.put('/count/:countId/inventoryData/:inventoryDataId', [userAuth, companyAuth, sanitizeBody, [
-        check('name', {title:'Error', description:'Name is required.'}).not().isEmpty(),
-        check('type', {title:'Error', description:'Count type is required.'}).not().isEmpty(),        
-        check('method', {title:'Error', description:'Count method is required.'}).not().isEmpty(),       
-         check('scheduled', {title:'Error', description:'Date is required.'}).not().isEmpty(),
+        check('result', {title:'Error', description:'Result is required.'}).not().isEmpty(),
     ], validationHandler],
-        editCount);
+        editCountInventoryData);
 
 module.exports = router;

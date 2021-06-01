@@ -296,7 +296,16 @@ const editCountInventoryData = async (req,res) => {
     apiLogger.info('Updating Inventory record in db', {collection: 'inventory',operation: 'save'})
 
     // Add count object to inventory record counts array
-    let targetRecord = count.inventoryData.find(item => item._id === inventoryDataId)
+    let targetRecord = count.inventoryData.find(item => item._id.toString() === inventoryDataId)
+
+    // Handle error if target record isn't found
+    if (!targetRecord) {
+      console.log('targetRecord: ', targetRecord);
+      return res
+      .status(400)
+      .json({errors: [{msg: {title: 'Error', description: 'Record does not exist.'}}]})
+    }
+
     let targetRecordIndex = count.inventoryData.indexOf(targetRecord);
     // Add new count to counts array
     targetRecord.counts.push({
