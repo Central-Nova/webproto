@@ -2,7 +2,7 @@ const expect = require('chai').expect;
 const sinon = require('sinon');
 const Inventory = require('../../models/inventory/Inventory');
 const Count = require('../../models/inventory/Count');
-const { getCounts, getCountByProduct, getCountById, createCount, editCount } = require('../../routes/api/controllers/counts');
+const { getCounts, getCountById, createCount, editCount } = require('../../routes/api/controllers/counts');
 
 describe('API Count Route', () => {
   const mockResponse = () => {
@@ -144,7 +144,7 @@ describe('API Count Route', () => {
       expect(res.status.calledWith(errorCode)).to.be.true;
     })
   })
-  describe('Get request to /count/:countId', () => {
+  describe.only('Get request to /count/:countId', () => {
     const mockRequest = () => {
       const req = {};
       req.query = {
@@ -157,52 +157,79 @@ describe('API Count Route', () => {
         company: 'fakecompany492384902'
       }
       req.params = {
-        productId: '60b38f90463513003a794998'
+        countId: '60b38f90463513003a794998'
       }
       return req;
     }
 
-    let mockInventory = () => {
+    let mockCount = () => {
       return {
-        _id: "60b38f90463513003a794998",
+        completed: false,
+        _id: "60b583b74e0e93008551c179",
         company: "607da9ab78caf50039e60be2",
-        serial: "serial102921",
-        lot: "60b38eb03ead17002ccd2ebd",
-        product: "6081cb3a72f96229a6261d53",
-        status: "sellable",
+        name: "Sixth Test Count",
+        type: "Cycle",
+        method: "Blind",
+        scheduled: "2021-05-31T14:36:11.579Z",
+        inventoryData: [
+            {
+              record: {
+                  product: {
+                      _id: "6081cb3a72f96229a6261d53",
+                      sku: "TSH-MED-WHI-COT-6"
+                  },
+                  serial: "serial102921",
+                  lot: "60b38eb03ead17002ccd2ebd",
+                  status: "sellable"
+              },
+              _id: "60b583b74e0e93008551c17a",
+              counts: []
+            },
+            {
+              record: {
+                  product: {
+                      _id: "6081cb3a72f96229a6261d53",
+                      sku: "TSH-MED-WHI-COT-6"
+                  },
+                  serial: "serial102922",
+                  lot: "60b38eb03ead17002ccd2ebd",
+                  status: "sellable"
+              },
+              _id: "60b583b74e0e93008551c17b",
+              counts: []
+            }
+        ],
       }
     }
     
-    it('should call res.send with inventory data', async () => {
+    it('should call res.send with count data', async () => {
       let req = mockRequest();
-      let fakeInventory = mockInventory();
-      let dbInventoryCall = sandbox.stub(Inventory, 'findOne').returns(fakeInventory);
+      let fakeCount = mockCount();
+      let dbCountCall = sandbox.stub(Count, 'findOne').returns(fakeCount);
  
       await getCountById(req, res);
-      expect(dbInventoryCall.calledOnce).to.be.true;
+      expect(dbCountCall.calledOnce).to.be.true;
       expect(res.send.calledOnce).to.be.true;
-      expect(res.send.calledWith(fakeInventory)).to.be.true;
+      expect(res.send.calledWith(fakeCount)).to.be.true;
     })
-    it('should handle error when db inventory call returns undefined', async () => {
+    it('should handle error when db count call returns undefined', async () => {
       let req = mockRequest();
-      let dbInventoryCall = sandbox.stub(Inventory, 'findOne').returns(undefined);
+      let dbCountCall = sandbox.stub(Count, 'findOne').returns(undefined);
  
       await getCountById(req, res);
-      expect(dbInventoryCall.calledOnce).to.be.true;
+      expect(dbCountCall.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
       expect(res.json.calledOnce).to.be.true;
-
     })
     it('should handle error when db inventory call throws objectId error', async () => {
       let req = mockRequest();
-      let dbInventoryCall = sandbox.stub(Inventory, 'findOne').throws({kind: 'ObjectId'});
+      let dbCountCall = sandbox.stub(Count, 'findOne').throws({kind: 'ObjectId'});
  
       await getCountById(req, res);
-      expect(dbInventoryCall.calledOnce).to.be.true;
+      expect(dbCountCall.calledOnce).to.be.true;
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(badCode)).to.be.true;
-      expect(res.json.calledOnce).to.be.true;
     })
   })
   describe('Post request to /', () => {

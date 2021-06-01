@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getCounts, getCountByProduct, getCountById, createCount, editCount } = require('./controllers/counts');
+const { getCounts, getCountById, createCount, editCount } = require('./controllers/counts');
 
 // Middleware
 const { check } = require('express-validator');
@@ -14,12 +14,6 @@ const sanitizeBody = require('../../middleware/sanitizeBody');
 // @access  private
 
 router.get('/',[userAuth,companyAuth], getCounts);
-
-// @route   GET api/count/product/:productId
-// @desc    Get count by id
-// @access  private
-
-router.get('/product/:productId', [userAuth,companyAuth], getCountByProduct);
 
 // @route   GET api/count/count/:countId
 // @desc    Get count by id

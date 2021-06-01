@@ -78,69 +78,6 @@ const getCounts = async (req, res) => {
   }
 }
 
-const getCountByProduct = async (req, res) => {
-  apiLogger.debug('User requesting all inventory records by company and product', {
-    params: req.params || '',
-    query: req.query || '',
-    body: req.body || ''
-  })
-
-  let page = parseInt(req.query.page) || 0;
-  let limit = parseInt(req.query.limit) || 0;
-  let sort = req.query.sort || '';
-
-  try {
-
-    // Query inventory by company and product
-    let queryStartTime = new Date();
-    apiLogger.info('Searching db for inventory by company', {collection: 'products',operation: 'read'})
-
-    let inventory = await Inventory.find({company: req.user.company, product: req.params.productId}).select('serial lot status').sort(sort).skip(page * limit).limit(limit);
-    apiLogger.debug('Inventory records found', {documents: inventory.length, responseTime: `${new Date() - queryStartTime}ms`})
-
-    // Handle error when the product doesn't have any inventory records
-    if (inventory.length === 0) {
-      apiLogger.debug('No inventory records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
-      return res
-      .status(400)
-      .json({msg: { title: 'Error', description: 'No inventory records found.'}})
-    }
-
-    queryStartTime = new Date();
-    apiLogger.info('Searching db for count of inventory records by company and product id', {collection: 'products',operation: 'read'})
-
-    // Count total inventory documents for the product for metadata
-    let total = await Inventory.countDocuments({company: req.user.company, product: req.params.productId});
-
-    if (!total) {
-      apiLogger.debug('No inventory records found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
-
-      return res
-      .status(400)
-      .json({msg: { title: 'Error', description: 'No inventory records found.'}})
-    }
-
-    apiLogger.debug('Inventory records counted', {documents: total, responseTime: `${new Date() - queryStartTime}ms`})
-    
-    httpContext.set('resDocs', inventory.length);
-    apiLogger.debug('Sending inventory records by company and product id', {documents: inventory.length})
-
-    // return inventory records with meta data
-    const returnItem = {
-        total,
-        page,
-        limit,
-        inventory
-    }
-    console.log('returnItem: ', returnItem);
-    return res.send(returnItem);
-    
-    } catch (error) {
-      console.log(error);
-      return res.status(500).send('Server Error');
-  }
-}
-
 const getCountById = async (req, res) => {
   apiLogger.debug('User requesting inventory record by inventory id', {
     params: req.params || '',
@@ -150,33 +87,33 @@ const getCountById = async (req, res) => {
 
   try {
    
-    // Query inventory record by company and object id
+    // Query count record by company and object id
     let queryStartTime = new Date();
-    apiLogger.info('Searching db for inventory by inventory id', {collection: 'inventory',operation: 'read'})
+    apiLogger.info('Searching db for count by count id', {collection: 'count',operation: 'read'})
 
-    let inventory = await Inventory.findOne({company: req.user.company, _id: req.params.inventoryId})
+    let count = await Count.findOne({company: req.user.company, _id: req.params.countId})
 
     // Handle error if object id doesn't exist
-    if (!inventory) {
-      apiLogger.debug('No inventory record found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
+    if (!count) {
+      apiLogger.debug('No count record found', {documents: 0, responseTime: `${new Date() - queryStartTime}ms`})
 
       return res
       .status(400)
-      .json({msg: { title: 'Error', description: 'Inventory record not found.'}})
+      .json({msg: { title: 'Error', description: 'Count record not found.'}})
     }
-    apiLogger.debug('Inventory record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+    apiLogger.debug('Count record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
 
     httpContext.set('resDocs', 1);
-    apiLogger.info('Sending inventory record by id', {documents: 1})
-    // Send inventory record
-    return res.send(inventory);
+    apiLogger.info('Sending count record by id', {documents: 1})
+    // Send count record
+    return res.send(count);
   } catch (error) {
     if (error.kind === 'ObjectId') {
       console.log('wrong')
-      apiLogger.warn('Invalid inventory id requested by user')
+      apiLogger.warn('Invalid count id requested by user')
       return res
       .status(400)
-      .json({msg: { title: 'Error', description: 'Inventory record not found.'}})      
+      .json({msg: { title: 'Error', description: 'Count record not found.'}})      
     }
 
     apiLogger.error('Caught error');
@@ -340,7 +277,6 @@ const editCount = async (req,res) => {
 
 module.exports = {
     getCounts,
-    getCountByProduct,
     getCountById,
     createCount,
     editCount
