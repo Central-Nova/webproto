@@ -26,7 +26,10 @@ router.get('/count/:countId', [userAuth,companyAuth], getCountById);
 // @access  private
 
 router.post('/', [userAuth, sanitizeBody, [
-        check('products.*', {title:'Error', description:'Select at least one product.'}).not().isEmpty(),
+        check('name', {title:'Error', description:'Name is required.'}).not().isEmpty(),
+        check('type', {title:'Error', description:'Count type is required.'}).not().isEmpty(),        
+        check('method', {title:'Error', description:'Count method is required.'}).not().isEmpty(),       
+         check('scheduled', {title:'Error', description:'Date is required.'}).not().isEmpty(),
         ], validationHandler], 
         createCount);
 
@@ -35,8 +38,22 @@ router.post('/', [userAuth, sanitizeBody, [
 // @access  Has company and has 'Account Information':'Edit' permission
 
 router.put('/count/:countId', [userAuth, companyAuth, sanitizeBody, [
-        check('count.*.serial', {title:'Error', description:'Lot code is required.'}).not().isEmpty(),
-        check('count.*.status', {title:'Error', description:'cost is required.'}).not().isEmpty(),
+        check('name', {title:'Error', description:'Name is required.'}).not().isEmpty(),
+        check('type', {title:'Error', description:'Count type is required.'}).not().isEmpty(),        
+        check('method', {title:'Error', description:'Count method is required.'}).not().isEmpty(),       
+         check('scheduled', {title:'Error', description:'Date is required.'}).not().isEmpty(),
+    ], validationHandler],
+        editCount);
+
+// @route   PUT api/count
+// @desc    Edit count
+// @access  Has company and has 'Account Information':'Edit' permission
+
+router.put('/count/:countId/inventoryData/:inventoryDataId', [userAuth, companyAuth, sanitizeBody, [
+        check('name', {title:'Error', description:'Name is required.'}).not().isEmpty(),
+        check('type', {title:'Error', description:'Count type is required.'}).not().isEmpty(),        
+        check('method', {title:'Error', description:'Count method is required.'}).not().isEmpty(),       
+         check('scheduled', {title:'Error', description:'Date is required.'}).not().isEmpty(),
     ], validationHandler],
         editCount);
 

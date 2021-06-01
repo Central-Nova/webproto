@@ -2,7 +2,7 @@ const expect = require('chai').expect;
 const sinon = require('sinon');
 const Inventory = require('../../models/inventory/Inventory');
 const Count = require('../../models/inventory/Count');
-const { getCounts, getCountById, createCount, editCount } = require('../../routes/api/controllers/counts');
+const { getCounts, getCountById, createCount, editCount, editCountInventoryData } = require('../../routes/api/controllers/counts');
 
 describe('API Count Route', () => {
   const mockResponse = () => {
@@ -446,6 +446,119 @@ describe('API Count Route', () => {
       expect(dbCountFind.calledOnce).to.be.true;
       expect(fakeCount.save.calledOnce).to.be.true;
       expect(fakeCount.name).to.equal(req.body.name)
+      expect(res.status.calledOnce).to.be.true;
+      expect(res.status.calledWith(errorCode)).to.be.true;
+    })
+  })
+  describe.only('Put request to /count/:countId/inventoryData/:inventoryDataId', () => {
+    const mockRequest = () => {
+      const req = {};
+      req.params = {
+        countId: '60b53b1c5a297a0217b4f392',
+        inventoryDataId: '60b583b74e0e93008551c17a'
+      }
+      req.body = {
+        result: true
+      }
+      req.user = {
+        _id: 'fake1908239021',
+        company: 'fakecompany492384902'
+      }
+      return req;
+    }
+
+    let mockCount = () => {
+      return {
+        completed: false,
+        _id: "60b583b74e0e93008551c179",
+        company: "607da9ab78caf50039e60be2",
+        name: "Sixth Test Count",
+        type: "Cycle",
+        method: "Blind",
+        scheduled: "2021-05-31T14:36:11.579Z",
+        inventoryData: [
+            {
+              record: {
+                  product: {
+                      _id: "6081cb3a72f96229a6261d53",
+                      sku: "TSH-MED-WHI-COT-6"
+                  },
+                  serial: "serial102921",
+                  lot: "60b38eb03ead17002ccd2ebd",
+                  status: "sellable"
+              },
+              _id: "60b583b74e0e93008551c17a",
+              counts: []
+            },
+            {
+              record: {
+                  product: {
+                      _id: "6081cb3a72f96229a6261d53",
+                      sku: "TSH-MED-WHI-COT-6"
+                  },
+                  serial: "serial102922",
+                  lot: "60b38eb03ead17002ccd2ebd",
+                  status: "sellable"
+              },
+              _id: "60b583b74e0e93008551c17b",
+              counts: []
+            }
+        ],
+        save: sandbox.stub()
+      }
+    }
+
+    it('should update the count record', async () => {
+      let req = mockRequest();
+      let fakeCount = mockCount();
+      let dbCountFind = sandbox.stub(Count, 'findOne').returns(fakeCount);
+
+      expect(fakeCount.inventoryData[0].counts.length).to.equal(0);
+      await editCountInventoryData(req,res)
+      expect(dbCountFind.calledOnce).to.be.true;
+      expect(fakeCount.save.calledOnce).to.be.true;
+      expect(fakeCount.inventoryData[0].counts.length).to.equal(1);
+      expect(res.status.calledOnce).to.be.true;
+      expect(res.status.calledWith(goodCode)).to.be.true;
+    })
+    it('should handle error if wrong object id is given', async () => {
+      let req = mockRequest();
+      let fakeCount = mockCount();
+      let dbCountFind = sandbox.stub(Count, 'findOne').throws({kind: 'ObjectId'});
+
+      expect(fakeCount.inventoryData[0].counts.length).to.equal(0);
+      await editCountInventoryData(req,res)
+      expect(dbCountFind.calledOnce).to.be.true;
+      expect(fakeCount.save.callCount).to.equal(0);
+      expect(res.status.calledOnce).to.be.true;
+      expect(res.status.calledWith(badCode)).to.be.true;
+      expect(res.json.calledOnce).to.be.true;
+
+    })
+    it('should handle error if db count call returns undefined', async () => {
+      let req = mockRequest();
+      let fakeCount = mockCount();
+      let dbCountFind = sandbox.stub(Count, 'findOne').returns(undefined);
+
+      expect(fakeCount.inventoryData[0].counts.length).to.equal(0);
+      await editCountInventoryData(req,res)
+      expect(dbCountFind.calledOnce).to.be.true;
+      expect(fakeCount.save.callCount).to.equal(0);
+      expect(res.status.calledOnce).to.be.true;
+      expect(res.status.calledWith(badCode)).to.be.true;
+      expect(res.json.calledOnce).to.be.true;
+    })
+    it('should handle error if count save call throws', async () => {
+      let req = mockRequest();
+      let fakeCount = mockCount();
+      let dbCountFind = sandbox.stub(Count, 'findOne').returns(fakeCount);
+      fakeCount.save = sandbox.stub().throws();
+
+      expect(fakeCount.inventoryData[0].counts.length).to.equal(0);
+      await editCountInventoryData(req,res)
+      expect(dbCountFind.calledOnce).to.be.true;
+      expect(fakeCount.save.calledOnce).to.be.true;
+      expect(fakeCount.inventoryData[0].counts.length).to.equal(1);
       expect(res.status.calledOnce).to.be.true;
       expect(res.status.calledWith(errorCode)).to.be.true;
     })

@@ -230,6 +230,7 @@ const editCount = async (req,res) => {
     queryStartTime = new Date();
     apiLogger.info('Updating Inventory record in db', {collection: 'inventory',operation: 'save'})
 
+    // Update fields
     count.name = name;
     count.type = type;
     count.method = method;
@@ -256,9 +257,82 @@ const editCount = async (req,res) => {
 
 }
 
+const editCountInventoryData = async (req,res) => {
+  
+  apiLogger.debug('User requesting to update count record', {
+    params: req.params || '',
+    query: req.query || '',
+    body: req.body || ''
+  })
+  
+  const { 
+    result
+  } = req.body;
+
+  const { countId, inventoryDataId } = req.params
+    
+    try {
+
+    // Check if count exists
+    let queryStartTime = new Date();
+    apiLogger.debug('Searching for count  record in db', {collection: 'count',operation: 'findOne'})
+    
+    let count = await Count.findOne({
+      company: req.user.company,
+      _id: countId
+    });
+    console.log('count: ', count)
+
+    // Handle error if inventory record isn't found
+    if (!count) {
+      apiLogger.warn('No count record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+      return res
+      .status(400)
+      .json({errors: [{msg: {title: 'Error', description: 'Count does not exist.'}}]})
+    }
+    apiLogger.debug('Count  record found', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+
+    queryStartTime = new Date();
+    apiLogger.info('Updating Inventory record in db', {collection: 'inventory',operation: 'save'})
+
+    // Add count object to inventory record counts array
+    let targetRecord = count.inventoryData.find(item => item._id === inventoryDataId)
+    let targetRecordIndex = count.inventoryData.indexOf(targetRecord);
+    // Add new count to counts array
+    targetRecord.counts.push({
+      countedBy: req.user._id,
+      countedOn: new Date(),
+      result
+    })
+
+    count.inventoryData[targetRecordIndex] = targetRecord
+    count.save();
+
+    apiLogger.info('Count record updated', {documents: 1, responseTime: `${new Date() - queryStartTime}ms`})
+    
+    return res
+    .status(200)
+    .json({msg: {title: 'Success', description: 'Count details have been updated!'}})
+    
+  } catch (error) {
+    console.log(error);
+    if (error.kind === 'ObjectId') {
+      console.log(error.kind);
+      return res
+      .status(400)
+      .json({msg: { title: 'Error', description: 'Count not found.'}})      
+    }
+    return res.status(500).send('Server Error');
+   
+  }
+
+}
+
+
 module.exports = {
     getCounts,
     getCountById,
     createCount,
-    editCount
+    editCount,
+    editCountInventoryData
 }
