@@ -26,7 +26,7 @@ router.get('/product/:productId', [userAuth,companyAuth, authorize('Products', '
 // @access  Has company, has 'Catalog Entry':'Create' permission
 
 router.post('/',
-[userAuth,companyAuth, authorize('Products', 'Catalog Entry', 'Create'), sanitizeBody,[
+[userAuth, companyAuth, authorize('Products', 'Catalog Entry', 'Create'), sanitizeBody,[
   check('products.*.sku', { title: 'Error', description: 'Please enter a valid SKU.' }).not().isEmpty().isLength({ min:4, max: 20 }),
   check('products.*.name', { title: 'Error', description: 'Please enter a product name.' }).not().isEmpty().isLength({ max: 80 }),
   check('products.*.description', { title: 'Error', description: 'Please enter a product description.' }).not().isEmpty().isLength({ max: 200 }),

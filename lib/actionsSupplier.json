@@ -134,28 +134,28 @@
   },
   {
     "department": "Inventory",
-    "document": "Product Lotting",
+    "document": "Inventory Lots",
     "action": "View",
     "manager": true,
     "worker": true
   },
   {
     "department": "Inventory",
-    "document": "Product Lotting",
+    "document": "Inventory Lots",
     "action": "Create",
     "manager": true,
     "worker": true
   },
   {
     "department": "Inventory",
-    "document": "Product Lotting",
+    "document": "Inventory Lots",
     "action": "Edit",
     "manager": true,
     "worker": true
   },
   {
     "department": "Inventory",
-    "document": "Product Lotting",
+    "document": "Inventory Lots",
     "action": "Delete",
     "manager": true,
     "worker": true
@@ -190,56 +190,84 @@
   },
   {
     "department": "Inventory",
-    "document": "Product Transformations",
+    "document": "Inventory Units",
     "action": "View",
     "manager": true,
     "worker": true
   },
   {
     "department": "Inventory",
-    "document": "Product Transformations",
+    "document": "Inventory Units",
     "action": "Create",
     "manager": true,
     "worker": true
   },
   {
     "department": "Inventory",
-    "document": "Product Transformations",
+    "document": "Inventory Units",
     "action": "Edit",
     "manager": true,
     "worker": true
   },
   {
     "department": "Inventory",
-    "document": "Product Transformations",
+    "document": "Inventory Units",
     "action": "Delete",
     "manager": true,
     "worker": true
   },
   {
     "department": "Inventory",
-    "document": "Inventory Counting",
+    "document": "Counting Tasks",
     "action": "View",
     "manager": true,
     "worker": true
   },
   {
     "department": "Inventory",
-    "document": "Inventory Counting",
+    "document": "Counting Tasks",
     "action": "Create",
     "manager": true,
     "worker": true
   },
   {
     "department": "Inventory",
-    "document": "Inventory Counting",
+    "document": "Counting Tasks",
     "action": "Edit",
     "manager": true,
     "worker": true
   },
   {
     "department": "Inventory",
-    "document": "Inventory Counting",
+    "document": "Counting Tasks",
+    "action": "Delete",
+    "manager": true,
+    "worker": true
+  },
+  {
+    "department": "Inventory",
+    "document": "Count Groups",
+    "action": "View",
+    "manager": true,
+    "worker": true
+  },
+  {
+    "department": "Inventory",
+    "document": "Count Groups",
+    "action": "Create",
+    "manager": true,
+    "worker": true
+  },
+  {
+    "department": "Inventory",
+    "document": "Count Groups",
+    "action": "Edit",
+    "manager": true,
+    "worker": true
+  },
+  {
+    "department": "Inventory",
+    "document": "Count Groups",
     "action": "Delete",
     "manager": true,
     "worker": true
